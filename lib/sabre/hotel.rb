@@ -25,29 +25,31 @@ module Sabre
 
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count, amenities = [])
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
-      client = Sabre.client('OTA_HotelAvailLLS1.11.1RQ.wsdl')
-      response = client.request(:ota_hotel_avail_rq, Sabre.request_header('2003A.TsabreXML1.11.1')) do
+      client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
+      response = client.request(:ota_hotel_avail_rq, Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
           'POS' => Sabre.pos,
           'AvailRequestSegments' => {
             'AvailRequestSegment' => {
-              'StayDateRange' => '', 
+              'GuestCounts' => '',
+              'TimeSpan' => '', 
               'RatePlanCandidates' => {
                 'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
-              }, 'RoomStayCandidates' => room_stay_candidates(guest_count),
+              }, 
               'HotelSearchCriteria' => {
                  'Criterion' => { 
                    'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', 'RefPoint' => 'G', :attributes! => {
                      'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude }, 
-                     'RefPoint' => { 'GEOCodeOnly' => 'true', 'LocationCode' => 'R' },
+                     'RefPoint' => { 'GeoCode' => 'true', 'Sort' => 'G' },
                    } 
                  }
               }, :attributes! => { 
-                'StayDateRange' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
+                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
                 'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
-                'HotelSearchCriteria' => { 'NumProperties' => 20 } 
+                'HotelSearchCriteria' => { 'NumProperties' => 20 },
+                'GuestCounts' => { 'Count' => guest_count } 
               }
             }
           }

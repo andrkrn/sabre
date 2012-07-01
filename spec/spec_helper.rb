@@ -6,7 +6,7 @@
 require 'ruby-debug'
 require 'mocha'
 require 'vcr'
-require 'webmock/rspec'
+#require 'webmock/rspec'
 require 'ffaker'
 require 'savon'
 require 'savon_spec'
