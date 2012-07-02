@@ -12,8 +12,8 @@ require 'savon'
 require 'savon_spec'
 require 'sabre'
 
-HTTPI.log = false
-Savon.log = false
+HTTPI.log = true
+Savon.log = true
 
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/fixtures/vcr_cassettes' 

@@ -30,27 +30,25 @@ module Sabre
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
-          'POS' => Sabre.pos,
-          'AvailRequestSegments' => {
-            'AvailRequestSegment' => {
-              'GuestCounts' => '',
-              'TimeSpan' => '', 
-              'RatePlanCandidates' => {
-                'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
-              }, 
-              'HotelSearchCriteria' => {
-                 'Criterion' => { 
-                   'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', 'RefPoint' => 'G', :attributes! => {
-                     'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude }, 
-                     'RefPoint' => { 'GeoCode' => 'true', 'Sort' => 'G' },
-                   } 
-                 }
-              }, :attributes! => { 
-                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
-                'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
-                'HotelSearchCriteria' => { 'NumProperties' => 20 },
-                'GuestCounts' => { 'Count' => guest_count } 
-              }
+          'AvailRequestSegment' => {
+            'GuestCounts' => '',
+            'HotelSearchCriteria' => {
+               'Criterion' => { 
+                 'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
+                   'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude }, 
+                   'RefPoint' => { 'GeoCode' => 'true', 'Sort' => 'G' },
+                 } 
+               }
+            },
+            'RatePlanCandidates' => {
+              'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
+            },
+            'TimeSpan' => '', 
+            :attributes! => { 
+              'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
+              'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
+              'HotelSearchCriteria' => { 'NumProperties' => 20 },
+              'GuestCounts' => { 'Count' => guest_count } 
             }
           }
         }
