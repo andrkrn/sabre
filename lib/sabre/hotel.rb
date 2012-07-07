@@ -26,7 +26,7 @@ module Sabre
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count, amenities = [])
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
       client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
-      response = client.request(:ota_hotel_avail_rq, Sabre.request_header('2.0.0')) do
+      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
@@ -59,7 +59,7 @@ module Sabre
     def self.find_by_iata(session, start_time, end_time, iata_city_code, guest_count, amenities = [])
       raise SabreException::SearchError, 'Missing IATA City Code - No search results found' if iata_city_code.nil?
       client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
-      response = client.request(:ota_hotel_avail_rq, Sabre.request_header('2.0.0')) do
+      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
@@ -85,7 +85,7 @@ module Sabre
 
     def self.rate_details(session, hotel_id, check_in, check_out, guest_count, code, line_number)
     	client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
-	    response = client.request(:hotel_rate_description_rq, Sabre.request_header('2.0.0')) do
+	    response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
 		    soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
 		    soap.body = {
@@ -116,7 +116,7 @@ module Sabre
 
     def self.profile(session,hotel_id, start_time, end_time, guest_count)
     	client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-	    response = client.request(:hotel_property_description_rq, Sabre.request_header('2.0.1')) do
+	    response = client.request('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
         Sabre.namespaces(soap)
 		    soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
 		    soap.body = {
@@ -142,7 +142,7 @@ module Sabre
 
     def self.find_by_code(session,hotel_id)
     	client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-	    response = client.request(:hotel_property_description_rq, Sabre.request_header('2.0.1')) do
+	    response = client.request('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
         Sabre.namespaces(soap)
 		    soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
 		    soap.body = {
