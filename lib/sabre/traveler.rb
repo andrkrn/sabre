@@ -33,7 +33,7 @@ module Sabre
     
     def self.locate(session, transaction_code, reservation_id)
       client = Sabre.client('TravelItineraryReadLLS2.0.0RQ.wsdl')
-      response = client.request(:travel_itinerary_read_rq, Sabre.request_header('2.0.0')) do
+      response = client.request('TravelItineraryAddInfoRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
 	      soap.header = session.header('Travel Itinerary Info','sabreXML','TravelItineraryReadLLSRQ')
 	      soap.body = {
