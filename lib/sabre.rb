@@ -37,13 +37,22 @@ module Sabre
     return client
   end
 
-  def self.request_header(version)
-    { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2003/07', 
-      'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
-      'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
-      'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'), 
-      'Version' => version 
-    }
+  def self.request_header(version, timestamp = true)
+#    if timestamp
+      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10', 
+        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
+        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
+        'ReturnHostCommand' => 'true',
+        'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'), 
+        'Version' => version 
+      }
+#    else
+#      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10', 
+#        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
+#        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
+#        'Version' => version 
+#      }
+#    end
   end
 
   def self.setup
@@ -63,7 +72,7 @@ module Sabre
   end
 
   def self.error_message(msg)
-    msg = "#{msg[:errors][:error][:@error_code]}: #{msg[:errors][:error][:@error_message]}: #{msg[:errors][:error][:error_info][:message]}" 
+    msg = "#{msg[:application_results][:error][:system_specific_results][:host_command]}: #{msg[:application_results][:error][:system_specific_results][:message]}: #{msg[:application_results][:error][:system_specific_results][:short_text]}" 
     return clean_error_message(msg)
   end
 

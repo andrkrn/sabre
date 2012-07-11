@@ -40,3 +40,9 @@ class User
 end
 ```
 
+### Logging
+You can turn the logging on/off during testing within spec/spec_helper.rb
+
+```ruby
+  Savon.log = true
+```
