@@ -99,7 +99,7 @@ module Sabre
             }, 
             #'POS' => Sabre.pos,
             #'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }} 
-            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'DCA_ProductCode' => code }} 
+            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }} 
             },
             'TimeSpan' => '',
             :attributes! => { 
@@ -187,7 +187,7 @@ module Sabre
           hotel.amenities = prop_info[:property_option_info].map do |key, val|
              key.to_s if val[:@ind] == 'true'
           end.compact.uniq
-          
+
           rating = ''
           if prop_info[:property]
             hotel.rating = prop_info[:property][:text]
