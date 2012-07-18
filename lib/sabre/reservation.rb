@@ -2,7 +2,7 @@ module Sabre
   class Reservation
     def self.book(session, chain_code, hotel_code, unit_count, guest_count, line_number, amount, currency, name, card_code, card_number, expire_date, check_in, check_out, confirmation_number )
       client = Sabre.client('OTA_HotelResLLS2.0.0RQ.wsdl')
-      response = client.request(:ota_hotel_res_rq, Sabre.request_header('2.0.0')) do
+      response = client.request('OTA_HotelResRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Booking','sabreXML','OTA_HotelResLLSRQ')
         soap.body = {
@@ -39,7 +39,7 @@ module Sabre
 
     def self.confirm(session, full_name)
       client = Sabre.client('EndTransactionLLS2.0.0RQ.wsdl')
-      response = client.request(:end_transaction_rq, Sabre.request_header('2.0.0', false)) do
+      response = client.request('EndTransactionRQ', Sabre.request_header('2.0.0', false)) do
         Sabre.namespaces(soap)
         soap.header = session.header('End Transaction','sabreXML','EndTransactionLLSRQ')
         soap.body = {
