@@ -83,7 +83,7 @@ module Sabre
       construct_response_hash(response)
     end
 
-    def self.rate_details(session, hotel_id, check_in, check_out, guest_count, code, line_number)
+    def self.rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)
     	client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
 	    response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
@@ -98,8 +98,8 @@ module Sabre
                 } }
             }, 
             #'POS' => Sabre.pos,
-            #'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }} 
-            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }} 
+            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }} 
+            #'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }} 
             },
             'TimeSpan' => '',
             :attributes! => { 
