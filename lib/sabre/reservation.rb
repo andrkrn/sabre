@@ -7,7 +7,7 @@ module Sabre
         soap.header = session.header('Hotel Booking','sabreXML','OTA_HotelResLLSRQ')
         soap.body = {
           'Hotel' => {
-            'BasicPropertyInfo' => { 'ConfirmationNumber' => confirmation_number },
+            'BasicPropertyInfo' => '' #{ 'ConfirmationNumber' => confirmation_number },
             'Guarantee' => {
               'CC_Info' => {
                 'PaymentCard' => '',
@@ -25,7 +25,7 @@ module Sabre
             :attributes! => { 
               'BasicPropertyInfo' => { 'RPH' => line_number }, 
             #  'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') }, 
-              'Guarantee' => { 'Type' => 'GDPST' },
+              'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
             #  'GuestCounts' => { 'Count' => guest_count }, 
               'RoomType' => { 'NumberOfUnits' => unit_count }
             }
