@@ -145,7 +145,7 @@ module Sabre
                },
               'TimeSpan' => '', 
               :attributes! => { 
-                'TimeSpan' => { 'Start' => start_time.strftime('%d-%m'), 'End' => end_time.strftime('%d-%m') }, 
+                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
                 'GuestCounts' => { 'Count' => guest_count } 
               }
             }
