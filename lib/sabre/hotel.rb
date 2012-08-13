@@ -83,6 +83,20 @@ module Sabre
       construct_response_hash(response)
     end
 
+    def.self.change_aaa(session, pcc)
+    	client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl')
+	    response = client.request('ChangeAAARQ', Sabre.request_header('1.1.1')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Change AAA','sabreXML','ChangeAAALLSRQ')
+        soap.body = {
+          'AAA' => '',
+          :attributes! => {
+            'AAA' => { 'PseudoCityCode' => pcc }
+          }
+        }
+      end
+    end
+
     def self.rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)
     	client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
 	    response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
