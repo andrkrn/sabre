@@ -83,7 +83,7 @@ module Sabre
       construct_response_hash(response)
     end
 
-    def.self.change_aaa(session, pcc)
+    def self.change_aaa(session, pcc)
     	client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl')
 	    response = client.request('ChangeAAARQ', Sabre.request_header('1.1.1')) do
         Sabre.namespaces(soap)
