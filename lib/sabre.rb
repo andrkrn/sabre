@@ -9,7 +9,7 @@ require 'sabre/reservation'
 require 'sabre/sabre_exception'
 
 module Sabre
-  mattr_accessor :cert_wsdl_url, :wsdl_url, :endpoint_url, :username, :password, :ipcc, :account_email, :domain, :binary_security_token, :ref_message_id
+  mattr_accessor :cert_wsdl_url, :wsdl_url, :endpoint_url, :username, :password, :ipcc, :pcc, :account_email, :domain, :binary_security_token, :ref_message_id
 
   def self.connect(&block)
     @errors = []
@@ -53,6 +53,15 @@ module Sabre
 #        'Version' => version 
 #      }
 #    end
+  end
+
+  def self.request_old_header(version, timestamp = true)
+    { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2003/07', 
+      'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
+      'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
+      'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'), 
+      'Version' => version 
+    }
   end
 
   def self.setup

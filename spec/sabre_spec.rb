@@ -46,6 +46,10 @@ describe Sabre do
       hotels.size.should > 0
     end
 
+    it "should change the AAA for rates", :vcr, record: :new_episodes do
+      Sabre::Hotel.change_aaa(@session, 'N10G').should be
+    end
+
     it "should return a list of errors when an invalid lat/lng request is sent", :vcr, record: :new_episodes do
       expect { Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),nil,nil,'1')}.should raise_error 
     end
