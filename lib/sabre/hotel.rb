@@ -96,6 +96,9 @@ module Sabre
           }
         }
       end
+	    result = response.to_hash[:change_aaa_rs]
+	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors] 
+	    return response
     end
 
     def self.rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)

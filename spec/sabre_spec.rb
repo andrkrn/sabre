@@ -51,7 +51,8 @@ describe Sabre do
     end
 
     it "should change the AAA for rates", :vcr, record: :new_episodes do
-      Sabre::Hotel.change_aaa(@session).should be
+      changed = Sabre::Hotel.change_aaa(@session)
+      changed.should_not be_nil
     end
 
     it "should return a list of errors when an invalid lat/lng request is sent", :vcr, record: :new_episodes do
