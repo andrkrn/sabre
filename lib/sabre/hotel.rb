@@ -85,7 +85,7 @@ module Sabre
 
     def self.change_aaa(session, pcc)
     	client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl')
-	    response = client.request('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
+	    response = client.request('ChangeAAARQ', Sabre.request_header('2003A.TsabreXML1.1.1')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Change AAA','sabreXML','ChangeAAALLSRQ')
         soap.body = {
