@@ -18,9 +18,13 @@ describe Sabre do
 
   context "SOAP Requests" do
     before(:each) do 
-      Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
-      Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
+      Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
+      #endpoint_url: https://webservices.sabre.com/websvc
+      #Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      #Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       Sabre.ipcc = 'P40G'
+      Sabre.pcc = 'N10G'
       Sabre.account_email = 'joe@example.com'
       Sabre.domain = 'example.com'
       Sabre.username = '7971'
@@ -31,7 +35,7 @@ describe Sabre do
 
     it "should create a travel itinerary", :vcr, record: :new_episodes do
       response = Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')  
-      response.to_hash.should include(:travel_itinerary_add_info_rs)
+      response.to_hash.should include('TravelItineraryAddInfoRS')
     end
 
     it "should return a list of hotels given a valid availability request", :vcr, record: :new_episodes do
@@ -47,7 +51,7 @@ describe Sabre do
     end
 
     it "should change the AAA for rates", :vcr, record: :new_episodes do
-      Sabre::Hotel.change_aaa(@session, 'N10G').should be
+      Sabre::Hotel.change_aaa(@session).should be
     end
 
     it "should return a list of errors when an invalid lat/lng request is sent", :vcr, record: :new_episodes do

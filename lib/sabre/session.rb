@@ -10,6 +10,7 @@ module Sabre
       @ipcc = Sabre.ipcc
       @account_email = Sabre.account_email
       @domain = Sabre.domain
+      @pcc = Sabre.pcc
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
     end

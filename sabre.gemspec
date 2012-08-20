@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'debugger'
 #s.add_development_dependency 'ruby-debug19'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'

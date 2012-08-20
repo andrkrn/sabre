@@ -3,7 +3,7 @@
 #$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib/generators/templates'))
 #require 'rspec'
 #require 'yaml'
-require 'ruby-debug'
+require 'debugger'
 require 'mocha'
 require 'vcr'
 #require 'webmock/rspec'
