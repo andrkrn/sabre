@@ -17,6 +17,31 @@ describe Sabre do
 
   end
 
+  context "SOAP Sabre 1.0 Requests" do
+    before(:each) do 
+      #Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      #Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
+      Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
+      #endpoint_url: https://webservices.sabre.com/websvc
+      Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
+      Sabre.ipcc = 'P40G'
+      Sabre.pcc = 'N10G'
+      Sabre.account_email = 'joe@example.com'
+      Sabre.domain = 'example.com'
+      Sabre.username = '7971'
+      Sabre.password = 'WS020212'
+      @session = Sabre::Session.new
+      @session.open
+    end
+
+    it "should change the AAA for rates", :vcr, record: :new_episodes do
+      changed = Sabre::Hotel.change_aaa(@session)
+      changed.should_not be_nil
+    end
+
+  end
+
   context "SOAP Requests" do
     before(:each) do 
       Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
@@ -51,11 +76,6 @@ describe Sabre do
       hotels.size.should > 0
     end
 
-    it "should change the AAA for rates", :vcr, record: :new_episodes do
-      changed = Sabre::Hotel.change_aaa(@session)
-      changed.should_not be_nil
-    end
-
     it "should return a list of errors when an invalid lat/lng request is sent", :vcr, record: :new_episodes do
       expect { Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),nil,nil,'1')}.should raise_error 
     end
@@ -76,7 +96,7 @@ describe Sabre do
     it "should fail booking a hotel reservation", :vcr, record: :new_episodes do
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
-      res = Sabre::Reservation.book(@session,'ES','0040713','1','1','1','179.00','USD','TEST','VI','4111',(Time.now + 6000000),Time.now+172800, Time.now+432000).to_hash.should include(:ota_hotel_res_rs)
+      res = Sabre::Reservation.book(@session,'ES','0040713','1','1','1','179.00','USD','TEST','VI','4111',(Time.now + 6000000),Time.now+172800, Time.now+432000, '123').to_hash.should include(:ota_hotel_res_rs)
       res.should raise_exception
     end
 
