@@ -40,6 +40,9 @@ describe Sabre do
       changed.should_not be_nil
     end
 
+    after(:each) do
+      @session.close
+    end
   end
 
   context "SOAP Requests" do
