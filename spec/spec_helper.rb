@@ -4,12 +4,12 @@
 #require 'rspec'
 #require 'yaml'
 require 'debugger'
-require 'mocha'
+#require 'mocha'
 #require 'vcr'
 #require 'webmock/rspec'
 require 'ffaker'
 require 'savon'
-require 'savon_spec'
+#require 'savon_spec'
 require 'sabre'
 
 HTTPI.log = true
@@ -30,10 +30,10 @@ RSpec.configure do |config|
   #  options = example.metadata.slice(:record, :match_requests_on).except(:example_group)
   #  VCR.use_cassette(name, options) { example.call }
   #end
-  config.mock_with :mocha
-  config.include Savon::Spec::Macros
+#  config.mock_with :mocha
+#  config.include Savon::Spec::Macros
 
-  Savon::Spec::Fixture.path = File.expand_path("../fixtures", __FILE__) 
+#  Savon::Spec::Fixture.path = File.expand_path("../fixtures", __FILE__) 
 #  config.before :each do 
     # Make sure we don't ever send requests
 #    HTTPI.expects(:get).never
