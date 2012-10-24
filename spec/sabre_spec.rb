@@ -50,13 +50,14 @@ describe Sabre do
     before(:each) do 
       #Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
-      #endpoint_url: https://webservices.sabre.com/websvc
+      Sabre.endpoint_url = 'https://cert-webservices.sabre.com/tsts'
       #Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      Sabre.cert_wsdl_url = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
-      Sabre.account_email = 'joe@example.com'
-      Sabre.domain = 'example.com'
+      Sabre.account_email = 'elia@mytravelershaven.com'
+      Sabre.domain = 'hotelengine.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
       @session = Sabre::Session.new

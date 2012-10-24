@@ -31,6 +31,7 @@ module Sabre
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
           'AvailRequestSegment' => {
+            'AdditionalAvail' => '',
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
                'Criterion' => { 
@@ -48,7 +49,8 @@ module Sabre
               'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
               'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
               'HotelSearchCriteria' => { 'NumProperties' => 20 },
-              'GuestCounts' => { 'Count' => guest_count } 
+              'GuestCounts' => { 'Count' => guest_count },  
+              'AdditionalAvail' => { 'Ind' => 'true' }
             }
           }
         }
@@ -239,14 +241,15 @@ module Sabre
 
     def self.construct_full_response_hash(result)
       hotel = nil
-      p = result.to_hash[:hotel_property_description_rs]
-      if p[:errors].nil?
-        room_stay = p[:room_stay]
+      response = result.to_hash[:hotel_property_description_rs]
+      puts "Sabre full response hash is #{response}"
+      if response[:errors].nil?
+        room_stay = response[:room_stay]
         prop_info = room_stay[:basic_property_info]
 
         hotel = Hotel.new(prop_info)
         cards = []
-        room_stay = p[:room_stay]
+        room_stay = response[:room_stay]
         if room_stay[:rate_plans]
           room_stay[:rate_plans][:rate_plan][:guarantee][:guarantees_accepted][:guarantee_accepted][:payment_card].each do |cc|
             cards << cc[:@card_type]
@@ -332,7 +335,7 @@ module Sabre
           key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
         end.compact 
       else
-        raise SabreException::SearchError, Sabre.error_message(p) if p[:errors]
+        raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
       end
       return hotel
     end
