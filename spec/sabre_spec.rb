@@ -7,8 +7,8 @@ describe Sabre do
         #wsdl.namespace = 'http://wsdl-crt.cert.sabre.com/'
         #wsdl.document = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/OTA_HotelAvailLLS1.11.1RQ.wsdl'
         #wsdl.document = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
-        #wsdl.document = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
-        wsdl.document = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+        wsdl.document = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+        #wsdl.document = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl' # This no longer works
       end
     end
 
@@ -51,8 +51,8 @@ describe Sabre do
       #Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
       Sabre.endpoint_url = 'https://cert-webservices.sabre.com/tsts'
-      #Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
-      Sabre.cert_wsdl_url = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      #Sabre.cert_wsdl_url = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl' # Stopped working... I hate you Sabre
       Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
@@ -82,7 +82,7 @@ describe Sabre do
     end
 
     it "should return a list of errors when an invalid lat/lng request is sent", :vcr, record: :new_episodes do
-      expect { Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),nil,nil,'1')}.should raise_error 
+      expect { Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),nil,nil,'1')}.to raise_error 
     end
 
     # Works with 0040713 

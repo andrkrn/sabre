@@ -31,7 +31,7 @@ module Sabre
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
           'AvailRequestSegment' => {
-            'AdditionalAvail' => '',
+            #'AdditionalAvail' => '',
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
                'Criterion' => { 
@@ -49,8 +49,8 @@ module Sabre
               'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
               'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
               'HotelSearchCriteria' => { 'NumProperties' => 20 },
-              'GuestCounts' => { 'Count' => guest_count },  
-              'AdditionalAvail' => { 'Ind' => 'true' }
+              'GuestCounts' => { 'Count' => guest_count }#,  
+              #'AdditionalAvail' => { 'Ind' => 'true' }
             }
           }
         }
