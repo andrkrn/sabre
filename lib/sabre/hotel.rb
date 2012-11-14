@@ -307,18 +307,14 @@ module Sabre
 
         details = {}
         begin
-          prop_info[:vendor_messages][:vendor_message].first.last.each do |msg|
-            text = msg[:paragraph][:text]
-            detail = {msg[:@sub_title].underscore.to_sym => text}
-            details = details.merge!(detail)
-          end
-          hotel.description = details[:description].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-          hotel.location_description = details[:location]
-          hotel.rooms_available = details[:rooms]
-          hotel.cancellation = details[:cancellation]
-          hotel.services = details[:services]
-          hotel.policies = details[:policies]
-          hotel.attractions = details[:attractions]
+          details = prop_info[:vendor_messages]
+          hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
+          hotel.location_description = details[:location][:text]
+          hotel.rooms_available = details[:rooms][:text]
+          hotel.cancellation = details[:cancellation][:text]
+          hotel.services = details[:services][:text]
+          hotel.policies = details[:policies][:text]
+          hotel.attractions = details[:attractions][:text]
 
         rescue
         end
