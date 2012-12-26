@@ -48,11 +48,15 @@ describe Sabre do
   context "SOAP Requests" do
     before(:each) do 
       #Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
-      Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
-      Sabre.endpoint_url = 'https://cert-webservices.sabre.com/tsts'
-      Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      #Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
+      Sabre.wsdl_url = 'http://webservices.sabre.com/wsdl/tpfc/' # 2.0
+      #Sabre.endpoint_url = 'https://cert-webservices.sabre.com/tsts'
+      Sabre.endpoint_url = 'https://webservices.sabre.com/websvc'
+      #Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       #Sabre.cert_wsdl_url = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl' # Stopped working... I hate you Sabre
-      Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
+      #Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
+      Sabre.orig_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/tpf/' # 1.0
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
       Sabre.account_email = 'elia@mytravelershaven.com'

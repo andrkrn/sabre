@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'savon_spec'
   s.add_development_dependency 'mocha'
   
-  s.add_runtime_dependency('savon','>= 1.0.0')
+  s.add_runtime_dependency('savon','~> 1.0.0')
   s.add_runtime_dependency('activesupport')
 
   # specify any dependencies here; for example:
