@@ -242,9 +242,10 @@ module Sabre
     def self.construct_full_response_hash(result)
       hotel = nil
       response = result.to_hash[:hotel_property_description_rs]
-      puts "Sabre full response hash is #{response}"
+      #puts "Sabre full response hash is #{response}"
       if response[:errors].nil?
         room_stay = response[:room_stay]
+        #puts "Room stay is #{room_stay}"
         prop_info = room_stay[:basic_property_info]
 
         hotel = Hotel.new(prop_info)
