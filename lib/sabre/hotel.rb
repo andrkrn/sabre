@@ -48,7 +48,7 @@ module Sabre
             :attributes! => { 
               'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
               'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
-              'HotelSearchCriteria' => { 'NumProperties' => 20 },
+              'HotelSearchCriteria' => { 'NumProperties' => 30 },
               'GuestCounts' => { 'Count' => guest_count }#,  
               #'AdditionalAvail' => { 'Ind' => 'true' }
             }
