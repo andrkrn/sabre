@@ -229,11 +229,15 @@ module Sabre
           if prop_info[:property]
             hotel.rating = prop_info[:property][:text]
           end
-          if prop_info[:additional_info]
-            hotel.cancel_code = prop_info[:additional_info][:cancel_policy][:@numeric]
+          if prop_info[:room_rate]
+            prop_info[:room_rate].each do |room_rate|
+              if room_rate.is_a? Hash
+                cp = room_rate[:additional_info][:cancel_policy]
+                hotel.cancel_code = cp[:@numeric]+cp[:@option]
+                hotel.rate_level_code = room_rate[:@rate_level_code] 
+              end
+            end
           end
-          hotel.rate_level_code = prop_info[:room_rate][:@rate_level_code] if prop_info[:room_rate]
-
 
           hotels << hotel 
         end
