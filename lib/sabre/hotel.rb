@@ -1,6 +1,6 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions
+    attr_accessor :area_id, :name, :address, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code
 
     def initialize(basic_info)
       @area_id = basic_info[:@area_id] 
@@ -229,6 +229,11 @@ module Sabre
           if prop_info[:property]
             hotel.rating = prop_info[:property][:text]
           end
+          if prop_info[:additional_info]
+            hotel.cancel_code = prop_info[:additional_info][:cancel_policy][:@numeric]
+          end
+          hotel.rate_level_code = prop_info[:room_rate][:@rate_level_code] if prop_info[:room_rate]
+
 
           hotels << hotel 
         end
@@ -263,12 +268,15 @@ module Sabre
           if room_stay[:room_rates][:room_rate]
             room_stay[:room_rates][:room_rate].each do |rr|
               code = rr[:@iata_characteristic_identification]
+              cancel_policy = rr[:additional_info][:cancel_policy] 
+              cancel_code = cancel_policy[:@numeric]+cancel_policy[:@option]
               line_number = rr[:@rph]
               if rr[:rates]
                 tax, total = tax_rate(rr)
                 rates << {
                   description: rate_description(rr),
                   code: code,
+                  cancel_code: cancel_code,
                   line_number: line_number,
                   amount: rr[:rates][:rate][:@amount],
                   currency: rr[:rates][:rate][:@currency_code],
