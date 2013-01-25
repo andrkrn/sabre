@@ -23,7 +23,7 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count, amenities = [], num_properties = 30)
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], num_properties = 30)
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
       client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
       response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
@@ -243,7 +243,7 @@ module Sabre
             hotels << hotel 
           end
         else
-          result = results.to_hash[:ota_hotel_avail_rs][:availability_options]
+          result = results.to_hash[:ota_hotel_avail_rs]
           raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
         end
       else
