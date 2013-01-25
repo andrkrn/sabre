@@ -79,6 +79,11 @@ describe Sabre do
     end
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
+      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 6.days), (Date.today+8.days),'40.0375','-107.9131',2) 
+      hotels.should be_empty
+    end
+
+    it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       hotels = Sabre::Hotel.find_by_iata(@session,Time.now+172800, Time.now+432000,'DFW','1')
       hotels.first.latitude.should_not be_nil
       hotels.size.should > 0

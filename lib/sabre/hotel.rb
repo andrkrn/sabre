@@ -200,55 +200,58 @@ module Sabre
     private
     def self.construct_response_hash(results)
       hotels = []
-      if results.to_hash[:ota_hotel_avail_rs][:errors].nil?
-        options = results.to_hash[:ota_hotel_avail_rs][:availability_options]
+      response = results.to_hash[:ota_hotel_avail_rs]
+      unless response[:application_results][:error]
+        if response[:errors].nil?
+          options = results.to_hash[:ota_hotel_avail_rs][:availability_options]
 
-        if options
-          options[:availability_option].each do |p|
-            prop_info = p[:basic_property_info]
-            #street, city, state, postal_code = sanitize_address(
-            #  prop_info[:address][:address_line].first.titleize,
-            #  prop_info[:address][:address_line].last.split(' ')
-            #)
+          if options
+            options[:availability_option].each do |p|
+              prop_info = p[:basic_property_info]
+              #street, city, state, postal_code = sanitize_address(
+              #  prop_info[:address][:address_line].first.titleize,
+              #  prop_info[:address][:address_line].last.split(' ')
+              #)
 
-            hotel = Hotel.new(prop_info)
-            hotel.location_description = prop_info[:location_description][:text]
+              hotel = Hotel.new(prop_info)
+              hotel.location_description = prop_info[:location_description][:text]
 
-            rates = []
-            if rate_range = prop_info[:rate_range]
-              rates << {:description => 'Minimum', :amount => rate_range[:@min], :currency => rate_range[:@currency_code]}
-              rates << {:description => 'Maximum', :amount => rate_range[:@max], :currency => rate_range[:@currency_code]}
-            end
+              rates = []
+              if rate_range = prop_info[:rate_range]
+                rates << {:description => 'Minimum', :amount => rate_range[:@min], :currency => rate_range[:@currency_code]}
+                rates << {:description => 'Maximum', :amount => rate_range[:@max], :currency => rate_range[:@currency_code]}
+              end
 
-            hotel.rates = rates
+              hotel.rates = rates
 
-            hotel.amenities = prop_info[:property_option_info].map do |key, val|
-               key.to_s if val[:@ind] == 'true'
-            end.compact.uniq
+              hotel.amenities = prop_info[:property_option_info].map do |key, val|
+                 key.to_s if val[:@ind] == 'true'
+              end.compact.uniq
 
-            rating = ''
-            if prop_info[:property]
-              hotel.rating = prop_info[:property][:text]
-            end
-            if prop_info[:room_rate]
-              prop_info[:room_rate].each do |room_rate|
-                if room_rate.is_a? Hash
-                  cp = room_rate[:additional_info][:cancel_policy]
-                  hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                  hotel.rate_level_code = room_rate[:@rate_level_code] 
+              rating = ''
+              if prop_info[:property]
+                hotel.rating = prop_info[:property][:text]
+              end
+              if prop_info[:room_rate]
+                prop_info[:room_rate].each do |room_rate|
+                  if room_rate.is_a? Hash
+                    cp = room_rate[:additional_info][:cancel_policy]
+                    hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
+                    hotel.rate_level_code = room_rate[:@rate_level_code] 
+                  end
                 end
               end
-            end
 
-            hotels << hotel 
+              hotels << hotel 
+            end
+          else
+            result = results.to_hash[:ota_hotel_avail_rs]
+            raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
           end
         else
           result = results.to_hash[:ota_hotel_avail_rs]
           raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
         end
-      else
-        result = results.to_hash[:ota_hotel_avail_rs]
-        raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
       end
       return hotels
     end
