@@ -278,7 +278,7 @@ module Sabre
             room_stay[:room_rates][:room_rate].each do |rr|
               code = rr[:@iata_characteristic_identification]
               cancel_policy = rr[:additional_info][:cancel_policy] 
-              cancel_code = cancel_policy[:@numeric]+cancel_policy[:@option]
+              cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
               line_number = rr[:@rph]
               if rr[:rates]
                 tax, total = tax_rate(rr)
