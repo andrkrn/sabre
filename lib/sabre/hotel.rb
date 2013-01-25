@@ -279,6 +279,7 @@ module Sabre
               code = rr[:@iata_characteristic_identification]
               cancel_policy = rr[:additional_info][:cancel_policy] 
               commission = rr[:additional_info][:commission] 
+              commission = commission.blank? ? '0' : commission.gsub('PERCENT COMMISSION','') 
               cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
               line_number = rr[:@rph]
               if rr[:rates]
@@ -293,7 +294,7 @@ module Sabre
                 rates << {
                   description: rate_description(rr),
                   code: code,
-                  commission: commission.gsub('PERCENT COMMISSION','').strip,
+                  commission: commission,
                   cancel_code: cancel_code,
                   line_number: line_number,
                   amount: rr[:rates][:rate][:@amount],
