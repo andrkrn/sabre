@@ -234,7 +234,7 @@ module Sabre
               prop_info[:room_rate].each do |room_rate|
                 if room_rate.is_a? Hash
                   cp = room_rate[:additional_info][:cancel_policy]
-                  hotel.cancel_code = cp[:@numeric]+cp[:@option]
+                  hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
                   hotel.rate_level_code = room_rate[:@rate_level_code] 
                 end
               end
@@ -243,7 +243,7 @@ module Sabre
             hotels << hotel 
           end
         else
-          result = results.to_hash[:ota_hotel_avail_rs]
+          result = results.to_hash[:ota_hotel_avail_rs][:availability_options]
           raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
         end
       else
