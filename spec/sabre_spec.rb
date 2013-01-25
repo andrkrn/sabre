@@ -90,7 +90,7 @@ describe Sabre do
 
     # Works with 0040713 
     it "should return a hotels description response", :vcr, record: :new_episodes do
-      hotel = Sabre::Hotel.profile(@session,'0031653',Time.now+172800, Time.now+432000, '1')
+      hotel = Sabre::Hotel.profile(@session,'0006674',Time.now+172800, Time.now+432000, '1')
       hotel.latitude.should_not be_nil
     end
 

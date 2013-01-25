@@ -279,14 +279,14 @@ module Sabre
               code = rr[:@iata_characteristic_identification]
               cancel_policy = rr[:additional_info][:cancel_policy] 
               commission = rr[:additional_info][:commission] 
-              commission = commission.blank? ? '0' : commission.gsub('PERCENT COMMISSION','') 
+              commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil 
               cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
               line_number = rr[:@rph]
               if rr[:rates]
                 nightly_rates = Hash.new
-                nightly_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
-                unless nightly_range.nil?
-                  nightly_range.each_with_index do |day,i|
+                visit_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
+                unless visit_range.nil?
+                  visit_range.each_with_index do |day,i|
                     nightly_rates.merge!({"night_#{i}_price" => day[:@amount]})
                   end
                 end
