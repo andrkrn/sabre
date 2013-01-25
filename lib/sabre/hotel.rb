@@ -278,16 +278,26 @@ module Sabre
             room_stay[:room_rates][:room_rate].each do |rr|
               code = rr[:@iata_characteristic_identification]
               cancel_policy = rr[:additional_info][:cancel_policy] 
+              commission = rr[:additional_info][:commission] 
               cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
               line_number = rr[:@rph]
               if rr[:rates]
+                nightly_rates = Hash.new
+                nightly_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
+                unless nightly_range.nil?
+                  nightly_range.each_with_index do |day,i|
+                    nightly_rates.merge!({"night_#{i}_price" => day[:@amount]})
+                  end
+                end
                 tax, total = tax_rate(rr)
                 rates << {
                   description: rate_description(rr),
                   code: code,
+                  commission: commission.gsub('PERCENT COMMISSION','').strip,
                   cancel_code: cancel_code,
                   line_number: line_number,
                   amount: rr[:rates][:rate][:@amount],
+                  nightly_prices: nightly_rates,
                   currency: rr[:rates][:rate][:@currency_code],
                   taxes: tax,
                   total_pricing: total
