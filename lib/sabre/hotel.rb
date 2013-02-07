@@ -3,7 +3,7 @@ module Sabre
     attr_accessor :area_id, :name, :address, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code
 
     def initialize(basic_info)
-      @area_id = basic_info[:@area_id] 
+      @area_id = basic_info[:@area_id]
       @name = basic_info[:@hotel_name].titleize
       if basic_info[:address][:tpa_extensions]
         @address = basic_info[:address][:tpa_extensions][:address_line].compact
@@ -34,22 +34,22 @@ module Sabre
             #'AdditionalAvail' => '',
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
-               'Criterion' => { 
+               'Criterion' => {
                  'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
-                   'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude }, 
+                   'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude },
                    'RefPoint' => { 'Sort' => 'true', 'GeoCode' => 'true' },
-                 } 
+                 }
                }
             },
             'RatePlanCandidates' => {
               'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
             },
-            'TimeSpan' => '', 
-            :attributes! => { 
-              'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
+            'TimeSpan' => '',
+            :attributes! => {
+              'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
               'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
               'HotelSearchCriteria' => { 'NumProperties' => num_properties },
-              'GuestCounts' => { 'Count' => guest_count }#,  
+              'GuestCounts' => { 'Count' => guest_count }#,
               #'AdditionalAvail' => { 'Ind' => 'true' }
             }
           }
@@ -68,16 +68,16 @@ module Sabre
           'AvailRequestSegment' => {
               'GuestCounts' => '',
               'HotelSearchCriteria' => {
-                'Criterion' => { 
+                'Criterion' => {
                   'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', :attributes! => {
-                    'HotelRef' => { 'HotelCityCode' => iata_city_code } 
+                    'HotelRef' => { 'HotelCityCode' => iata_city_code }
                   } }
-              }, 
-              'TimeSpan' => '', 
-              :attributes! => { 
-                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
-                'HotelSearchCriteria' => { 'NumProperties' => 20 }, 
-                'GuestCounts' => { 'Count' => guest_count } 
+              },
+              'TimeSpan' => '',
+              :attributes! => {
+                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
+                'HotelSearchCriteria' => { 'NumProperties' => 20 },
+                'GuestCounts' => { 'Count' => guest_count }
               }
            }
        }
@@ -100,7 +100,7 @@ module Sabre
       end
 	    #result = response.to_hash[:change_aaars]
 	    response.to_hash[:change_aaars]
-	    #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors] 
+	    #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
 	    #return response
     end
 
@@ -111,13 +111,13 @@ module Sabre
 		    soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
 		    soap.body = {
           'AvailRequestSegment' => {
-            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }} 
+            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }}
             }
           }
 	    	}
 	    end
 	    result = response.to_hash[:hotel_rate_description_rs]
-	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors] 
+	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
 	    return response
     end
 
@@ -130,24 +130,24 @@ module Sabre
           'AvailRequestSegment' => {
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
-              'Criterion' => { 
+              'Criterion' => {
                 'HotelRef' => '', :attributes! => {
-                  'HotelRef' => { 'HotelCode' => hotel_id } 
+                  'HotelRef' => { 'HotelCode' => hotel_id }
                 } }
-            }, 
+            },
             #'POS' => Sabre.pos,
-            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }} 
+            'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }}
             },
             'TimeSpan' => '',
-            :attributes! => { 
-              'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') }, 
-              'GuestCounts' => { 'Count' => guest_count } 
+            :attributes! => {
+              'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') },
+              'GuestCounts' => { 'Count' => guest_count }
             }
           }
 	    	}
 	    end
 	    result = response.to_hash[:hotel_rate_description_rs]
-	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors] 
+	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
 	    return response
     end
 
@@ -164,16 +164,16 @@ module Sabre
                       'HotelRef' => { 'HotelCode' => hotel_id }
                     } }
                },
-              'TimeSpan' => '', 
-              :attributes! => { 
-                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') }, 
-                'GuestCounts' => { 'Count' => guest_count } 
+              'TimeSpan' => '',
+              :attributes! => {
+                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
+                'GuestCounts' => { 'Count' => guest_count }
               }
             }
 	    	}
 	    end
 	    result = response.to_hash[:hotel_property_description_rs]
-	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors] 
+	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
 	    return construct_full_response_hash(response)
     end
 
@@ -193,7 +193,7 @@ module Sabre
 	    	}
 	    end
 	    result = response.to_hash[:hotel_property_description_rs]
-	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors] 
+	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
 	    return construct_full_response_hash(response)
     end
 
@@ -237,12 +237,12 @@ module Sabre
                   if room_rate.is_a? Hash
                     cp = room_rate[:additional_info][:cancel_policy]
                     hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                    hotel.rate_level_code = room_rate[:@rate_level_code] 
+                    hotel.rate_level_code = room_rate[:@rate_level_code]
                   end
                 end
               end
 
-              hotels << hotel 
+              hotels << hotel
             end
           else
             result = results.to_hash[:ota_hotel_avail_rs]
@@ -259,7 +259,6 @@ module Sabre
     def self.construct_full_response_hash(result)
       hotel = nil
       response = result.to_hash[:hotel_property_description_rs]
-      #puts "Sabre full response hash is #{response}"
       if response[:errors].nil?
         room_stay = response[:room_stay]
         #puts "Room stay is #{room_stay}"
@@ -280,9 +279,9 @@ module Sabre
           if room_stay[:room_rates][:room_rate]
             room_stay[:room_rates][:room_rate].each do |rr|
               code = rr[:@iata_characteristic_identification]
-              cancel_policy = rr[:additional_info][:cancel_policy] 
-              commission = rr[:additional_info][:commission] 
-              commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil 
+              cancel_policy = rr[:additional_info][:cancel_policy]
+              commission = rr[:additional_info][:commission]
+              commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil
               cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
               line_number = rr[:@rph]
               if rr[:rates]
@@ -290,7 +289,9 @@ module Sabre
                 visit_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
                 unless visit_range.nil?
                   visit_range.each_with_index do |day,i|
-                    nightly_rates.merge!({"night_#{i}_price" => day[:@amount]})
+                    d = Date.parse(day[:@effective_date])
+                    d += 1.year if d < Date.today
+                    nightly_rates.merge!({d.strftime('%a %B %d, %Y') => day[:@amount]})
                   end
                 end
                 tax, total = tax_rate(rr)
@@ -361,7 +362,7 @@ module Sabre
 
         hotel.property_types = prop_info[:property_type_info].map do |key, val|
           key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
-        end.compact 
+        end.compact
       else
         raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
       end
@@ -390,9 +391,9 @@ module Sabre
 
     def self.room_stay_candidates(number_of_guests)
       {
-        'RoomStayCandidate' => { 
-        } 
+        'RoomStayCandidate' => {
+        }
       }
-    end    
+    end
   end
 end
