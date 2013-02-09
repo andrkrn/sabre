@@ -105,14 +105,16 @@ module Sabre
         #return response
       end
 
-      def self.rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)
+      def self.rate_details(session, hotel_id, check_in, check_out, guest_count, line_number, contract_rate_plans = [])
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
           soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
           soap.body = {
             'AvailRequestSegment' => {
-              'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }}
+              'RatePlanCandidates' => {
+                'ContractNegotiatedRateCode' => contract_rate_plans,
+                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }}
               }
             }
           }
@@ -122,7 +124,7 @@ module Sabre
         return response
       end
 
-      def self.independent_rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)
+      def self.independent_rate_details(session, hotel_id, check_in, check_out, guest_count, line_number, contract_rate_plans = [])
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
@@ -137,7 +139,9 @@ module Sabre
                   } }
               },
               #'POS' => Sabre.pos,
-              'RatePlanCandidates' => { 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }}
+              'RatePlanCandidates' => {
+                'ContractNegotiatedRateCode' => contract_rate_plans,
+                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }}
               },
               'TimeSpan' => '',
               :attributes! => {

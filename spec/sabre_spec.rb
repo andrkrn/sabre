@@ -19,7 +19,7 @@ describe Sabre do
   end
 
   context "SOAP Sabre 1.0 Requests" do
-    before(:each) do 
+    before(:each) do
       #Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       #endpoint_url: https://webservices.sabre.com/websvc
@@ -46,7 +46,7 @@ describe Sabre do
   end
 
   context "SOAP Requests" do
-    before(:each) do 
+    before(:each) do
       #Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       #Sabre.wsdl_url = 'http://wsdl-crt.cert.sabre.com/wsdl/tpfc/' # 2.0
       Sabre.wsdl_url = 'http://webservices.sabre.com/wsdl/tpfc/' # 2.0
@@ -68,18 +68,19 @@ describe Sabre do
     end
 
     it "should create a travel itinerary" do #, :vcr, record: :new_episodes do
-      response = Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')  
+      response = Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       response.to_hash.should include(:travel_itinerary_add_info_rs)
     end
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
-      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1') 
+      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1')
       hotels.first.latitude.should_not be_nil
       hotels.size.should > 0
     end
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
-      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 6.days), (Date.today+8.days),'40.0375','-107.9131',2) 
+      Sabre::Hotel.change_aaa(@session)
+      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 6.days), (Date.today+8.days),'40.0375','-107.9131',2,[],['THH'])
       hotels.should be_empty
     end
 
@@ -90,12 +91,13 @@ describe Sabre do
     end
 
     it "should return a list of errors when an invalid lat/lng request is sent", :vcr, record: :new_episodes do
-      expect { Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),nil,nil,'1')}.to raise_error 
+      expect { Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),nil,nil,'1')}.to raise_error
     end
 
-    # Works with 0040713 
+    # Works with 0040713
     it "should return a hotels description response", :vcr, record: :new_episodes do
-      hotel = Sabre::Hotel.profile(@session,'0006674',Time.now+172800, Time.now+432000, '1')
+      Sabre::Hotel.change_aaa(@session)
+      hotel = Sabre::Hotel.profile(@session,'0006674',Time.now+172800, Time.now+432000, '1',['THH'])
       hotel.latitude.should_not be_nil
     end
 
@@ -105,7 +107,7 @@ describe Sabre do
       Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
       Sabre::Reservation.book(@session,'ES','0040713','1','1','1','179.00','USD','TEST','AX','378282246310005',(Time.now + 6000000),Time.now+172800, Time.now+432000,'123').to_hash.should include(:ota_hotel_res_rs)
     end
- 
+
     it "should fail booking a hotel reservation", :vcr, record: :new_episodes do
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
