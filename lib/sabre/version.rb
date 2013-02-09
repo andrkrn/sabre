@@ -1,3 +1,3 @@
 module Sabre
-  VERSION = "0.0.11"
+  VERSION = "0.1.1"
 end
