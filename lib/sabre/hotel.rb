@@ -1,6 +1,6 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code
+    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code
 
     def initialize(basic_info)
       @area_id = basic_info[:@area_id]
@@ -10,6 +10,7 @@ module Sabre
       else
         @address = basic_info[:address][:address_line].compact
       end
+      @country = basic_info[:address][:country_code]
       @phone = basic_info[:contact_numbers][:contact_number][:@phone]
       @fax = basic_info[:contact_numbers][:contact_number][:@fax]
       @chain_code = basic_info[:@chain_code]
