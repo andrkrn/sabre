@@ -355,7 +355,7 @@ module Sabre
           hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
           hotel.location_description = details[:location][:text]
           hotel.rooms_available = details[:rooms][:text]
-          hotel.cancellation = details[:cancellation][:text]
+          hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
           hotel.services = details[:services][:text]
           hotel.policies = details[:policies][:text]
           hotel.attractions = details[:attractions][:text]
