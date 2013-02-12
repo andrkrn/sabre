@@ -273,14 +273,16 @@ module Sabre
       if response[:errors].nil?
         room_stay = response[:room_stay]
         #puts "Room stay is #{room_stay}"
-        prop_info = room_stay[:basic_property_info]
+        if room_stay[:basic_property_info]
+          prop_info = room_stay[:basic_property_info]
 
-        hotel = Hotel.new(prop_info)
-        cards = []
-        room_stay = response[:room_stay]
-        if room_stay[:rate_plans]
-          room_stay[:rate_plans][:rate_plan][:guarantee][:guarantees_accepted][:guarantee_accepted][:payment_card].each do |cc|
-            cards << cc[:@card_type]
+          hotel = Hotel.new(prop_info)
+          cards = []
+          room_stay = response[:room_stay]
+          if room_stay[:rate_plans]
+            room_stay[:rate_plans][:rate_plan][:guarantee][:guarantees_accepted][:guarantee_accepted][:payment_card].each do |cc|
+              cards << cc[:@card_type]
+            end
           end
         end
 
