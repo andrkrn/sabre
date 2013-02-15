@@ -361,8 +361,16 @@ module Sabre
     def self.room(response)
       stay = response[:hotel_rate_description_rs][:room_stay]
       cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].join(" ") 
-      room_rates = stay[:room_rates]
-      return room_rates, cancellation
+      room_rate = stay[:room_rates][:room_rate]
+      rates = []
+      if room_rate.class.name == 'Array'
+        room_rate.each do |rr|
+          rates = room_rate_builder(rr, rates)
+        end
+      else
+        rates = room_rate_builder(room_rate, rates)
+      end
+      return rates, cancellation
     end
 
     def self.rate_description(rate_result)
