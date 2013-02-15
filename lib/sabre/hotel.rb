@@ -290,37 +290,13 @@ module Sabre
         line_number = nil
         if room_stay[:room_rates]
           if room_stay[:room_rates][:room_rate]
-            room_stay[:room_rates][:room_rate].each do |rr|
-              code = rr[:@iata_characteristic_identification]
-              cancel_policy = rr[:additional_info][:cancel_policy]
-              commission = rr[:additional_info][:commission]
-              commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil
-              cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
-              line_number = rr[:@rph]
-              if rr[:rates]
-                nightly_rates = Hash.new
-                visit_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
-                unless visit_range.nil?
-                  visit_range.each_with_index do |day,i|
-                    d = Date.parse(day[:@effective_date])
-                    d += 1.year if d < Date.today
-                    nightly_rates.merge!({d.strftime('%a %B %d, %Y') => day[:@amount]})
-                  end
-                end
-                tax, total = tax_rate(rr)
-                rates << {
-                  description: rate_description(rr),
-                  code: code,
-                  commission: commission,
-                  cancel_code: cancel_code,
-                  line_number: line_number,
-                  amount: rr[:rates][:rate][:@amount],
-                  nightly_prices: nightly_rates,
-                  currency: rr[:rates][:rate][:@currency_code],
-                  taxes: tax,
-                  total_pricing: total
-                }
+            room_rate = room_stay[:room_rates][:room_rate]
+            if room_rate.class.name == 'Array'
+              room_rate.each do |rr|
+                rates = room_rate_builder(rr, rates)
               end
+            else
+              rates = room_rate_builder(room_rate, rates)
             end
           elsif room_stay[:room_plans]
             room_stay[:room_plans][:room_plan].each do |rr|
@@ -414,6 +390,40 @@ module Sabre
         'RoomStayCandidate' => {
         }
       }
+    end
+
+    def self.room_rate_builder(rr, rates)
+      code = rr[:@iata_characteristic_identification]
+      cancel_policy = rr[:additional_info][:cancel_policy]
+      commission = rr[:additional_info][:commission]
+      commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil
+      cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
+      line_number = rr[:@rph]
+      if rr[:rates]
+        nightly_rates = Hash.new
+        visit_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
+        unless visit_range.nil?
+          visit_range.each_with_index do |day,i|
+            d = Date.parse(day[:@effective_date])
+            d += 1.year if d < Date.today
+            nightly_rates.merge!({d.strftime('%a %B %d, %Y') => day[:@amount]})
+          end
+        end
+        tax, total = tax_rate(rr)
+        rates << {
+          description: rate_description(rr),
+          code: code,
+          commission: commission,
+          cancel_code: cancel_code,
+          line_number: line_number,
+          amount: rr[:rates][:rate][:@amount],
+          nightly_prices: nightly_rates,
+          currency: rr[:rates][:rate][:@currency_code],
+          taxes: tax,
+          total_pricing: total
+        }
+      end
+      return rates
     end
   end
 end
