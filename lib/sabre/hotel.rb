@@ -49,7 +49,7 @@ module Sabre
               'TimeSpan' => '',
               :attributes! => {
                 'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
-                'RatePlanCandidates' => { 'SuppressRackRate' => 'false' },
+                'RatePlanCandidates' => { 'PromotionalSpot' => 'L', 'RateAssured' => 'true','SuppressRackRate' => 'false' },
                 'HotelSearchCriteria' => { 'NumProperties' => num_properties },
                 'GuestCounts' => { 'Count' => guest_count }#,
                 #'AdditionalAvail' => { 'Ind' => 'true' }
@@ -106,7 +106,7 @@ module Sabre
         #return response
       end
 
-      def self.rate_details(session, hotel_id, check_in, check_out, guest_count, line_number, contract_rate_plans = [])
+      def self.rate_details(session, line_number, contract_rate_plans = [])
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
@@ -122,7 +122,7 @@ module Sabre
         end
         result = response.to_hash[:hotel_rate_description_rs]
         raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-        return response
+        return room(response)
       end
 
       def self.independent_rate_details(session, hotel_id, check_in, check_out, guest_count, line_number, contract_rate_plans = [])
@@ -380,6 +380,13 @@ module Sabre
         raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
       end
       return hotel
+    end
+
+    def self.room(response)
+      stay = response[:hotel_rate_description_rs][:room_stay]
+      cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].join(" ") 
+      room_rates = stay[:room_rates]
+      return room_rates, cancellation
     end
 
     def self.rate_description(rate_result)

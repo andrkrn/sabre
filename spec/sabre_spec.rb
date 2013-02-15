@@ -101,6 +101,12 @@ describe Sabre do
       hotel.latitude.should_not be_nil
     end
 
+    it "should return the rate details for a hotel", :vcr, record: :new_episodes do
+      Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
+      room_stay, cancellation = Sabre::Hotel.rate_details(@session,'1')
+      cancellation.should_not be_nil
+    end
+
     # This needs to be a Long booking
     it "should book a hotel reservation", :vcr, record: :new_episodes do
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
