@@ -102,8 +102,9 @@ describe Sabre do
     end
 
     it "should return the rate details for a hotel", :vcr, record: :new_episodes do
-      Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
-      room_stay, cancellation = Sabre::Hotel.rate_details(@session,'1')
+      hotel = Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
+      rate = hotel.rates.sample
+      room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:code])
       cancellation.should_not be_nil
     end
 

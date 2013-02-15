@@ -106,7 +106,7 @@ module Sabre
         #return response
       end
 
-      def self.rate_details(session, line_number, contract_rate_plans = [])
+      def self.rate_details(session, code, contract_rate_plans = [])
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
@@ -115,7 +115,7 @@ module Sabre
             'AvailRequestSegment' => {
               'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number.to_s }}
+                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RateCode' => code }}
               }
             }
           }
