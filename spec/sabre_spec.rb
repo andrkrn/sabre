@@ -110,17 +110,21 @@ describe Sabre do
 
     # This needs to be a Long booking
     it "should book a hotel reservation", :vcr, record: :new_episodes do
+      check_in = Date.today + 25.days
+      check_out = check_in + 2.days
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
-      hotel = Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
+      hotel = Sabre::Hotel.profile(@session,'0040713',check_in, check_out, '1')
       rate = hotel.rates.sample
-      Sabre::Reservation.book(@session,'ES','0040713','1','1',rate[:code],'179.00','USD','TEST','AX','378282246310005',(Time.now + 6000000),Time.now+172800, Time.now+432000,'123').to_hash.should include(:ota_hotel_res_rs)
+      Sabre::Reservation.book(@session,'ES','0040713','1','1',rate[:code],'179.00','USD','TEST','AX','378282246310005',(Time.now + 6000000),check_in, check_out,'123').to_hash.should include(:ota_hotel_res_rs)
     end
 
     it "should fail booking a hotel reservation", :vcr, record: :new_episodes do
+      check_in = Date.today + 25.days
+      check_out = check_in + 2.days
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
-      hotel = Sabre::Hotel.profile(@session,'0040713',Time.now+172800, Time.now+432000, '1')
+      hotel = Sabre::Hotel.profile(@session,'0040713',check_in, check_out, '1')
       rate = hotel.rates.sample
-      res = Sabre::Reservation.book(@session,'ES','0040713','1','1',rate[:code],'179.00','USD','TEST','VI','4111',(Time.now + 6000000),Time.now+172800, Time.now+432000, '123').to_hash.should include(:ota_hotel_res_rs)
+      res = Sabre::Reservation.book(@session,'ES','0040713','1','1',rate[:code],'179.00','USD','TEST','VI','4111',(Time.now + 6000000),check_in, check_out, '123').to_hash.should include(:ota_hotel_res_rs)
       res.should raise_exception
     end
 

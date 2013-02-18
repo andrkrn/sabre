@@ -25,6 +25,10 @@ module Sabre
     end
 
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], contract_rate_plans = [], num_properties = 30)
+      rate_plan_codes = []
+      unless contract_rate_plans.empty?
+        rate_plan_codes = ['GOV','N']
+      end
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
       client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
       response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
@@ -44,8 +48,7 @@ module Sabre
             },
             'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => 'GOV',
-                'RatePlanCode' => 'N',
+                'RatePlanCode' => rate_plan_codes,
                 'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
               },
               'TimeSpan' => '',
@@ -108,7 +111,7 @@ module Sabre
         #return response
       end
 
-      def self.rate_details(session, code, contract_rate_plans = [])
+      def self.rate_details(session, code)
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
@@ -116,9 +119,6 @@ module Sabre
           soap.body = {
             'AvailRequestSegment' => {
               'RatePlanCandidates' => {
-                'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => 'GOV',
-                'RatePlanCode' => 'N',
                 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RateCode' => code }}
               }
             }
@@ -129,7 +129,7 @@ module Sabre
         return room(response)
       end
 
-      def self.independent_rate_details(session, hotel_id, check_in, check_out, guest_count, line_number, contract_rate_plans = [])
+      def self.independent_rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
@@ -145,9 +145,6 @@ module Sabre
               },
               #'POS' => Sabre.pos,
               'RatePlanCandidates' => {
-                'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => 'GOV',
-                'RatePlanCode' => 'N',
                 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }}
               },
               'TimeSpan' => '',
@@ -179,9 +176,7 @@ module Sabre
                   }
                },
               'RatePlanCandidates' => {
-                'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => 'GOV',
-                'RatePlanCode' => 'N',
+                'ContractNegotiatedRateCode' => contract_rate_plans
               },
               'TimeSpan' => '',
               :attributes! => {
