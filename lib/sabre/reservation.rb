@@ -7,7 +7,7 @@ module Sabre
         soap.header = session.header('Hotel Booking','sabreXML','OTA_HotelResLLSRQ')
         soap.body = {
           'Hotel' => {
-            'BasicPropertyInfo' => '', #{ 'ConfirmationNumber' => confirmation_number },
+            'BasicPropertyInfo' => { 'ConfirmationNumber' => confirmation_number },
             'Guarantee' => {
               'CC_Info' => {
                 'PaymentCard' => '',
