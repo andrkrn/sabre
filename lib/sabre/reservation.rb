@@ -1,6 +1,6 @@
 module Sabre
   class Reservation
-    def self.book(session, chain_code, hotel_code, unit_count, guest_count, line_number, amount, currency, name, card_code, card_number, expire_date, check_in, check_out, confirmation_number )
+    def self.book(session, chain_code, hotel_code, unit_count, guest_count, rate_code, amount, currency, name, card_code, card_number, expire_date, check_in, check_out, confirmation_number )
       client = Sabre.client('OTA_HotelResLLS2.0.0RQ.wsdl')
       response = client.request('OTA_HotelResRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
@@ -23,11 +23,11 @@ module Sabre
             'RoomType' => '',
             #'TimeSpan' => '',
             :attributes! => { 
-              'BasicPropertyInfo' => { 'RPH' => line_number }, 
+              'BasicPropertyInfo' => { 'ChainCode' => chain_code, 'HotelCode' => hotel_code }, 
             #  'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') }, 
               'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
             #  'GuestCounts' => { 'Count' => guest_count }, 
-              'RoomType' => { 'NumberOfUnits' => unit_count }
+              'RoomType' => { 'NumberOfUnits' => unit_count, 'RoomTypeCode' => rate_code }
             }
           }
       }
