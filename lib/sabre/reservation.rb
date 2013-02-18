@@ -24,7 +24,7 @@ module Sabre
             'TimeSpan' => '',
             :attributes! => { 
               'BasicPropertyInfo' => { 'ChainCode' => chain_code, 'HotelCode' => hotel_code }, 
-              'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
+              'Guarantee' => { 'Type' => 'GDPST' }, # Took out GDPST
               'GuestCounts' => { 'Count' => guest_count }, 
               'RoomType' => { 'NumberOfUnits' => unit_count, 'RoomTypeCode' => rate_code },
               'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') } 
