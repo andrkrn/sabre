@@ -117,6 +117,8 @@ module Sabre
             'AvailRequestSegment' => {
               'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
+                'RatePlanCode' => 'GOV',
+                'RatePlanCode' => 'N',
                 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RateCode' => code }}
               }
             }
@@ -144,6 +146,8 @@ module Sabre
               #'POS' => Sabre.pos,
               'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
+                'RatePlanCode' => 'GOV',
+                'RatePlanCode' => 'N',
                 'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }}
               },
               'TimeSpan' => '',
@@ -176,6 +180,8 @@ module Sabre
                },
               'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
+                'RatePlanCode' => 'GOV',
+                'RatePlanCode' => 'N',
               },
               'TimeSpan' => '',
               :attributes! => {
