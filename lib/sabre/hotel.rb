@@ -48,7 +48,7 @@ module Sabre
             },
             'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => rate_plan_codes,
+                #'RatePlanCode' => rate_plan_codes,
                 'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
               },
               'TimeSpan' => '',
