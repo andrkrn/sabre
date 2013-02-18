@@ -44,6 +44,8 @@ module Sabre
             },
             'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
+                'RatePlanCode' => 'GOV',
+                'RatePlanCode' => 'N',
                 'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
               },
               'TimeSpan' => '',
@@ -360,7 +362,7 @@ module Sabre
 
     def self.room(response)
       stay = response[:hotel_rate_description_rs][:room_stay]
-      cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].join(" ") 
+      cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].join(" ")
       room_rate = stay[:room_rates][:room_rate]
       rates = []
       if room_rate.class.name == 'Array'
