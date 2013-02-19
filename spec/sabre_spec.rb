@@ -117,7 +117,11 @@ describe Sabre do
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0040713',check_in, check_out, '1')
       rate = hotel.rates.sample
-      Sabre::Reservation.book(@session,'ES','0040713','1','1',rate[:code],'179.00','USD','TEST','AX','378282246310005',(Time.now + 6000000),check_in, check_out,'123').to_hash.should include(:ota_hotel_res_rs)
+      rates, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
+      rate = rates.first
+      booking = Sabre::Reservation.book(@session,rate[:line_number].to_i,'1','1','179.00','USD','TEST','AX','378282246310005',(Time.now + 6000000),'123')
+      booking.to_hash.should include(:ota_hotel_res_rs)
+      booking.to_hash[:ota_hotel_res_rs]
     end
 
     it "should fail booking a hotel reservation", :vcr, record: :new_episodes do
@@ -126,7 +130,9 @@ describe Sabre do
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0040713',check_in, check_out, '1')
       rate = hotel.rates.sample
-      res = Sabre::Reservation.book(@session,'ES','0040713','1','1',rate[:code],'179.00','USD','TEST','VI','4111',(Time.now + 6000000),check_in, check_out, '123').to_hash.should include(:ota_hotel_res_rs)
+      rates, cancellation = Sabre::Hotel.rate_details(@session,rate[:code])
+      rate = rates.first
+      res = Sabre::Reservation.book(@session,rate[:line_number].to_i,'1','2','179.00','USD','TEST','VI','4111',(Time.now + 6000000),'123').to_hash.should include(:ota_hotel_res_rs)
       res.should raise_exception
     end
 

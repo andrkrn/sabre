@@ -1,6 +1,6 @@
 module Sabre
   class Reservation
-    def self.book(session, chain_code, hotel_code, unit_count, guest_count, rate_code, amount, currency, name, card_code, card_number, expire_date, check_in, check_out, confirmation_number )
+    def self.book(session, line_number, unit_count, guest_count, amount, currency, name, card_code, card_number, expire_date, confirmation_number )
       client = Sabre.client('OTA_HotelResLLS2.0.0RQ.wsdl')
       response = client.request('OTA_HotelResRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
@@ -13,21 +13,21 @@ module Sabre
                 'PaymentCard' => '',
                 'PersonName' => {
                   'Surname' => name
-                }, 
-                :attributes! => { 'PaymentCard' => { 'Code' => card_code, 'ExpireDate' => expire_date.strftime('%Y-%m'), 'Number' => card_number } } 
+                },
+                :attributes! => { 'PaymentCard' => { 'Code' => card_code, 'ExpireDate' => expire_date.strftime('%Y-%m'), 'Number' => card_number } }
 
               }
             },
             'GuestCounts' => '',
             #'POS' => Sabre.pos,
             'RoomType' => '',
-            'TimeSpan' => '',
-            :attributes! => { 
-              'BasicPropertyInfo' => { 'ChainCode' => chain_code, 'HotelCode' => hotel_code }, 
+            #'TimeSpan' => '',
+            :attributes! => {
+              'BasicPropertyInfo' => { 'RPH' => line_number },
               'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
-              'GuestCounts' => { 'Count' => guest_count }, 
-              'RoomType' => { 'NumberOfUnits' => unit_count, 'RoomTypeCode' => rate_code },
-              'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') } 
+              'GuestCounts' => { 'Count' => guest_count },
+              'RoomType' => { 'NumberOfUnits' => unit_count }
+              #'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') }
             }
           }
       }
@@ -43,11 +43,11 @@ module Sabre
         Sabre.namespaces(soap)
         soap.header = session.header('End Transaction','sabreXML','EndTransactionLLSRQ')
         soap.body = {
-          'EndTransaction' => '',#{ 'Email' => '',#{ 'Itinerary' => { 'PDF' => '', :attributes! => { 'PDF' => { 'Ind' => 'true' } } }, 
+          'EndTransaction' => '',#{ 'Email' => '',#{ 'Itinerary' => { 'PDF' => '', :attributes! => { 'PDF' => { 'Ind' => 'true' } } },
                                              #:attributes! => { 'Itinerary' => { 'Ind' => 'true' } }
-                                             #}, 
-          #                        :attributes! => {'Email' => {'Ind' => 'true'} } 
-          #}, 
+                                             #},
+          #                        :attributes! => {'Email' => {'Ind' => 'true'} }
+          #},
           'Source' => '',
           :attributes! => { 'EndTransaction' => { 'Ind' => 'true' }, 'Source' => { 'ReceivedFrom' => 'SWS TEST' } }
         }
@@ -61,10 +61,10 @@ module Sabre
       soap.header = session.header('Cancel Reservation','sabreXML','OTA_CancelLLSRQ')
       soap.body = {
           'POS' => Sabre.pos,
-          'TPA_Extensions' => { 
-            'SegmentCancel' => { 
-              'Segment' => '', :attributes! => { 'Segment' => { 'Number' => reservation_id } } 
-            }, :attributes! => {'SegmentCancel' => {'Type' => 'Hotel'}} 
+          'TPA_Extensions' => {
+            'SegmentCancel' => {
+              'Segment' => '', :attributes! => { 'Segment' => { 'Number' => reservation_id } }
+            }, :attributes! => {'SegmentCancel' => {'Type' => 'Hotel'}}
           }
 	    }
       end

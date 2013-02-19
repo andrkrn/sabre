@@ -111,7 +111,7 @@ module Sabre
         #return response
       end
 
-      def self.rate_details(session, code)
+      def self.rate_details(session, line_number)
         client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
         response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
           Sabre.namespaces(soap)
@@ -119,7 +119,7 @@ module Sabre
           soap.body = {
             'AvailRequestSegment' => {
               'RatePlanCandidates' => {
-                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RateCode' => code }}
+                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number }}
               }
             }
           }
@@ -364,6 +364,7 @@ module Sabre
     def self.room(response)
       stay = response[:hotel_rate_description_rs][:room_stay]
       cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].join(" ")
+      line_number = stay[:basic_property_info][:@rph]
       room_rate = stay[:room_rates][:room_rate]
       rates = []
       if room_rate.class.name == 'Array'
@@ -373,6 +374,7 @@ module Sabre
       else
         rates = room_rate_builder(room_rate, rates)
       end
+      rates = rates.each{|r|r[:line_number] = line_number}
       return rates, cancellation
     end
 
