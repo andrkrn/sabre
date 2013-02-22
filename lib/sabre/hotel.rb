@@ -217,7 +217,7 @@ module Sabre
       response = results.to_hash[:ota_hotel_avail_rs]
       unless response[:application_results][:error]
         if response[:errors].nil?
-          options = results.to_hash[:ota_hotel_avail_rs][:availability_options]
+          options = response[:availability_options]
 
           if options
             options[:availability_option].each do |p|
@@ -259,12 +259,10 @@ module Sabre
               hotels << hotel
             end
           else
-            result = results.to_hash[:ota_hotel_avail_rs]
-            raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
+            raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
           end
         else
-          result = results.to_hash[:ota_hotel_avail_rs]
-          raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
+          raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
         end
       end
       return hotels
