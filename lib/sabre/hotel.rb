@@ -382,7 +382,8 @@ module Sabre
       line_number = rr[:@rph]
       if rr[:rates]
         nightly_rates = Hash.new
-        visit_range = rr[:rates][:rate][:hotel_total_pricing][:rate_range]
+        hotel_rate = rr[:rates][:rate]
+        visit_range = hotel_rate[:hotel_total_pricing][:rate_range]
         unless visit_range.nil?
           visit_range.each_with_index do |day,i|
             d = Date.parse(day[:@effective_date])
