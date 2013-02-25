@@ -97,9 +97,10 @@ describe Sabre do
     end
 
     # Works with 0040713
+    # 0112273 is Best Western Denver
     it "should return a hotels description response", :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      hotel = Sabre::Hotel.profile(@session,'0006674',Time.now+172800, Time.now+432000, '1',['THH'])
+      hotel = Sabre::Hotel.profile(@session,'0112273',Time.now+172800, Time.now+432000, '1',['THH'])
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end

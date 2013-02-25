@@ -24,6 +24,7 @@ module Sabre
       end
     end
 
+
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], contract_rate_plans = [], num_properties = 30)
       rate_plan_codes = []
       unless contract_rate_plans.empty?
@@ -61,129 +62,98 @@ module Sabre
               }
             }
           }
-        end
-        construct_response_hash(response)
       end
+      construct_response_hash(response)
+    end
 
-      def self.find_by_iata(session, start_time, end_time, iata_city_code, guest_count, amenities = [])
-        raise SabreException::SearchError, 'Missing IATA City Code - No search results found' if iata_city_code.nil?
-        client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
-        response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
-          Sabre.namespaces(soap)
-          soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
-          soap.body = {
-            'AvailRequestSegment' => {
-                'GuestCounts' => '',
-                'HotelSearchCriteria' => {
-                  'Criterion' => {
-                    'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', :attributes! => {
-                      'HotelRef' => { 'HotelCityCode' => iata_city_code }
-                    } }
-                },
-                'TimeSpan' => '',
-                :attributes! => {
-                  'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
-                  'HotelSearchCriteria' => { 'NumProperties' => 20 },
-                  'GuestCounts' => { 'Count' => guest_count }
-                }
-             }
-         }
-        end
-        construct_response_hash(response)
-      end
-
-      def self.change_aaa(session)
-        client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl',1)
-        response = client.request('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
-          Sabre.namespaces(soap)
-          soap.header = session.header('Change AAA','sabreXML','ChangeAAALLSRQ')
-          soap.body = {
-            'POS' => Sabre.pos,
-            'AAA' => '',
-            :attributes! => {
-              'AAA' => { 'PseudoCityCode' => Sabre.pcc }
-            }
-          }
-        end
-        #result = response.to_hash[:change_aaars]
-        response.to_hash[:change_aaars]
-        #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-        #return response
-      end
-
-      def self.rate_details(session, line_number)
-        client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
-        response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
-          Sabre.namespaces(soap)
-          soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
-          soap.body = {
-            'AvailRequestSegment' => {
-              'RatePlanCandidates' => {
-                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number }}
-              }
-            }
-          }
-        end
-        result = response.to_hash[:hotel_rate_description_rs]
-        raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-        return room(response)
-      end
-
-      def self.independent_rate_details(session, hotel_id, check_in, check_out, guest_count, line_number)
-        client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
-        response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
-          Sabre.namespaces(soap)
-          soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
-          soap.body = {
-            'AvailRequestSegment' => {
+    def self.find_by_iata(session, start_time, end_time, iata_city_code, guest_count, amenities = [])
+      raise SabreException::SearchError, 'Missing IATA City Code - No search results found' if iata_city_code.nil?
+      client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
+      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
+        soap.body = {
+          'AvailRequestSegment' => {
               'GuestCounts' => '',
               'HotelSearchCriteria' => {
                 'Criterion' => {
-                  'HotelRef' => '', :attributes! => {
-                    'HotelRef' => { 'HotelCode' => hotel_id }
+                  'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', :attributes! => {
+                    'HotelRef' => { 'HotelCityCode' => iata_city_code }
                   } }
-              },
-              #'POS' => Sabre.pos,
-              'RatePlanCandidates' => {
-                'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'CurrencyCode' => 'USD', 'DCA_ProductCode' => code }}
-              },
-              'TimeSpan' => '',
-              :attributes! => {
-                'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') },
-                'GuestCounts' => { 'Count' => guest_count }
-              }
-            }
-          }
-        end
-        result = response.to_hash[:hotel_rate_description_rs]
-        raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-        return response
-      end
-
-      def self.profile(session,hotel_id, start_time, end_time, guest_count, contract_rate_plans = [])
-        client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-        response = client.request('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
-          Sabre.namespaces(soap)
-          soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
-          soap.body = {
-            'AvailRequestSegment' => {
-              'GuestCounts' => '',
-              'HotelSearchCriteria' => {
-                  'Criterion' => {
-                    'HotelRef' => '', :attributes! => {
-                      'HotelRef' => { 'HotelCode' => hotel_id }
-                    }
-                  }
-               },
-              'RatePlanCandidates' => {
-                'ContractNegotiatedRateCode' => contract_rate_plans
               },
               'TimeSpan' => '',
               :attributes! => {
                 'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
+                'HotelSearchCriteria' => { 'NumProperties' => 20 },
                 'GuestCounts' => { 'Count' => guest_count }
               }
+           }
+       }
+      end
+      construct_response_hash(response)
+    end
+
+    def self.change_aaa(session)
+      client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl',1)
+      response = client.request('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Change AAA','sabreXML','ChangeAAALLSRQ')
+        soap.body = {
+          'POS' => Sabre.pos,
+          'AAA' => '',
+          :attributes! => {
+            'AAA' => { 'PseudoCityCode' => Sabre.pcc }
+          }
+        }
+      end
+      #result = response.to_hash[:change_aaars]
+      response.to_hash[:change_aaars]
+      #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
+      #return response
+    end
+
+    def self.rate_details(session, line_number)
+      client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
+      response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
+        soap.body = {
+          'AvailRequestSegment' => {
+            'RatePlanCandidates' => {
+              'RatePlanCandidate' => '', :attributes! => { 'RatePlanCandidate' => { 'RPH' => line_number }}
             }
+          }
+        }
+      end
+      result = response.to_hash[:hotel_rate_description_rs]
+      raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
+      return room(response)
+    end
+
+    def self.profile(session,hotel_id, start_time, end_time, guest_count, contract_rate_plans = [])
+      client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
+      response = client.request('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
+        soap.body = {
+          'AvailRequestSegment' => {
+            'GuestCounts' => '',
+            'HotelSearchCriteria' => {
+               'Criterion' => {
+                  'HotelRef' => '', :attributes! => {
+                    'HotelRef' => { 'HotelCode' => hotel_id }
+                  }
+               }
+            },
+            'RatePlanCandidates' => {
+              'ContractNegotiatedRateCode' => contract_rate_plans
+            },
+            'TimeSpan' => '',
+              :attributes! => {
+                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
+                'GuestCounts' => { 'Count' => guest_count }
+            }
+          }
 	    	}
 	    end
 	    result = response.to_hash[:hotel_property_description_rs]
@@ -217,7 +187,7 @@ module Sabre
       response = results.to_hash[:ota_hotel_avail_rs]
       unless response[:application_results][:error]
         if response[:errors].nil?
-          options = results.to_hash[:ota_hotel_avail_rs][:availability_options]
+          options = response[:availability_options]
 
           if options
             options[:availability_option].each do |p|
@@ -259,12 +229,10 @@ module Sabre
               hotels << hotel
             end
           else
-            result = results.to_hash[:ota_hotel_avail_rs]
-            raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
+            raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
           end
         else
-          result = results.to_hash[:ota_hotel_avail_rs]
-          raise SabreException::SearchError, Sabre.error_message(result) if result[:errors]
+          raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
         end
       end
       return hotels
