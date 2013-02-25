@@ -27,6 +27,7 @@ module Sabre
 
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], contract_rate_plans = [], num_properties = 30)
       rate_plan_codes = []
+      amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.empty?
         rate_plan_codes = ['GOV','N']
       end
@@ -41,7 +42,7 @@ module Sabre
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
                'Criterion' => {
-                 'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
+                 'HotelAmenity' => amenities, 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
                    'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude },
                    'RefPoint' => { 'Sort' => 'true', 'GeoCode' => 'true' },
                  }

@@ -76,7 +76,9 @@ describe Sabre do
       st = DateTime.now
       hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1',[],[],20)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
-      hotels.sample.latitude.should_not be_nil
+      hotel = hotels.sample
+      hotel.latitude.should_not be_nil
+      hotels.map(&:cancel_code).should include('06P')
       hotels.size.should > 0
     end
 
