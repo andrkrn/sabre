@@ -334,13 +334,12 @@ module Sabre
         begin
           details = prop_info[:vendor_messages]
           hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-          hotel.location_description = details[:location][:text]
           hotel.rooms_available = details[:rooms][:text]
           hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
+          hotel.location_description = details[:location][:text] if details[:location]
           hotel.services = details[:services][:text]
           hotel.policies = details[:policies][:text]
           hotel.attractions = details[:attractions][:text]
-
         rescue
         end
 
