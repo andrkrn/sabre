@@ -24,7 +24,6 @@ module Sabre
       end
     end
 
-
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], contract_rate_plans = [], num_properties = 30)
       rate_plan_codes = []
       unless contract_rate_plans.empty?
