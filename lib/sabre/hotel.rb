@@ -326,7 +326,6 @@ module Sabre
       else
         raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
       end
-      debugger
       return hotel
     end
 
