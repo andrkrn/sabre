@@ -326,6 +326,7 @@ module Sabre
       else
         raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
       end
+      debugger
       return hotel
     end
 
@@ -386,7 +387,7 @@ module Sabre
         visit_range = hotel_rate[:hotel_total_pricing][:rate_range]
         unless visit_range.nil?
           visit_range.each_with_index do |day,i|
-            d = Date.parse(day[:@effective_date])
+            d = Date.strptime(day[:@effective_date], '%m-%d')
             d += 1.year if d < Date.today
             nightly_rates.merge!({d.strftime('%a %B %d, %Y') => day[:@amount]})
           end

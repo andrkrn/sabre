@@ -112,6 +112,7 @@ describe Sabre do
       hotel = hotels.sample
       hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,Time.now+172800, Time.now+432000, '1')
       rate = hotel.rates.sample
+      rate[:nightly_prices].should_not be_empty
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:code])
       cancellation.should_not be_nil
     end
