@@ -19,7 +19,9 @@ module Sabre
       client = Savon::Client.new(Sabre.cert_wsdl_url)
       response = client.request(:session_create_rq) do
         Sabre.namespaces(soap)
-        soap.header = header('Session','sabreXML','SessionCreateRQ')      
+        #soap.namespaces = Sabre.namespaces
+        #soap.version = 1
+        soap.header = header('Session','sabreXML','SessionCreateRQ')
         soap.body = { 'POS' => { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } } }
       end
       #doc = response.body
@@ -32,7 +34,9 @@ module Sabre
       client = Savon::Client.new(Sabre.cert_wsdl_url)
       client.request(:session_close_rq) do
         Sabre.namespaces(soap)
-        soap.header = header('Session','sabreXML','SessionCloseRQ')      
+        #soap.namespaces = Sabre.namespaces
+        #soap.version = 1
+        soap.header = header('Session','sabreXML','SessionCloseRQ')
         soap.body = { 'POS' => { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } } }
       end
     end
@@ -49,15 +53,15 @@ module Sabre
                      'eb:RefToMessageId' => self.ref_message_id,
                      'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')
                   } }
-      { 'eb:MessageHeader' => msg_header.to_hash, 
-        'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'SOAP-ENV:mustUnderstand' => "1", 'eb:version' => "2.0" } } 
+      { 'eb:MessageHeader' => msg_header.to_hash,
+        'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'SOAP-ENV:mustUnderstand' => "1", 'eb:version' => "2.0" } }
       }
     end
 
     def security
       if self.binary_security_token
         { 'wsse:BinarySecurityToken' => self.binary_security_token, :attributes! => { 'wsse:BinarySecurityToken' => { 'xmlns:wsu' => "http://schemas.xmlsoap.org/ws/2002/12/utility", 'wsu:Id' => 'SabreSecurityToken', 'valueType' => 'String', 'EncodingType' => "wsse:Base64Binary" } } }
-      else 
+      else
         { 'wsse:UsernameToken' => { 'wsse:Username' => self.username, 'wsse:Password' => self.password, 'Organization' => self.ipcc, 'Domain' => 'DEFAULT' } }
       end
     end

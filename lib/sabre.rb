@@ -24,7 +24,7 @@ module Sabre
     #rescue SabreException::SearchError => e
     #  @errors << {:type => e.class.name, :message => Sabre.clean_error_message(e.message)}
     rescue Timeout::Error => e
-      @errors << {:type => e.class.name, :message => "Sabre Travel Network service request failed due to timeout"} 
+      @errors << {:type => e.class.name, :message => "Sabre Travel Network service request failed due to timeout"}
     ensure
       session.close
     end
@@ -43,28 +43,28 @@ module Sabre
 
   def self.request_header(version, timestamp = true)
 #    if timestamp
-      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10', 
-        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
-        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
+      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10',
+        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
+        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         'ReturnHostCommand' => 'true',
-        'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'), 
-        'Version' => version 
+        'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'),
+        'Version' => version
       }
 #    else
-#      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10', 
-#        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
-#        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
-#        'Version' => version 
+#      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10',
+#        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
+#        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+#        'Version' => version
 #      }
 #    end
   end
 
   def self.request_old_header(version, timestamp = true)
-    { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2003/07', 
-      'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema', 
-      'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 
-      'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'), 
-      'Version' => version 
+    { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2003/07',
+      'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
+      'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+      'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'),
+      'Version' => version
     }
   end
 
@@ -84,8 +84,16 @@ module Sabre
     return soap
   end
 
+  #def self.namespaces
+  #  {
+  #    "xmlns:SOAP-ENV" => "http://schemas.xmlsoap.org/soap/envelope/",
+  #    "xmlns:eb" => "http://www.ebxml.org/namespaces/messageHeader",
+  #    "xmlns:xlinx" => "http://www.w3.org/1999/xlink"
+  #  }
+  #end
+
   def self.error_message(msg)
-    msg = "#{msg[:application_results][:error][:system_specific_results][:host_command]}: #{msg[:application_results][:error][:system_specific_results][:message]}: #{msg[:application_results][:error][:system_specific_results][:short_text]}" 
+    msg = "#{msg[:application_results][:error][:system_specific_results][:host_command]}: #{msg[:application_results][:error][:system_specific_results][:message]}: #{msg[:application_results][:error][:system_specific_results][:short_text]}"
     return clean_error_message(msg)
   end
 
@@ -95,5 +103,5 @@ module Sabre
     msg = 'Invalid Format' if msg.include?('INVALID FORMAT')
     return msg
   end
-	
+
 end
