@@ -74,9 +74,11 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       st = DateTime.now
-      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1')
+      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1',[],[],20)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
-      hotels.sample.latitude.should_not be_nil
+      hotel = hotels.sample
+      hotel.latitude.should_not be_nil
+      hotels.map(&:cancel_code).should include('06P')
       hotels.size.should > 0
     end
 
@@ -102,6 +104,7 @@ describe Sabre do
       Sabre::Hotel.change_aaa(@session)
       hotel = Sabre::Hotel.profile(@session,'0016862',Time.now+172800, Time.now+432000, '1',['THH'])
       hotel.latitude.should_not be_nil
+      hotel.cancellation.should_not be_nil
     end
 
     it "should return the rate details for a hotel", :vcr, record: :new_episodes do
@@ -109,6 +112,7 @@ describe Sabre do
       hotel = hotels.sample
       hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,Time.now+172800, Time.now+432000, '1')
       rate = hotel.rates.sample
+      rate[:nightly_prices].should_not be_empty
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:code])
       cancellation.should_not be_nil
     end

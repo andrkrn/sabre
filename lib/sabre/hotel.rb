@@ -26,6 +26,7 @@ module Sabre
 
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], contract_rate_plans = [], num_properties = 30)
       rate_plan_codes = []
+      amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.empty?
         rate_plan_codes = ['GOV','N']
       end
@@ -40,7 +41,7 @@ module Sabre
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
                'Criterion' => {
-                 'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
+                 'HotelAmenity' => amenities, 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
                    'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude },
                    'RefPoint' => { 'Sort' => 'true', 'GeoCode' => 'true' },
                  }
@@ -301,13 +302,12 @@ module Sabre
         begin
           details = prop_info[:vendor_messages]
           hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-          hotel.location_description = details[:location][:text]
           hotel.rooms_available = details[:rooms][:text]
           hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
+          hotel.location_description = details[:location][:text] if details[:location]
           hotel.services = details[:services][:text]
           hotel.policies = details[:policies][:text]
           hotel.attractions = details[:attractions][:text]
-
         rescue
         end
 
@@ -380,14 +380,14 @@ module Sabre
       cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
       line_number = rr[:@rph]
       if rr[:rates]
+        # TODO Merge in V2
         nightly_rates = Hash.new
         hotel_total_pricing = rr[:rates][:rate][:hotel_total_pricing]
         if hotel_total_pricing
           visit_range = hotel_total_pricing[:rate_range]
           unless visit_range.nil?
-            # TODO FIXME undefined method [] for nil:NilClass
             visit_range.each_with_index do |day,i|
-              d = Date.parse(day[:@effective_date])
+              d = Date.strptime(day[:@effective_date], '%m-%d')
               d += 1.year if d < Date.today
               nightly_rates.merge!({d.strftime('%a %B %d, %Y') => day[:@amount]})
             end
