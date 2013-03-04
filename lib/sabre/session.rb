@@ -13,6 +13,7 @@ module Sabre
       @conversation_id = conversation_id
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
+      open
     end
 
     def open

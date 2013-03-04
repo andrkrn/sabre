@@ -16,8 +16,7 @@ module Sabre
   def self.connect(&block)
     @errors = []
     begin
-      session = Session.new
-      session.open(self.conversation_id)
+      session = Session.new(self.conversation_id)
       block.call(session)
     #rescue SabreException::ConnectionError => e
     #  @errors << {:type => e.class.name, :message => Sabre.clean_error_message(e.message)}
