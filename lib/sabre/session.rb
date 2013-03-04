@@ -3,14 +3,14 @@ require 'savon'
 
 module Sabre
   class Session
-    attr_accessor :username, :password, :ipcc, :binary_security_token, :ref_message_id, :account_email, :domain
-    def initialize
+    attr_accessor :username, :password, :ipcc, :binary_security_token, :ref_message_id, :domain, :conversation_id
+    def initialize(conversation_id)
       @username = Sabre.username
       @password = Sabre.password
       @ipcc = Sabre.ipcc
-      @account_email = Sabre.account_email
       @domain = Sabre.domain
       @pcc = Sabre.pcc
+      @conversation_id = conversation_id
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
     end
@@ -19,8 +19,6 @@ module Sabre
       client = Savon::Client.new(Sabre.cert_wsdl_url)
       response = client.request(:session_create_rq) do
         Sabre.namespaces(soap)
-        #soap.namespaces = Sabre.namespaces
-        #soap.version = 1
         soap.header = header('Session','sabreXML','SessionCreateRQ')
         soap.body = { 'POS' => { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } } }
       end
@@ -34,15 +32,13 @@ module Sabre
       client = Savon::Client.new(Sabre.cert_wsdl_url.gsub('SessionCreate','SessionClose'))
       client.request(:session_close_rq) do
         Sabre.namespaces(soap)
-        #soap.namespaces = Sabre.namespaces
-        #soap.version = 1
         soap.header = header('Session','sabreXML','SessionCloseRQ')
         soap.body = { 'POS' => { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } } }
       end
     end
 
     def header(service, type, action)
-      msg_header = { 'eb:ConversationId' => self.account_email,
+      msg_header = { 'eb:ConversationId' => self.conversation_id,
                   'eb:From' => { 'eb:PartyId' => self.domain, :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
                   'eb:To' => { 'eb:PartyId' => "webservices.sabre.com", :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
                   'eb:CPAId' => self.ipcc,

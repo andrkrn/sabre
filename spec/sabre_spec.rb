@@ -27,11 +27,11 @@ describe Sabre do
       Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
-      Sabre.account_email = 'joe@example.com'
+      Sabre.conversation_id = 'joe@example.com'
       Sabre.domain = 'example.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
-      @session = Sabre::Session.new
+      @session = Sabre::Session.new('joe@example.com')
       @session.open
     end
 
@@ -59,11 +59,11 @@ describe Sabre do
       Sabre.orig_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/tpf/' # 1.0
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
-      Sabre.account_email = 'elia@mytravelershaven.com'
+      Sabre.conversation_id = 'elia@mytravelershaven.com'
       Sabre.domain = 'hotelengine.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
-      @session = Sabre::Session.new
+      @session = Sabre::Session.new('elia@mytravelershaven.com')
       @session.open
     end
 
@@ -149,6 +149,30 @@ describe Sabre do
 
     after(:each) do
       @session.close
+    end
+  end
+
+  context "Connection Pool" do
+    before(:each) do
+      Sabre.wsdl_url = 'http://webservices.sabre.com/wsdl/tpfc/' # 2.0
+      Sabre.endpoint_url = 'https://webservices.sabre.com/websvc'
+      Sabre.cert_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
+      Sabre.orig_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/tpf/' # 1.0
+      Sabre.ipcc = 'P40G'
+      Sabre.pcc = 'N10G'
+      Sabre.conversation_id = 'elia@mytravelershaven.com'
+      Sabre.domain = 'hotelengine.com'
+      Sabre.username = '7971'
+      Sabre.password = 'WS020212'
+      @pool = Sabre::ConnectionManager.new(:pool_size => 5)
+    end
+
+    it "should have a connection manager that initiate connections" do
+      @pool.connections.size.should == 5
+    end
+
+    after(:each) do
+      @pool.destroy_all
     end
   end
 end

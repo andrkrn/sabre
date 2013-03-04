@@ -2,6 +2,8 @@ require 'active_support/all'
 require 'sabre/version'
 require 'yaml'
 require 'savon'
+require 'sabre/connection'
+require 'sabre/connection_manager'
 require 'sabre/session'
 require 'sabre/traveler'
 require 'sabre/hotel'
@@ -9,13 +11,13 @@ require 'sabre/reservation'
 require 'sabre/sabre_exception'
 
 module Sabre
-  mattr_accessor :cert_wsdl_url, :wsdl_url, :orig_wsdl_url, :endpoint_url, :username, :password, :ipcc, :pcc, :account_email, :domain, :binary_security_token, :ref_message_id
+  mattr_accessor :cert_wsdl_url, :wsdl_url, :orig_wsdl_url, :endpoint_url, :username, :password, :ipcc, :pcc, :conversation_id, :domain, :binary_security_token, :ref_message_id
 
   def self.connect(&block)
     @errors = []
     begin
       session = Session.new
-      session.open
+      session.open(self.conversation_id)
       block.call(session)
     #rescue SabreException::ConnectionError => e
     #  @errors << {:type => e.class.name, :message => Sabre.clean_error_message(e.message)}
