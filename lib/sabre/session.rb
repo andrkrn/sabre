@@ -31,7 +31,7 @@ module Sabre
 
 
     def close
-      client = Savon::Client.new(Sabre.cert_wsdl_url)
+      client = Savon::Client.new(Sabre.cert_wsdl_url.gsub('SessionCreate','SessionClose'))
       client.request(:session_close_rq) do
         Sabre.namespaces(soap)
         #soap.namespaces = Sabre.namespaces
