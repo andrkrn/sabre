@@ -24,13 +24,20 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], contract_rate_plans = [], num_properties = 30)
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 30)
       rate_plan_codes = []
       amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.empty?
         rate_plan_codes = ['GOV','N']
       end
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
+      hotel_attr = {
+        'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude },
+        'RefPoint' => { 'Sort' => 'true', 'GeoCode' => 'true' },
+      }
+      chain_codes.each do |cc|
+        hotel_attr.merge!({'HotelRef' => { 'ChainCode' => cc }})
+      end
       client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
       response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
@@ -41,10 +48,8 @@ module Sabre
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
                'Criterion' => {
-                 'HotelAmenity' => amenities, 'HotelRef' => '', 'RefPoint' => '', :attributes! => {
-                   'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude },
-                   'RefPoint' => { 'Sort' => 'true', 'GeoCode' => 'true' },
-                 }
+                 'HotelAmenity' => amenities, 'HotelRef' => '', 'RefPoint' => '',
+                  :attributes! => hotel_attr
                }
             },
             'RatePlanCandidates' => {

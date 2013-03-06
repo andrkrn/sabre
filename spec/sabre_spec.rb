@@ -64,7 +64,6 @@ describe Sabre do
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
       @session = Sabre::Session.new('elia@mytravelershaven.com')
-      @session.open
     end
 
     it "should create a travel itinerary" do #, :vcr, record: :new_episodes do
@@ -74,7 +73,8 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       st = DateTime.now
-      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1',[],[],20)
+      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),
+        '37.7838', '-122.4176','1',[],[],[],25)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
       hotel = hotels.sample
       hotel.latitude.should_not be_nil
@@ -84,7 +84,8 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 6.days), (Date.today+8.days),'40.0375','-107.9131',2,[],['THH','AVT','THW','THV','TRV'])
+      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 6.days), (Date.today+8.days),
+        '40.0375','-107.9131',2,[],[],['THH','AVT','THW','THV','TRV'])
       hotels.should be_empty
     end
 
