@@ -27,15 +27,14 @@ describe Sabre do
       Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
-      Sabre.conversation_id = 'joe@example.com'
-      Sabre.domain = 'example.com'
+      Sabre.conversation_id = 'elia@mytravelershaven.com'
+      Sabre.domain = 'hotelengine.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
-      @session = Sabre::Session.new('joe@example.com')
-      @session.open
+      @session = Sabre::Session.new('elia@mytravelershaven.com')
     end
 
-    it "should change the AAA for rates", :vcr, record: :new_episodes do
+    it "should change the AAA for rates" do
       changed = Sabre::Hotel.change_aaa(@session)
       changed.should_not be_nil
     end
