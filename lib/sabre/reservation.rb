@@ -18,14 +18,14 @@ module Sabre
 
               }
             },
-            'GuestCounts' => '',
+            #'GuestCounts' => '',
             #'POS' => Sabre.pos,
             'RoomType' => '',
             #'TimeSpan' => '',
             :attributes! => {
               'BasicPropertyInfo' => { 'RPH' => line_number },
               'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
-              'GuestCounts' => { 'Count' => guest_count },
+              #'GuestCounts' => { 'Count' => guest_count },
               'RoomType' => { 'NumberOfUnits' => unit_count }
               #'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') }
             }
