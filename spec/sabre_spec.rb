@@ -73,7 +73,7 @@ describe Sabre do
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       st = DateTime.now
       hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),
-        '37.7838', '-122.4176','1',[],[],[],25)
+        '43.66', '-79.45','1',[],[],[],25)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
       hotel = hotels.sample
       hotel.latitude.should_not be_nil

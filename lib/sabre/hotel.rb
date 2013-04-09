@@ -285,10 +285,10 @@ module Sabre
 
                 rates << {
                   description: rate_description(rr),
-                  amount: rr[:rates][:rate][:@amount],
+                  night_list_price: rr[:rates][:rate][:@amount],
                   currency: rr[:rates][:rate][:@currency_code],
                   taxes: tax,
-                  total_pricing: total
+                  total_list_price: total
                 }
               end
             end
@@ -409,11 +409,11 @@ module Sabre
           commission: commission,
           cancel_code: cancel_code,
           line_number: line_number,
-          amount: rr[:rates][:rate][:@amount],
+          night_list_price: rr[:rates][:rate][:@amount],
           nightly_prices: nightly_rates,
           currency: rr[:rates][:rate][:@currency_code],
           taxes: tax,
-          total_pricing: total
+          total_list_price: total
         }
       end
       return rates
