@@ -3,7 +3,7 @@ require 'savon'
 
 module Sabre
   class Session
-    attr_accessor :username, :password, :ipcc, :binary_security_token, :ref_message_id, :domain, :conversation_id
+    attr_accessor :username, :password, :pcc, :ipcc, :binary_security_token, :ref_message_id, :domain, :conversation_id
     def initialize(conversation_id)
       @username = Sabre.username
       @password = Sabre.password
