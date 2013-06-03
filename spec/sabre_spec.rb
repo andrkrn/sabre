@@ -76,6 +76,7 @@ describe Sabre do
         '43.66', '-79.45','1',[],[],[],25)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
       hotel = hotels.sample
+      debugger
       hotel.latitude.should_not be_nil
       hotels.map(&:cancel_code).should include('06P')
       hotels.size.should > 0
