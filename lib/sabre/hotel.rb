@@ -226,7 +226,6 @@ module Sabre
                 hotel.rating = prop_info[:property][:text]
               end
               if prop_info[:room_rate]
-                debugger
                 prop_info[:room_rate].each do |room_rate|
                   if room_rate.is_a? Hash
                     cp = room_rate[:additional_info][:cancel_policy]
