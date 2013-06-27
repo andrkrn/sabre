@@ -1,6 +1,6 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code
+    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code, :taxes
 
     def initialize(basic_info)
       @area_id = basic_info[:@area_id]
@@ -21,6 +21,14 @@ module Sabre
       else
         @latitude = basic_info[:@latitude]
         @longitude = basic_info[:@longitude]
+      end
+      if basic_info[:award]
+        @rating = basic_info[:award][:@provider].gsub("NTM","").gsub(" CROWN","").strip
+      elsif basic_info[:property]
+        @rating = basic_info[:property][:text].gsub("NTM","").gsub(" CROWN","").strip
+      end
+      if basic_info[:taxes]
+        @taxes = basic_info[:taxes][:text].gsub("PCT","").gsub("TTL","").strip
       end
     end
 
@@ -221,10 +229,6 @@ module Sabre
                  key.to_s if val[:@ind] == 'true'
               end.compact.uniq
 
-              rating = ''
-              if prop_info[:property]
-                hotel.rating = prop_info[:property][:text]
-              end
               if prop_info[:room_rate]
                 prop_info[:room_rate].each do |room_rate|
                   if room_rate.is_a? Hash
