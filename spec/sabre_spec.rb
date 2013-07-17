@@ -65,6 +65,11 @@ describe Sabre do
       @session = Sabre::Session.new('elia@mytravelershaven.com')
     end
 
+    it "should change the AAA for rates" do
+      changed = Sabre::Hotel.context_change(@session)
+      changed.should_not be_nil
+    end
+
     it "should create a travel itinerary" do #, :vcr, record: :new_episodes do
       response = Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       response.to_hash.should include(:travel_itinerary_add_info_rs)
@@ -82,10 +87,10 @@ describe Sabre do
     end
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
-      Sabre::Hotel.change_aaa(@session)
-      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 6.days), (Date.today+8.days),
-        '40.0375','-107.9131',2,[],[],['THH','AVT','THW','THV','TRV'])
-      hotels.should be_empty
+      Sabre::Hotel.context_change(@session)
+      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 26.days), (Date.today+28.days),
+        '29.9746','-92.1343',2,[],[],['THH','THV','TV9'])
+      hotels.should_not be_empty
     end
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
@@ -102,7 +107,7 @@ describe Sabre do
     # 0112273 is Best Western Denver
     it "should return a hotels description response", :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      hotel = Sabre::Hotel.profile(@session,'0016862',Time.now+172800, Time.now+432000, '1',['THH'])
+      hotel = Sabre::Hotel.profile(@session,'0104919',Date.today+26.days, Date.today+28.days, '1',['THH'])
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end

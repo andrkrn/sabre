@@ -50,8 +50,8 @@ module Sabre
           hotel_attr.merge!({'HotelRef' => { 'ChainCode' => cc }})
         end
       end
-      client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
-      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
+      client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
+      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
@@ -125,6 +125,24 @@ module Sabre
       end
       #result = response.to_hash[:change_aaars]
       response.to_hash[:change_aaars]
+      #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
+      #return response
+    end
+
+    def self.context_change(session)
+      client = Sabre.client('ContextChangeLLS2.0.2RQ.wsdl')
+      response = client.request('ContextChangeRQ', Sabre.request_header('2.0.2')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Change AAA','sabreXML','ContextChangeLLSRQ')
+        soap.body = {
+          'ChangeAAA' => '',
+          :attributes! => {
+            'ChangeAAA' => { 'PseudoCityCode' => Sabre.pcc }
+          }
+        }
+      end
+      #result = response.to_hash[:change_aaars]
+      response.to_hash[:context_change_rs]
       #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
       #return response
     end
