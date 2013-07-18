@@ -6,6 +6,7 @@ module Sabre
       if h.length == 1 && h.first.kind_of?(Hash)
         h.first.each { |k,v| send("#{k}=",v) }
       end
+      destroy_all
       build_pool
     end
 
@@ -17,7 +18,9 @@ module Sabre
     end
 
     def destroy_all
-      self.connections.each{|c|c.destroy}
+      if self.connections
+        self.connections.each{|c|c.destroy} 
+      end
     end
   end
 end
