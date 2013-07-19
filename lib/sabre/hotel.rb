@@ -28,7 +28,9 @@ module Sabre
         @rating = basic_info[:property][:text].gsub("NTM","").gsub(" CROWN","").strip
       end
       if basic_info[:taxes]
-        @taxes = basic_info[:taxes][:text].gsub("PCT","").gsub("TTL","").strip
+        tax = basic_info[:taxes][:text]
+        tax = tax.first if tax.is_a? Array
+        @taxes = tax.gsub("PCT","").gsub("TTL","").strip
       end
     end
 
