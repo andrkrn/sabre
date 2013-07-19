@@ -1,5 +1,6 @@
 module Sabre
   class Connection
+=begin
     attr_accessor :session, :security_token, :conversation_id, :status, :client_id, :created_at, :updated_at
 
     def initialize(*h)
@@ -15,5 +16,6 @@ module Sabre
       self.session.close
       puts "Destroyed session #{self.session}"
     end
+=end
   end
 end
