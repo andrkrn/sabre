@@ -108,8 +108,7 @@ describe Sabre do
     # 0112273 is Best Western Denver
     it "should return a hotels description response", :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      hotel = Sabre::Hotel.profile(@session,'0006016',Date.today, Date.today+2.days, '1',['THH'])
-      debugger
+      hotel = Sabre::Hotel.profile(@session,'0104919',Date.today+26.days, Date.today+28.days, '1',['THH'])
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end
