@@ -77,9 +77,11 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       st = DateTime.now
-      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today+25.days), (Date.today+27.days),
-        '29.9680', '-92.0861','1',[],[],[],25)
-
+      #hotels = Sabre::Hotel.find_by_geo(@session, (Date.today+25.days), (Date.today+27.days),
+      #  '29.9680', '-92.0861','1',[],[],[],25)
+      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 67.days), (Date.today + 68.days), 
+        '39.7417','-104.9894', 2, [], [], [], 25)
+      #debugger
       puts "Time elapsed #{(DateTime.now - st).to_f}"
       hotel = hotels.sample
       hotel.latitude.should_not be_nil
@@ -106,9 +108,10 @@ describe Sabre do
 
     # Works with 0040713
     # 0112273 is Best Western Denver
-    it "should return a hotels description response", :vcr, record: :new_episodes do
+    it "should return a hotels description response" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      hotel = Sabre::Hotel.profile(@session,'0104919',Date.today+26.days, Date.today+28.days, '1',['THH'])
+      #hotel = Sabre::Hotel.profile(@session,'0104919',Date.today+26.days, Date.today+28.days, '1',['THH'])
+      hotel = Sabre::Hotel.profile(@session,'0006016',Date.today+67.days, Date.today+68.days, '1',[])
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end
@@ -131,10 +134,10 @@ describe Sabre do
       Sabre::Traveler.profile(@session, Faker::Name.first_name, Faker::Name.last_name, '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0040713',check_in, check_out, '1')
       rate_orig = hotel.rates.sample
-      #rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
-      #rate = rates.first
+      rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
+      rate = rates.first
       #rate_orig[:line_number].should == rate[:line_number]
-      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate_orig[:line_number].to_i,'1','1',rate_orig[:total_list_price],'USD','TEST','AX','378282246310005',(Date.today + 8.months),check_in,check_out,'123')
+      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',(Date.today + 8.months),check_in,check_out,'123')
       booking.to_hash.should include(:ota_hotel_res_rs)
       booking.to_hash[:ota_hotel_res_rs]
     end
