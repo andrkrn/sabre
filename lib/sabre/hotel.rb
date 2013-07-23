@@ -393,6 +393,7 @@ module Sabre
           total = room_rate[:rates][:rate][:hotel_total_pricing][:@amount]
           taxes = room_rate[:rates][:rate][:hotel_total_pricing][:total_taxes]
           tax = taxes ? taxes[:@amount] : nil
+          tax = taxes[:tax_field_one] if tax.nil?
         end
       end
       return tax, total
