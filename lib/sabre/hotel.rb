@@ -407,6 +407,7 @@ module Sabre
 
     def self.room_rate_builder(rr, rates)
       code = rr[:@iata_characteristic_identification]
+      product = rr[:@iata_product_identification]
       cancel_policy = rr[:additional_info][:cancel_policy]
       commission = rr[:additional_info][:commission]
       commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil
@@ -430,6 +431,7 @@ module Sabre
         rates << {
           description: rate_description(rr),
           code: code,
+          product: product,
           commission: commission,
           cancel_code: cancel_code,
           line_number: line_number,

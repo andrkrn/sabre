@@ -39,8 +39,8 @@ module Sabre
     end
 
     def self.confirm(session, full_name)
-      client = Sabre.client('EndTransactionLLS2.0.0RQ.wsdl')
-      response = client.request('EndTransactionRQ', Sabre.request_header('2.0.0', false)) do
+      client = Sabre.client('EndTransactionLLS2.0.2RQ.wsdl')
+      response = client.request('EndTransactionRQ', Sabre.request_header('2.0.2', false)) do
         Sabre.namespaces(soap)
         soap.header = session.header('End Transaction','sabreXML','EndTransactionLLSRQ')
         soap.body = {
