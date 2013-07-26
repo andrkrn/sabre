@@ -30,7 +30,9 @@ module Sabre
       if basic_info[:taxes]
         tax = basic_info[:taxes][:text]
         tax = tax.first if tax.is_a? Array
-        @taxes = tax.gsub("PCT","").gsub("TTL","").strip
+        unless tax.nil?
+          @taxes = tax.gsub("PCT","").gsub("TTL","").strip
+        end
       end
     end
 
