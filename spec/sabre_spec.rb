@@ -79,9 +79,8 @@ describe Sabre do
       st = DateTime.now
       #hotels = Sabre::Hotel.find_by_geo(@session, (Date.today+25.days), (Date.today+27.days),
       #  '29.9680', '-92.0861','1',[],[],[],25)
-      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 67.days), (Date.today + 68.days), 
+      hotels = Sabre::Hotel.find_by_geo(@session, Date.today, (Date.today + 1.days), 
         '39.7417','-104.9894', 2, [], [], [], 25)
-      #debugger
       puts "Time elapsed #{(DateTime.now - st).to_f}"
       hotel = hotels.sample
       hotel.latitude.should_not be_nil
@@ -91,8 +90,7 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.context_change(@session)
-      hotels = Sabre::Hotel.find_by_geo(@session, (Date.today + 25.days), (Date.today+27.days),
-        '29.9746','-92.1343',2,[],[],['THH','THV','TV9'])
+      hotels = Sabre::Hotel.find_by_geo(@session, Date.today, Date.today+2.days,'29.9746','-92.1343',2,[],[],['TRH','THH','THV','TV9'])
       hotels.should_not be_empty
     end
 
@@ -110,8 +108,10 @@ describe Sabre do
     # 0112273 is Best Western Denver
     it "should return a hotels description response" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      #hotel = Sabre::Hotel.profile(@session,'0104919',Date.today+26.days, Date.today+28.days, '1',['THH'])
-      hotel = Sabre::Hotel.profile(@session,'0006016',Date.today+67.days, Date.today+68.days, '1',[])
+      hotel = Sabre::Hotel.profile(@session,'0104919',Date.today+26.days, Date.today+28.days, '1',['THH'])
+      #hotel = Sabre::Hotel.profile(@session,'0006016',Date.today+67.days, Date.today+68.days, '1',[])
+      #hotel = Sabre::Hotel.profile(@session,'0050264',Date.today, Date.today+1.days, '1',[])
+      debugger
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end
@@ -123,6 +123,7 @@ describe Sabre do
       hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,Time.now+172800, Time.now+432000, '1')
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
+      debugger
       rate[:nightly_prices].should_not be_empty
       #rate[:line_number].should == room_stay.first[:line_number]
       cancellation.should_not be_nil

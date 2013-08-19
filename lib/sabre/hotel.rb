@@ -251,14 +251,20 @@ module Sabre
                  key.to_s if val[:@ind] == 'true'
               end.compact.uniq
 
-              if prop_info[:room_rate]
+              if prop_info[:room_rate].is_a? Array
                 prop_info[:room_rate].each do |room_rate|
                   if room_rate.is_a? Hash
                     cp = room_rate[:additional_info][:cancel_policy]
                     hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
                     hotel.rate_level_code = room_rate[:@rate_level_code]
+                    #hotel.rate_code = room_rate[:hotel_rate_code]
                   end
                 end
+              else
+                room_rate = prop_info[:room_rate]
+                cp = room_rate[:additional_info][:cancel_policy]
+                hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
+                hotel.rate_level_code = room_rate[:@rate_level_code]
               end
 
               hotels << hotel
