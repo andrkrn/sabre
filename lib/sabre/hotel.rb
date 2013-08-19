@@ -239,24 +239,14 @@ module Sabre
               hotel = Hotel.new(prop_info)
               hotel.location_description = prop_info[:location_description][:text]
 
-              rates = []
-              if rate_range = prop_info[:rate_range]
-                rates << {:description => 'Minimum', :amount => rate_range[:@min], :currency => rate_range[:@currency_code]}
-                rates << {:description => 'Maximum', :amount => rate_range[:@max], :currency => rate_range[:@currency_code]}
-              end
-
-              hotel.rates = rates
-
-              hotel.amenities = prop_info[:property_option_info].map do |key, val|
-                 key.to_s if val[:@ind] == 'true'
-              end.compact.uniq
+              rate_level_code = 'RAC'
 
               if prop_info[:room_rate].is_a? Array
                 prop_info[:room_rate].each do |room_rate|
                   if room_rate.is_a? Hash
                     cp = room_rate[:additional_info][:cancel_policy]
                     hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                    hotel.rate_level_code = room_rate[:@rate_level_code]
+                    rate_level_code = room_rate[:@rate_level_code]
                     #hotel.rate_code = room_rate[:hotel_rate_code]
                   end
                 end
@@ -264,8 +254,20 @@ module Sabre
                 room_rate = prop_info[:room_rate]
                 cp = room_rate[:additional_info][:cancel_policy]
                 hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                hotel.rate_level_code = room_rate[:@rate_level_code]
+                rate_level_code = room_rate[:@rate_level_code]
               end
+
+              rates = []
+              if rate_range = prop_info[:rate_range]
+                rates << {description: 'Minimum', rate_level_code: rate_level_code, amount: rate_range[:@min], currency: rate_range[:@currency_code]}
+                rates << {description: 'Maximum', rate_level_code: rate_level_code, amount: rate_range[:@max], currency: rate_range[:@currency_code]}
+              end
+
+              hotel.rates = rates
+
+              hotel.amenities = prop_info[:property_option_info].map do |key, val|
+                 key.to_s if val[:@ind] == 'true'
+              end.compact.uniq
 
               hotels << hotel
             end
