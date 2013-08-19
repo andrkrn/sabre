@@ -252,9 +252,11 @@ module Sabre
                 end
               else
                 room_rate = prop_info[:room_rate]
-                cp = room_rate[:additional_info][:cancel_policy]
-                hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                rate_level_code = room_rate[:@rate_level_code]
+                if room_rate
+                  cp = room_rate[:additional_info][:cancel_policy]
+                  hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
+                  rate_level_code = room_rate[:@rate_level_code]
+                end
               end
 
               rates = []
