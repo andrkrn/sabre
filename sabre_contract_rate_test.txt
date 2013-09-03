@@ -1,0 +1,2025 @@
+Run options: include {:locations=>{"./spec/sabre_spec.rb"=>[91]}}
+W, [2013-08-20T11:10:09.471338 #15137]  WARN -- : HTTPI executes HTTP GET using the net_http adapter
+D, [2013-08-20T11:10:09.609952 #15137] DEBUG -- : SOAP request: https://webservices.sabre.com/websvc
+D, [2013-08-20T11:10:09.610037 #15137] DEBUG -- : SOAPAction: "OTA", Content-Type: text/xml;charset=UTF-8, Content-Length: 1386
+D, [2013-08-20T11:10:09.610074 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xlinx="http://www.w3.org/1999/xlink"><env:Header><eb:MessageHeader SOAP-ENV:mustUnderstand="1" eb:version="2.0"><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:From><eb:PartyId type="urn:x12.org:IO5:01">hotelengine.com</eb:PartyId></eb:From><eb:To><eb:PartyId type="urn:x12.org:IO5:01">webservices.sabre.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:Service eb:type="sabreXML">Session</eb:Service><eb:Action>SessionCreateRQ</eb:Action><eb:MessageData><eb:MessageId>mid:20130820-111009@hotelengine.com</eb:MessageId><eb:RefToMessageId xsi:nil="true"/><eb:Timestamp>2013-08-20T11:10:09Z</eb:Timestamp></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:UsernameToken><wsse:Username>7971</wsse:Username><wsse:Password>WS020212</wsse:Password><Organization>P40G</Organization><Domain>DEFAULT</Domain></wsse:UsernameToken></wsse:Security></env:Header><env:Body><eb:MessageHeader><POS><Source PseudoCityCode="P40G"></Source></POS></eb:MessageHeader></env:Body></env:Envelope>
+W, [2013-08-20T11:10:09.610115 #15137]  WARN -- : HTTPI executes HTTP POST using the net_http adapter
+D, [2013-08-20T11:10:09.920975 #15137] DEBUG -- : SOAP response (status 200):
+D, [2013-08-20T11:10:09.921045 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><eb:MessageHeader xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" eb:version="1.0" soap-env:mustUnderstand="1"><eb:From><eb:PartyId eb:type="URI">webservices.sabre.com</eb:PartyId></eb:From><eb:To><eb:PartyId eb:type="URI">hotelengine.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:Service eb:type="sabreXML">Session</eb:Service><eb:Action>SessionCreateRS</eb:Action><eb:MessageData><eb:MessageId>e22135b0-cb5a-4926-9e1d-e9f674b55a2c@19</eb:MessageId><eb:Timestamp>2013-08-20T15:10:08</eb:Timestamp><eb:RefToMessageId>mid:20130820-111009@hotelengine.com</eb:RefToMessageId></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></soap-env:Header><soap-env:Body><SessionCreateRS xmlns="http://www.opentravel.org/OTA/2002/11" version="1" status="Approved">	<ConversationId>elia@mytravelershaven.com</ConversationId></SessionCreateRS></soap-env:Body></soap-env:Envelope>
+W, [2013-08-20T11:10:09.921730 #15137]  WARN -- : HTTPI executes HTTP GET using the net_http adapter
+D, [2013-08-20T11:10:10.059595 #15137] DEBUG -- : SOAP request: https://webservices.sabre.com/websvc
+D, [2013-08-20T11:10:10.059718 #15137] DEBUG -- : Content-Type: text/xml;charset=UTF-8, SOAPAction: "ContextChangeRQ", Content-Length: 1823
+D, [2013-08-20T11:10:10.059761 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="https://webservices.sabre.com/websvc" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" xmlns:xlinx="http://www.w3.org/1999/xlink"><env:Header><eb:MessageHeader SOAP-ENV:mustUnderstand="1" eb:version="2.0"><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:From><eb:PartyId type="urn:x12.org:IO5:01">hotelengine.com</eb:PartyId></eb:From><eb:To><eb:PartyId type="urn:x12.org:IO5:01">webservices.sabre.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:Service eb:type="sabreXML">Change AAA</eb:Service><eb:Action>ContextChangeLLSRQ</eb:Action><eb:MessageData><eb:MessageId>mid:20130820-111010@hotelengine.com</eb:MessageId><eb:RefToMessageId>mid:20130820-111009@hotelengine.com</eb:RefToMessageId><eb:Timestamp>2013-08-20T11:10:10Z</eb:Timestamp></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/12/utility" wsu:Id="SabreSecurityToken" valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></env:Header><env:Body><ContextChangeRQ xmlns="http://webservices.sabre.com/sabreXML/2011/10" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ReturnHostCommand="true" TimeStamp="2013-08-20T11:10:09" Version="2.0.2"><ChangeAAA PseudoCityCode="N10G"></ChangeAAA></ContextChangeRQ></env:Body></env:Envelope>
+W, [2013-08-20T11:10:10.059837 #15137]  WARN -- : HTTPI executes HTTP POST using the net_http adapter
+D, [2013-08-20T11:10:11.684278 #15137] DEBUG -- : SOAP response (status 200):
+D, [2013-08-20T11:10:11.684369 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><eb:MessageHeader xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" eb:version="1.0" soap-env:mustUnderstand="1"><eb:From><eb:PartyId eb:type="URI">webservices.sabre.com</eb:PartyId></eb:From><eb:To><eb:PartyId eb:type="URI">hotelengine.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:Service eb:type="sabreXML">Change AAA</eb:Service><eb:Action>ContextChangeLLSRS</eb:Action><eb:MessageData><eb:MessageId>714ad100-fe9a-4179-a5cb-de527287c2ac@19</eb:MessageId><eb:Timestamp>2013-08-20T15:10:10</eb:Timestamp><eb:RefToMessageId>mid:20130820-111010@hotelengine.com</eb:RefToMessageId></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></soap-env:Header><soap-env:Body><ContextChangeRS xmlns="http://webservices.sabre.com/sabreXML/2011/10" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:stl="http://services.sabre.com/STL/v01" Version="2.0.2">
+ <stl:ApplicationResults status="Complete">
+  <stl:Success timeStamp="2013-08-20T10:10:10-05:00">
+   <stl:SystemSpecificResults>
+    <stl:HostCommand LNIATA="791D7C">AAAN10G</stl:HostCommand>
+   </stl:SystemSpecificResults>
+  </stl:Success>
+ </stl:ApplicationResults>
+ <SecurityToken Updated="false">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</SecurityToken>
+ <Text>N10G.P40G*AWS.A</Text>
+ <Text>20AUG</Text>
+ <Text>GREAT COMFORT WITH SOUTH AFRICAN AIRWAYS</Text>
+ <Text>180 DEGREE LIE FLAT SEAT IN PREMIUM BUSINESS CLASS</Text>
+</ContextChangeRS></soap-env:Body></soap-env:Envelope>
+W, [2013-08-20T11:10:11.690562 #15137]  WARN -- : HTTPI executes HTTP GET using the net_http adapter
+D, [2013-08-20T11:10:11.824262 #15137] DEBUG -- : SOAP request: https://webservices.sabre.com/websvc
+D, [2013-08-20T11:10:11.824330 #15137] DEBUG -- : Content-Type: text/xml;charset=UTF-8, SOAPAction: "OTA_HotelAvailRQ", Content-Length: 2523
+D, [2013-08-20T11:10:11.824390 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="https://webservices.sabre.com/websvc" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" xmlns:xlinx="http://www.w3.org/1999/xlink"><env:Header><eb:MessageHeader SOAP-ENV:mustUnderstand="1" eb:version="2.0"><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:From><eb:PartyId type="urn:x12.org:IO5:01">hotelengine.com</eb:PartyId></eb:From><eb:To><eb:PartyId type="urn:x12.org:IO5:01">webservices.sabre.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:Service eb:type="sabreXML">Hotel Availability</eb:Service><eb:Action>OTA_HotelAvailLLSRQ</eb:Action><eb:MessageData><eb:MessageId>mid:20130820-111011@hotelengine.com</eb:MessageId><eb:RefToMessageId>mid:20130820-111009@hotelengine.com</eb:RefToMessageId><eb:Timestamp>2013-08-20T11:10:11Z</eb:Timestamp></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/12/utility" wsu:Id="SabreSecurityToken" valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></env:Header><env:Body><OTA_HotelAvailRQ xmlns="http://webservices.sabre.com/sabreXML/2011/10" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ReturnHostCommand="true" TimeStamp="2013-08-20T11:10:11" Version="2.1.0"><AvailRequestSegment><GuestCounts Count="2"></GuestCounts><HotelSearchCriteria NumProperties="30"><Criterion><HotelRef Latitude="29.9746" Longitude="-92.1343"></HotelRef><RefPoint Sort="true" GeoCode="true"></RefPoint></Criterion></HotelSearchCriteria><RatePlanCandidates PromotionalSpot="L" RateAssured="true" SuppressRackRate="false"><ContractNegotiatedRateCode>TRH</ContractNegotiatedRateCode><ContractNegotiatedRateCode>THH</ContractNegotiatedRateCode><ContractNegotiatedRateCode>THV</ContractNegotiatedRateCode><ContractNegotiatedRateCode>TV9</ContractNegotiatedRateCode><RateRange CurrencyCode="USD" Max="1000.00" Min="20.00"></RateRange></RatePlanCandidates><TimeSpan Start="08-20" End="08-22"></TimeSpan></AvailRequestSegment></OTA_HotelAvailRQ></env:Body></env:Envelope>
+W, [2013-08-20T11:10:11.824436 #15137]  WARN -- : HTTPI executes HTTP POST using the net_http adapter
+D, [2013-08-20T11:10:14.902720 #15137] DEBUG -- : SOAP response (status 200):
+D, [2013-08-20T11:10:14.902801 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><eb:MessageHeader xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" eb:version="1.0" soap-env:mustUnderstand="1"><eb:From><eb:PartyId eb:type="URI">webservices.sabre.com</eb:PartyId></eb:From><eb:To><eb:PartyId eb:type="URI">hotelengine.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:Service eb:type="sabreXML">Hotel Availability</eb:Service><eb:Action>OTA_HotelAvailLLSRS</eb:Action><eb:MessageData><eb:MessageId>85e6f258-ac84-4e77-96b0-882a677d026a@22</eb:MessageId><eb:Timestamp>2013-08-20T15:10:13</eb:Timestamp><eb:RefToMessageId>mid:20130820-111011@hotelengine.com</eb:RefToMessageId></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></soap-env:Header><soap-env:Body><OTA_HotelAvailRS xmlns="http://webservices.sabre.com/sabreXML/2011/10" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:stl="http://services.sabre.com/STL/v01" Version="2.1.0">
+ <stl:ApplicationResults status="Complete">
+  <stl:Success timeStamp="2013-08-20T10:10:13-05:00">
+   <stl:SystemSpecificResults>
+    <stl:HostCommand LNIATA="791D7C">HOTGEOC¥29.9746,-92.1343/¥TRH¥THH¥THV¥TV9/20AUG-22AUG2/RP-30/G/*SD/PS-L/*RA/C-USD/R-1000.00/R¥20.00</stl:HostCommand>
+   </stl:SystemSpecificResults>
+  </stl:Success>
+ </stl:ApplicationResults>
+ <AdditionalAvail Ind="true"/>
+ <AvailabilityOptions>
+  <AvailabilityOption RPH="001">
+   <BasicPropertyInfo AreaID="001NE" ChainCode="SM" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0058548" HotelName="EXECUTIVE INN EXPRESS" Latitude="29.981914" Longitude="-92.125410">
+    <Address>
+     <AddressLine>730 VETERANS MEMORIAL DRIVE</AddressLine>
+     <AddressLine>ABBEVILLE LA 70510</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-740-4667" Phone="1-213-595-7050"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G"/>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="false"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="false"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="false"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="false"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="false"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="false"/>
+     <OutdoorPool Ind="false"/>
+     <Pets Ind="true"/>
+     <Pool Ind="false"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="71.95" Min="64.76"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="002">
+   <BasicPropertyInfo AreaID="003E" ChainCode="BW" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0104919" HotelName="BEST WESTERN ABBEVILLE INN STE" Latitude="29.968066" Longitude="-92.086107">
+    <Address>
+     <AddressLine>3515 VETERANS MEMORIAL DRIVE</AddressLine>
+     <AddressLine>ABBEVILLE LA 70510</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-740-4101" Phone="1-337-740-4100"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>ABBEVILLE</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THH</NegotiatedRateCodeMatch>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="true"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="true"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="true"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="139.00" Min="80.19"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THH">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THH</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="003">
+   <BasicPropertyInfo AreaID="003E" ChainCode="MS" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0046812" HotelName="MAGNUSON HOTEL ABBEVILLE" Latitude="29.968035" Longitude="-92.086005">
+    <Address>
+     <AddressLine>3523 VETERANS MEMORIAL DRIVE</AddressLine>
+     <AddressLine>ABBEVILLE LA 70510</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-8982399" Phone="1-337-8983180"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G"/>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="false"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="false"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="false"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="false"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="false"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="71.95" Min="55.76"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="004">
+   <BasicPropertyInfo AreaID="014NE" ChainCode="CI" Distance="M" GEO_ConfidenceLevel="2" HotelCityCode="LFT" HotelCode="0000364" HotelName="COMFORT INN" Latitude="30.089700" Longitude="-91.941400">
+    <Address>
+     <AddressLine>146 HERITAGE PARKWAY</AddressLine>
+     <AddressLine>BROUSSARD LA 70518</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="337-856-8940" Phone="337-856-8887"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>RT 90 BROUSSARD</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="false"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="149.99" Min="115.99"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="005">
+   <BasicPropertyInfo AreaID="014N" ChainCode="HI" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0022751" HotelName="HOLIDAY INN EXPRESS AND SUITES" Latitude="30.167841" Longitude="-92.062117">
+    <Address>
+     <AddressLine>3903 AMBASSADOR CAFFERY PKWY</AddressLine>
+     <AddressLine>LAFAYETTE LA 70503</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="337-981-2779" Phone="337-981-0600"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THV</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="false"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="true"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="174.00" Min="120.60"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THV">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THV</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="006">
+   <BasicPropertyInfo AreaID="014NE" ChainCode="YO" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0080359" HotelName="CANDLEWOODS SUITES LAFAYETTE" Latitude="30.166160" Longitude="-92.037880">
+    <Address>
+     <AddressLine>2105 KALISTE SALOOM ROAD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-984-6898" Phone="1-337-984-6900"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE LA</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THV</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="false"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="false"/>
+     <Pets Ind="true"/>
+     <Pool Ind="false"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="true"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="149.00" Min="93.60"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THV">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THV</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="007">
+   <BasicPropertyInfo AreaID="015N" ChainCode="YX" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0080766" HotelName="CARRIAGE HOUSE SUITES" Latitude="30.173070" Longitude="-92.041550">
+    <Address>
+     <AddressLine>603 SILVERSTONE RD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-4066590" Phone="337-769-8400"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G"/>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="true"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="false"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="true"/>
+     <HighSpeedInternet Ind="false"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="false"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="false"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="true"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="219.00" Min="139.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="008">
+   <BasicPropertyInfo AreaID="016NE" ChainCode="HI" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0087493" HotelName="HOLIDAY INN EXP STES S LAFAYET" Latitude="30.186670" Longitude="-92.015590">
+    <Address>
+     <AddressLine>210 KALISTE SALOOM ROAD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-456-6961" Phone="1-337-456-6900"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE LA</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THV</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="true"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="154.00" Min="107.10"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THV">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THV</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="009">
+   <BasicPropertyInfo AreaID="016NE" ChainCode="RC" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0043020" HotelName="RESIDENCE INN MARRIOTT AIRPORT" Latitude="30.187633" Longitude="-92.012326">
+    <Address>
+     <AddressLine>128 JAMES COMEAUX RD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-2329145" Phone="1-337-2323341"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G"/>
+    <Property Rating="NTM">
+     <Text>3 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="true"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="true"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="true"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="189.00" Min="189.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="010">
+   <BasicPropertyInfo AreaID="017E" ChainCode="OZ" Distance="M" GEO_ConfidenceLevel="3" HotelCityCode="LFT" HotelCode="0139169" HotelName="SUPER 8 NEW IBERIA">
+    <Address>
+     <AddressLine>2714 HIGHWAY 14</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-3675311" Phone="1-337-3643030"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>TRH</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>1 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="true"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="true"/>
+     <HighSpeedInternet Ind="false"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="true"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="89.99" Min="72.24"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="TRH">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>TRH</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="011">
+   <BasicPropertyInfo AreaID="017E" ChainCode="YO" Distance="M" GEO_ConfidenceLevel="3" HotelCityCode="LFT" HotelCode="0084515" HotelName="CANDLEWOOD SUITES NEW IBERIA">
+    <Address>
+     <AddressLine>2600 HIGHWAY 14</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-256-8478" Phone="1-337-256-8113"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>NEW IBERIA LA</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THV</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="true"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="true"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="134.00" Min="75.60"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THV">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THV</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="012">
+   <BasicPropertyInfo AreaID="017E" ChainCode="RA" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0003787" HotelName="RAMADA NEW IBERIA" Latitude="29.985188" Longitude="-91.857166">
+    <Address>
+     <AddressLine>2915 HIGHWAY 14</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-3677877" Phone="1-337-3671201"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>3 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="true"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="false"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="true"/>
+     <Golf Ind="true"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="true"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="true"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="89.95" Min="85.95"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="TRH">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="013">
+   <BasicPropertyInfo AreaID="017NE" ChainCode="WV" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0087770" HotelName="THE HOTEL ACADIANA" Latitude="30.192469" Longitude="-92.015830">
+    <Address>
+     <AddressLine>1801 W. PINHOOK RD.</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-2349667" Phone="1-337-2338120"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>3 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="true"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="true"/>
+     <FitnessCenter Ind="false"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="false"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="true"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="false"/>
+     <Pets Ind="false"/>
+     <Pool Ind="false"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="true"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="true"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="189.00" Min="89.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="014">
+   <BasicPropertyInfo AreaID="017E" ChainCode="HI" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0081433" HotelName="HOLIDAY INN EXP STES NEW IBERI" Latitude="29.983576" Longitude="-91.856512">
+    <Address>
+     <AddressLine>318 WEST HWY 90 FRONTAGE RD</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-408-2710" Phone="1-337-408-2700"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>NEW IBERIA LA</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THV</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="true"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="true"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="174.95" Min="107.06"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THV">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THV</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="015">
+   <BasicPropertyInfo AreaID="017NE" ChainCode="FN" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0029623" HotelName="FAIRFIELD INN N STES MARRIOTT" Latitude="30.192493" Longitude="-92.015817">
+    <Address>
+     <AddressLine>1606 W PINHOOK ROAD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-2335223" Phone="1-337-2335558"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G"/>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="true"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="true"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="true"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="149.00" Min="111.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="016">
+   <BasicPropertyInfo AreaID="017NE" ChainCode="CZ" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0000802" HotelName="COMFORT SUITES LAFAYETTE" Latitude="30.193116" Longitude="-92.017133">
+    <Address>
+     <AddressLine>114 RUE FERNAND</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="337-456-8963" Phone="337-456-8390"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="false"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="true"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="true"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="109.99" Min="109.99"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="017">
+   <BasicPropertyInfo AreaID="017NE" ChainCode="YZ" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0087810" HotelName="STAYBRIDGE SUITES LAFAYETTE" Latitude="30.191261" Longitude="-92.012097">
+    <Address>
+     <AddressLine>129 E KALISTE SALOOM ROAD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-236-3084" Phone="1-337-267-4666"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE LA</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>THV</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="true"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="true"/>
+     <FreeWifiInMeetingRooms Ind="true"/>
+     <FreeWifiInPublicSpaces Ind="true"/>
+     <FreeWifiInRooms Ind="true"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="true"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="244.99" Min="144.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="THV">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>THV</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="018">
+   <BasicPropertyInfo AreaID="017E" ChainCode="LQ" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0058588" HotelName="LA QUINTA INN STE NEW IBERIA" Latitude="29.985671" Longitude="-91.855385">
+    <Address>
+     <AddressLine>611A QUEEN CITY DRIVE</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-321-6007" Phone="1-337-321-6000"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>NEW IBERIA</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="true"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="true"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="false"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="false"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="114.00" Min="94.00"/>
+    <RoomRate GuaranteeSurchargeRequired="G" RateLevelCode="RAC" XPM_GuaranteeRequired="6">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="06" Option="P"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+     <RateTypeCode>A2D</RateTypeCode>
+     <RateTypeCode>B1K</RateTypeCode>
+     <RateTypeCode>E1K</RateTypeCode>
+     <RateTypeCode>H1K</RateTypeCode>
+     <RateTypeCode>H2D</RateTypeCode>
+     <RateTypeCode>S1K</RateTypeCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="019">
+   <BasicPropertyInfo AreaID="017E" ChainCode="DI" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0057770" HotelName="DAYS INN AND SUITES NEW IBERIA" Latitude="29.985671" Longitude="-91.855385">
+    <Address>
+     <AddressLine>611 QUEEN CITY DRIVE</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-5605611" Phone="1-337-5609500"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>LAFAYETTE</Text>
+    </LocationDescription>
+    <NegotiatedRateCodeMatch>TRH</NegotiatedRateCodeMatch>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="true"/>
+     <Golf Ind="true"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="false"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="false"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="89.00" Min="67.15"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <RoomRate RateLevelCode="TRH">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>TRH</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="020">
+   <BasicPropertyInfo AreaID="017E" ChainCode="CZ" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0055860" HotelName="COMFORT SUITES NEW IBERIA" Latitude="29.985109" Longitude="-91.854810">
+    <Address>
+     <AddressLine>2817 HWY 14</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="337-367-0845" Phone="337-367-0855"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>NEW IBERIA</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="false"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="false"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="false"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="true"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="false"/>
+     <Pets Ind="false"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="false"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="true"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="249.99" Min="80.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="021">
+   <BasicPropertyInfo AreaID="017NE" ChainCode="HH" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0009260" HotelName="HILTON LAFAYETTE AND TOWERS" Latitude="30.197170" Longitude="-92.016459">
+    <Address>
+     <AddressLine>1521 WEST PINHOOK RD</AddressLine>
+     <AddressLine>LAFAYETTE LA 70508</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-237-6313" Phone="1-337-235-6111"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G">
+     <Text>AIRPORT  FROM APT N</Text>
+    </LocationDescription>
+    <Property Rating="NTM">
+     <Text>4 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="true"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="false"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="true"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="true"/>
+     <ExecutiveFloors Ind="true"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="true"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="true"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="true"/>
+     <Pets Ind="true"/>
+     <Pool Ind="true"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="true"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="209.00" Min="119.00"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+  <AvailabilityOption RPH="022">
+   <BasicPropertyInfo AreaID="017E" ChainCode="HX" Distance="M" GEO_ConfidenceLevel="1" HotelCityCode="LFT" HotelCode="0120563" HotelName="HAMPTON INN AND STE NEW IBERIA" Latitude="29.985400" Longitude="-91.849300">
+    <Address>
+     <AddressLine>400 OLDE SPANISH TOWNE BLVD</AddressLine>
+     <AddressLine>NEW IBERIA LA 70560</AddressLine>
+    </Address>
+    <ContactNumbers>
+     <ContactNumber Fax="1-337-321-6659" Phone="1-337-321-6700"/>
+    </ContactNumbers>
+    <DirectConnect>
+     <Alt_Avail Ind="false"/>
+     <DC_AvailParticipant Ind="true"/>
+     <DC_SellParticipant Ind="true"/>
+     <RatesExceedMax Ind="false"/>
+     <UnAvail Ind="false"/>
+    </DirectConnect>
+    <LocationDescription Code="G"/>
+    <Property Rating="NTM">
+     <Text>2 CROWN</Text>
+    </Property>
+    <PropertyOptionInfo>
+     <ADA_Accessible Ind="false"/>
+     <AdultsOnly Ind="false"/>
+     <BeachFront Ind="false"/>
+     <Breakfast Ind="true"/>
+     <BusinessCenter Ind="true"/>
+     <BusinessReady Ind="false"/>
+     <Conventions Ind="false"/>
+     <Dataport Ind="true"/>
+     <Dining Ind="false"/>
+     <DryClean Ind="false"/>
+     <EcoCertified Ind="true"/>
+     <ExecutiveFloors Ind="false"/>
+     <FitnessCenter Ind="true"/>
+     <FreeLocalCalls Ind="false"/>
+     <FreeParking Ind="true"/>
+     <FreeShuttle Ind="false"/>
+     <FreeWifiInMeetingRooms Ind="false"/>
+     <FreeWifiInPublicSpaces Ind="false"/>
+     <FreeWifiInRooms Ind="false"/>
+     <FullServiceSpa Ind="false"/>
+     <GameFacilities Ind="false"/>
+     <Golf Ind="false"/>
+     <HighSpeedInternet Ind="true"/>
+     <HypoallergenicRooms Ind="false"/>
+     <IndoorPool Ind="false"/>
+     <InRoomCoffeeTea Ind="true"/>
+     <InRoomMiniBar Ind="false"/>
+     <InRoomRefrigerator Ind="true"/>
+     <InRoomSafe Ind="false"/>
+     <InteriorDoorways Ind="false"/>
+     <Jacuzzi Ind="false"/>
+     <KidsFacilities Ind="false"/>
+     <KitchenFacilities Ind="false"/>
+     <MealService Ind="false"/>
+     <MeetingFacilities Ind="true"/>
+     <NoAdultTV Ind="false"/>
+     <NonSmoking Ind="true"/>
+     <OutdoorPool Ind="false"/>
+     <Pets Ind="false"/>
+     <Pool Ind="false"/>
+     <PublicTransportationAdjacent Ind="false"/>
+     <RateAssured Ind="true"/>
+     <Recreation Ind="false"/>
+     <RestrictedRoomAccess Ind="true"/>
+     <RoomService Ind="false"/>
+     <RoomService24Hours Ind="false"/>
+     <RoomsWithBalcony Ind="false"/>
+     <SkiInOutProperty Ind="false"/>
+     <SmokeFree Ind="false"/>
+     <SmokingRoomsAvail Ind="false"/>
+     <Tennis Ind="false"/>
+     <WaterPurificationSystem Ind="false"/>
+     <Wheelchair Ind="false"/>
+    </PropertyOptionInfo>
+    <RateRange CurrencyCode="USD" Max="171.72" Min="113.05"/>
+    <RoomRate RateLevelCode="RAC">
+     <AdditionalInfo>
+      <CancelPolicy Numeric="00"/>
+     </AdditionalInfo>
+     <HotelRateCode>RAC</HotelRateCode>
+    </RoomRate>
+    <SpecialOffers Ind="false"/>
+   </BasicPropertyInfo>
+  </AvailabilityOption>
+ </AvailabilityOptions>
+</OTA_HotelAvailRS></soap-env:Body></soap-env:Envelope>
+W, [2013-08-20T11:10:15.027575 #15137]  WARN -- : HTTPI executes HTTP GET using the net_http adapter
+D, [2013-08-20T11:10:15.162667 #15137] DEBUG -- : SOAP request: https://webservices.sabre.com/websvc
+D, [2013-08-20T11:10:15.162734 #15137] DEBUG -- : SOAPAction: "OTA", Content-Type: text/xml;charset=UTF-8, Content-Length: 1548
+D, [2013-08-20T11:10:15.162770 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xlinx="http://www.w3.org/1999/xlink"><env:Header><eb:MessageHeader SOAP-ENV:mustUnderstand="1" eb:version="2.0"><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:From><eb:PartyId type="urn:x12.org:IO5:01">hotelengine.com</eb:PartyId></eb:From><eb:To><eb:PartyId type="urn:x12.org:IO5:01">webservices.sabre.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:Service eb:type="sabreXML">Session</eb:Service><eb:Action>SessionCloseRQ</eb:Action><eb:MessageData><eb:MessageId>mid:20130820-111015@hotelengine.com</eb:MessageId><eb:RefToMessageId>mid:20130820-111009@hotelengine.com</eb:RefToMessageId><eb:Timestamp>2013-08-20T11:10:15Z</eb:Timestamp></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/12/utility" wsu:Id="SabreSecurityToken" valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></env:Header><env:Body><eb:MessageHeader><POS><Source PseudoCityCode="P40G"></Source></POS></eb:MessageHeader></env:Body></env:Envelope>
+W, [2013-08-20T11:10:15.162823 #15137]  WARN -- : HTTPI executes HTTP POST using the net_http adapter
+D, [2013-08-20T11:10:15.461100 #15137] DEBUG -- : SOAP response (status 200):
+D, [2013-08-20T11:10:15.461175 #15137] DEBUG -- : <?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><eb:MessageHeader xmlns:eb="http://www.ebxml.org/namespaces/messageHeader" eb:version="1.0" soap-env:mustUnderstand="1"><eb:From><eb:PartyId eb:type="URI">webservices.sabre.com</eb:PartyId></eb:From><eb:To><eb:PartyId eb:type="URI">hotelengine.com</eb:PartyId></eb:To><eb:CPAId>P40G</eb:CPAId><eb:ConversationId>elia@mytravelershaven.com</eb:ConversationId><eb:Service eb:type="sabreXML">Session</eb:Service><eb:Action>SessionCloseRS</eb:Action><eb:MessageData><eb:MessageId>575bd483-e173-4150-a928-c66d861d8553@156</eb:MessageId><eb:Timestamp>2013-08-20T15:10:14</eb:Timestamp><eb:RefToMessageId>mid:20130820-111015@hotelengine.com</eb:RefToMessageId></eb:MessageData></eb:MessageHeader><wsse:Security xmlns:wsse="http://schemas.xmlsoap.org/ws/2002/12/secext"><wsse:BinarySecurityToken valueType="String" EncodingType="wsse:Base64Binary">Shared/IDL:IceSess\/SessMgr:1\.0.IDL/Common/!ICESMS\/RESH!ICESMSLB\/RES.LB!-3758487217962580559!1617983!0</wsse:BinarySecurityToken></wsse:Security></soap-env:Header><soap-env:Body><SessionCloseRS xmlns="http://www.opentravel.org/OTA/2002/11" version="1" status="Approved"/></soap-env:Body></soap-env:Envelope>
+.
+
+Finished in 6 seconds
+1 example, 0 failures
