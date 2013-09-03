@@ -289,7 +289,7 @@ module Sabre
       response = result.to_hash[:hotel_property_description_rs]
       if response[:errors].nil?
         room_stay = response[:room_stay]
-        #puts "Room stay is #{room_stay}"
+        puts "Room stay is #{room_stay}"
         if room_stay[:basic_property_info]
           prop_info = room_stay[:basic_property_info]
 
