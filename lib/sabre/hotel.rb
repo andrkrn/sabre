@@ -36,7 +36,7 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 30)
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 40)
       rate_plan_codes = []
       amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.nil?
@@ -289,7 +289,7 @@ module Sabre
       response = result.to_hash[:hotel_property_description_rs]
       if response[:errors].nil?
         room_stay = response[:room_stay]
-        puts "Room stay is #{room_stay}"
+        #puts "Room stay is #{room_stay}"
         if room_stay[:basic_property_info]
           prop_info = room_stay[:basic_property_info]
 

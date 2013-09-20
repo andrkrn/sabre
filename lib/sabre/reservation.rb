@@ -1,8 +1,8 @@
 module Sabre
   class Reservation
-    def self.book(session, room_code, line_number, unit_count, guest_count, amount, currency, name, card_code, card_number, expire_date, check_in, check_out, confirmation_number )
-      client = Sabre.client('OTA_HotelResLLS2.1.0RQ.wsdl')
-      response = client.request('OTA_HotelResRQ', Sabre.request_header('2.1.0')) do
+    def self.book(session, room_code, line_number, unit_count, guest_count, amount, currency, name, card_code, card_number, expire_date, check_in, check_out, confirmation_number, memo )
+      client = Sabre.client('OTA_HotelResLLS2.1.1RQ.wsdl')
+      response = client.request('OTA_HotelResRQ', Sabre.request_header('2.1.1')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Booking','sabreXML','OTA_HotelResLLSRQ')
         soap.body = {
@@ -16,7 +16,8 @@ module Sabre
                 },
                 :attributes! => { 'PaymentCard' => { 'Code' => card_code, 'ExpireDate' => expire_date.strftime('%Y-%m'), 'Number' => card_number } }
 
-              }
+              },
+              'Text' => memo
             },
             'GuestCounts' => '',
             #'POS' => Sabre.pos,
