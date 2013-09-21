@@ -1,8 +1,8 @@
 module Sabre
   module Traveler
     def self.profile(session,first_name,last_name,phone)
-      client = Sabre.client('TravelItineraryAddInfoLLS2.2.0RQ.wsdl')
-      response = client.request('TravelItineraryAddInfoRQ', Sabre.request_header('2.2.0')) do
+      client = Sabre.client('TravelItineraryAddInfoLLS2.0.1RQ.wsdl')
+      response = client.request('TravelItineraryAddInfoRQ', Sabre.request_header('2.0.1')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Travel Itinerary Info','sabreXML','TravelItineraryAddInfoLLSRQ')
         soap.body = {
