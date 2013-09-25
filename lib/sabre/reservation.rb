@@ -59,17 +59,17 @@ module Sabre
     end
 
     def self.cancel_stay(session,reservation_id = '1')
-      client = Sabre.client('OTA_CancelLLSRQ.wsdl',1)
-      response = client.request(:ota_cancel_rq, Sabre.request_header('1.0.1')) do
+      client = Sabre.client('OTA_CancelLLS2.0.0RQ.wsdl',1)
+      response = client.request(:ota_cancel_rq, Sabre.request_header('2.0.0')) do
       Sabre.namespaces(soap)
       soap.header = session.header('Cancel Reservation','sabreXML','OTA_CancelLLSRQ')
       soap.body = {
-          'POS' => Sabre.pos,
-          'TPA_Extensions' => {
-            'SegmentCancel' => {
-              'Segment' => '', :attributes! => { 'Segment' => { 'Number' => reservation_id } }
-            }, :attributes! => {'SegmentCancel' => {'Type' => 'Hotel'}}
-          }
+          #'POS' => Sabre.pos,
+          #'TPA_Extensions' => {
+            #'SegmentCancel' => {
+              'Segment' => '', :attributes! => { 'Segment' => { 'Type' => 'hotel' } }
+            #}, :attributes! => {'SegmentCancel' => {'Type' => 'hotel'}}
+          #}
 	    }
       end
     end
