@@ -16,20 +16,22 @@ module Sabre
                 },
                 :attributes! => { 'PaymentCard' => { 'Code' => card_code, 'ExpireDate' => expire_date.strftime('%Y-%m'), 'Number' => card_number } }
 
-              },
-              'Text' => memo
+              }
             },
             'GuestCounts' => '',
             #'POS' => Sabre.pos,
             #'RatePlanCandidates' => { 'ContractNegotiatedRateCode' => rate_code },
             'RoomType' => '',
+            'SpecialPrefs' => {
+              'Text' => memo
+            },
             #'TimeSpan' => '',
             :attributes! => {
               'BasicPropertyInfo' => { 'RPH' => line_number },
               'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
               'GuestCounts' => { 'Count' => guest_count },
               'RoomType' => { 'NumberOfUnits' => unit_count } #, 'RoomTypeCode' => room_code },
-              #'TimeSpan' => { 'Start' => check_in.strftime('%m-%d'), 'End' => check_out.strftime('%m-%d') }
+              #'TimeSpan' => { 'End' => check_out.strftime('%m-%d'), 'Start' => check_in.strftime('%m-%d') }
             }
           }
       }
