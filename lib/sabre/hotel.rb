@@ -425,6 +425,7 @@ module Sabre
       code = rr[:@iata_characteristic_identification]
       product = rr[:@iata_product_identification]
       cancel_policy = rr[:additional_info][:cancel_policy]
+      cancellation_details = cancel_policy[:text].nil? ? nil : cancel_policy[:text]
       commission = rr[:additional_info][:commission]
       commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil
       cancel_code = [cancel_policy[:@numeric],cancel_policy[:@option]].join('')
@@ -450,6 +451,7 @@ module Sabre
           product: product,
           commission: commission,
           cancel_code: cancel_code,
+          cancellation_details: cancellation_details,
           line_number: line_number,
           night_list_price: rr[:rates][:rate][:@amount],
           nightly_prices: nightly_rates,

@@ -123,7 +123,6 @@ describe Sabre do
       hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,Time.now+172800, Time.now+432000, '1')
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
-      debugger
       rate[:nightly_prices].should_not be_empty
       #rate[:line_number].should == room_stay.first[:line_number]
       cancellation.should_not be_nil
