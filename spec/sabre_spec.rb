@@ -169,14 +169,11 @@ describe Sabre do
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
       rate = rates.first
       #rate_orig[:line_number].should == rate[:line_number]
-      debugger
       booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',expire_date,check_in,check_out,'123',"Guest paid #{rate[:total_list_price]} USD")
-      Sabre::Reservation.confirm(@session,'TEST USER')
-      breakpoint
+      response = Sabre::Reservation.confirm(@session,'TEST USER')
       booking.to_hash.should include(:ota_hotel_res_rs)
-      puts booking.to_hash
-      booking.to_hash[:ota_hotel_res_rs]
-      unique_num = booking.to_hash[:end_transaction_rs][:itinerary_ref][:@id]
+      puts response.to_hash
+      unique_num = response.to_hash[:end_transaction_rs][:itinerary_ref][:@id]
       puts unique_num
       unique_num.should_not be_nil
       response = Sabre::Traveler.locate(@session,'PNR',unique_num)
@@ -186,9 +183,8 @@ describe Sabre do
       b.should_not be_nil
     end
 
-
     it "should cancel a hotel reservation" do
-      response = Sabre::Traveler.locate(@session,'PNR','ZIWDZG')
+      response = Sabre::Traveler.locate(@session,'PNR','ASQFBT')
       a = Sabre::Reservation.cancel_stay(@session)
       b = Sabre::Reservation.confirm(@session, 'TEST USER')
       b.should_not be_nil
