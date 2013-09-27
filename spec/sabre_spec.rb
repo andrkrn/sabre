@@ -90,7 +90,9 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.context_change(@session)
-      hotels = Sabre::Hotel.find_by_geo(@session, Date.today, Date.today+2.days,'29.9746','-92.1343',2,[],[],['TRH','THH','THV','TV9'])
+      
+      hotels = Sabre::Hotel.find_by_geo(@session, Date.today + 1, Date.today+2.days,'39.7376','-104.9847',2,[],[],['TRH','THH','THV','TV9'])
+      puts hotels.count
       hotels.should_not be_empty
     end
 
@@ -155,27 +157,29 @@ describe Sabre do
       res.should raise_exception
     end
 
+    # TODO Test this non-stop
     # This needs to be a Long booking
     it "should book, confirm and cancel a hotel reservation" do#, :vcr, record: :new_episodes do
       check_in = Date.today + 70.days
       check_out = check_in + 2.days
+      expire_date = Date.today + 2.years
       Sabre::Traveler.profile(@session, 'TEST', 'USER', '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0001810',check_in, check_out, '1')
       rate_orig = hotel.rates.sample
-      debugger
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
-      breakpoint
       rate = rates.first
       #rate_orig[:line_number].should == rate[:line_number]
-      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',(Date.today + 8.months),check_in,check_out,'123',"Guest paid #{rate[:total_list_price]} USD")
+      debugger
+      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',expire_date,check_in,check_out,'123',"Guest paid #{rate[:total_list_price]} USD")
       Sabre::Reservation.confirm(@session,'TEST USER')
+      breakpoint
       booking.to_hash.should include(:ota_hotel_res_rs)
       puts booking.to_hash
       booking.to_hash[:ota_hotel_res_rs]
       unique_num = booking.to_hash[:end_transaction_rs][:itinerary_ref][:@id]
       puts unique_num
       unique_num.should_not be_nil
-      response = Sabre::Traveler.locate(@session,'PNR','TEST USER')
+      response = Sabre::Traveler.locate(@session,'PNR',unique_num)
       a = Sabre::Reservation.cancel_stay(@session)
       b = Sabre::Reservation.confirm(@session, 'TEST USER')
       breakpoint
@@ -183,8 +187,11 @@ describe Sabre do
     end
 
 
-    it "should cancel a hotel reservation", :vcr, record: :new_episodes do
-      Sabre::Reservation.cancel_stay(@session)
+    it "should cancel a hotel reservation" do
+      response = Sabre::Traveler.locate(@session,'PNR','ZIWDZG')
+      a = Sabre::Reservation.cancel_stay(@session)
+      b = Sabre::Reservation.confirm(@session, 'TEST USER')
+      b.should_not be_nil
     end
 
     after(:each) do
