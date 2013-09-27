@@ -134,8 +134,8 @@ module Sabre
     end
 
     def self.context_change(session)
-      client = Sabre.client('ContextChangeLLS2.0.2RQ.wsdl')
-      response = client.request('ContextChangeRQ', Sabre.request_header('2.0.2')) do
+      client = Sabre.client('ContextChangeLLS2.0.3RQ.wsdl')
+      response = client.request('ContextChangeRQ', Sabre.request_header('2.0.3')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Change AAA','sabreXML','ContextChangeLLSRQ')
         soap.body = {
