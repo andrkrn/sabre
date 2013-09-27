@@ -376,19 +376,25 @@ module Sabre
 
     def self.room(response)
       stay = response[:hotel_rate_description_rs][:room_stay]
-      cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].each{|text|text.to_s}.join(" ")
-      line_number = stay[:basic_property_info][:@rph]
-      room_rate = stay[:room_rates][:room_rate]
-      rates = []
-      if room_rate.class.name == 'Array'
-        room_rate.each do |rr|
-          rates = room_rate_builder(rr, rates)
-        end
+      if stay[:basic_property_info][:vendor_messages]
+        cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].each{|text|text.to_s}.join(" ")
       else
-        rates = room_rate_builder(room_rate, rates)
+        cancellation = nil
       end
-      rates = rates.each{|r|r[:line_number] = line_number}
-      return rates, cancellation
+      line_number = stay[:basic_property_info][:@rph]
+      rates = []
+      if stay[:room_rates]
+        room_rate = stay[:room_rates][:room_rate]
+        if room_rate.class.name == 'Array'
+          room_rate.each do |rr|
+            rates = room_rate_builder(rr, rates)
+          end
+        else
+          rates = room_rate_builder(room_rate, rates)
+        end
+        rates = rates.each{|r|r[:line_number] = line_number}
+      end
+      return rates, cancellation # It is quite possible that the cancellation is null
     end
 
     def self.rate_description(rate_result)
