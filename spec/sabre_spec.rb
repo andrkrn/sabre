@@ -31,7 +31,7 @@ describe Sabre do
       Sabre.domain = 'hotelengine.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
-      @session = Sabre::Session.new('elia@mytravelershaven.com')
+      @session = Sabre::Session.new('elia@mytravelershaven.com-123')
     end
 
     it "should change the AAA for rates" do
@@ -91,7 +91,7 @@ describe Sabre do
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.context_change(@session)
       
-      hotels = Sabre::Hotel.find_by_geo(@session, Date.today + 1, Date.today+2.days,'39.7376','-104.9847',2,[],[],['TRH','THH','THV','TV9'])
+      hotels = Sabre::Hotel.find_by_geo(@session, Date.today + 1, Date.today+32.days,'39.7376','-104.9847',2,[],[],['TRH','THH','THV','TV9'])
       puts hotels.count
       hotels.should_not be_empty
     end
@@ -120,9 +120,11 @@ describe Sabre do
 
     # Rate Details
     it "should return the rate details for a hotel", :vcr, record: :new_episodes do
-      hotels = Sabre::Hotel.find_by_geo(@session, (Time.now+172800), (Time.now+432000),'39.75','-104.87','1')
+      @check_in = Date.today + 30.days
+      @check_out = @check_in + 45.days
+      hotels = Sabre::Hotel.find_by_geo(@session, @check_in, @check_out,'39.75','-104.87','1')
       hotel = hotels.sample
-      hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,Time.now+172800, Time.now+432000, '1')
+      hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,@check_in, @check_out, '1')
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
       rate[:nightly_prices].should_not be_empty
@@ -163,8 +165,9 @@ describe Sabre do
       check_in = Date.today + 70.days
       check_out = check_in + 2.days
       expire_date = Date.today + 2.years
+      changed = Sabre::Hotel.context_change(@session)
       Sabre::Traveler.profile(@session, 'TEST', 'USER', '303-861-9300')
-      hotel = Sabre::Hotel.profile(@session,'0001810',check_in, check_out, '1')
+      hotel = Sabre::Hotel.profile(@session,'0032919',check_in, check_out, '1')
       rate_orig = hotel.rates.sample
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
       rate = rates.first
@@ -179,12 +182,11 @@ describe Sabre do
       response = Sabre::Traveler.locate(@session,'PNR',unique_num)
       a = Sabre::Reservation.cancel_stay(@session)
       b = Sabre::Reservation.confirm(@session, 'TEST USER')
-      breakpoint
       b.should_not be_nil
     end
 
     it "should cancel a hotel reservation" do
-      response = Sabre::Traveler.locate(@session,'PNR','ASQFBT')
+      response = Sabre::Traveler.locate(@session,'PNR','PYXGPA')
       a = Sabre::Reservation.cancel_stay(@session)
       b = Sabre::Reservation.confirm(@session, 'TEST USER')
       b.should_not be_nil

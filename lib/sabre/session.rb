@@ -10,7 +10,7 @@ module Sabre
       @ipcc = Sabre.ipcc
       @domain = Sabre.domain
       @pcc = Sabre.pcc
-      @conversation_id = conversation_id
+      @conversation_id = [conversation_id,Time.now.to_i].join("-")
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
       open
