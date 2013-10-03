@@ -77,10 +77,12 @@ describe Sabre do
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       st = DateTime.now
+      check_in = Date.today + 4.months + 1.day
+      check_out = check_in + 1.day
       #hotels = Sabre::Hotel.find_by_geo(@session, (Date.today+25.days), (Date.today+27.days),
       #  '29.9680', '-92.0861','1',[],[],[],25)
-      hotels = Sabre::Hotel.find_by_geo(@session, Date.today, (Date.today + 1.days), 
-        '39.7417','-104.9894', 2, [], [], [], 25)
+      hotels = Sabre::Hotel.find_by_geo(@session, check_in, check_out, 
+        '39.7417','-104.9894', 2, [], [], [], 1000)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
       hotel = hotels.sample
       hotel.latitude.should_not be_nil
@@ -113,7 +115,6 @@ describe Sabre do
       hotel = Sabre::Hotel.profile(@session,'0009569',Date.today, Date.today+1.day, '1',['THH'])
       #hotel = Sabre::Hotel.profile(@session,'0006016',Date.today+67.days, Date.today+68.days, '1',[])
       #hotel = Sabre::Hotel.profile(@session,'0050264',Date.today, Date.today+1.days, '1',[])
-      debugger
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end
@@ -125,6 +126,7 @@ describe Sabre do
       hotels = Sabre::Hotel.find_by_geo(@session, @check_in, @check_out,'39.75','-104.87','1')
       hotel = hotels.sample
       hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,@check_in, @check_out, '1')
+      debugger
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
       rate[:nightly_prices].should_not be_empty
@@ -168,11 +170,12 @@ describe Sabre do
       changed = Sabre::Hotel.context_change(@session)
       Sabre::Traveler.profile(@session, 'TEST', 'USER', '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0032919',check_in, check_out, '1')
-      rate_orig = hotel.rates.sample
+      rate_orig = hotel.rates.select{|r|r[:code] == 'NK1RAC'}.first
+      #rate_orig = hotel.rates.sample
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
       rate = rates.first
       #rate_orig[:line_number].should == rate[:line_number]
-      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',expire_date,check_in,check_out,'123',"Guest paid #{rate[:total_list_price]} USD")
+      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',expire_date,check_in,check_out,'123',"DO NOT DISCLOSE RATES - PREPAID BOOKING FROM HOTELENGINE.COM GUEST CHARGED $#{rate[:total_list_price]} USD. TAXES $12.47 USD. FEES $2.65 USD.")
       response = Sabre::Reservation.confirm(@session,'TEST USER')
       booking.to_hash.should include(:ota_hotel_res_rs)
       puts response.to_hash

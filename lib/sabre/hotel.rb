@@ -1,6 +1,6 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :services, :policies, :attractions, :cancel_code, :rate_level_code, :taxes
+    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :awards, :services, :transportation, :policies, :attractions, :cancel_code, :rate_level_code, :taxes
 
     def initialize(basic_info)
       @area_id = basic_info[:@area_id]
@@ -36,7 +36,7 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 1000)
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 200)
       rate_plan_codes = []
       amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.nil?
@@ -71,7 +71,7 @@ module Sabre
             'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
                 #'RatePlanCode' => rate_plan_codes,
-                'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '1000.00', 'Min' => '20.00' }}
+                'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '9000.00', 'Min' => '20.00' }}
               },
               'TimeSpan' => '',
               :attributes! => {
@@ -352,6 +352,8 @@ module Sabre
           hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
           hotel.location_description = details[:location][:text] if details[:location]
           hotel.services = details[:services][:text]
+          hotel.awards = details[:awards][:text]
+          hotel.transportation = details[:transportation][:text]
           hotel.policies = details[:policies][:text]
           hotel.attractions = details[:attractions][:text]
         rescue
@@ -431,6 +433,7 @@ module Sabre
       code = rr[:@iata_characteristic_identification]
       product = rr[:@iata_product_identification]
       cancel_policy = rr[:additional_info][:cancel_policy]
+      dca_cancellation = rr[:additional_info][:dca_cancellation].nil? ? nil : rr[:additional_info][:dca_cancellation][:text]
       cancellation_details = cancel_policy[:text].nil? ? nil : cancel_policy[:text]
       commission = rr[:additional_info][:commission]
       commission = commission.include?('PERCENT COMMISSION') ? commission.gsub('PERCENT COMMISSION','') : nil
@@ -458,6 +461,7 @@ module Sabre
           commission: commission,
           cancel_code: cancel_code,
           cancellation_details: cancellation_details,
+          dca_cancellation: dca_cancellation,
           line_number: line_number,
           night_list_price: rr[:rates][:rate][:@amount],
           nightly_prices: nightly_rates,

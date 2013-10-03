@@ -18,7 +18,6 @@ module Sabre
 
               }
             },
-            'GuestCounts' => '',
             #'POS' => Sabre.pos,
             #'RatePlanCandidates' => { 'ContractNegotiatedRateCode' => rate_code },
             'RoomType' => '',
@@ -29,7 +28,6 @@ module Sabre
             :attributes! => {
               'BasicPropertyInfo' => { 'RPH' => line_number },
               'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
-              'GuestCounts' => { 'Count' => guest_count },
               'RoomType' => { 'NumberOfUnits' => unit_count } #, 'RoomTypeCode' => room_code },
               #'TimeSpan' => { 'End' => check_out.strftime('%m-%d'), 'Start' => check_in.strftime('%m-%d') }
             }
