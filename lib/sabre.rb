@@ -26,6 +26,8 @@ module Sabre
     #  @errors << {:type => e.class.name, :message => Sabre.clean_error_message(e.message)}
     rescue Timeout::Error => e
       @errors << {:type => e.class.name, :message => "Sabre Travel Network service request failed due to timeout"}
+    rescue Exception => e
+      session.close
     ensure
       session.close
     end

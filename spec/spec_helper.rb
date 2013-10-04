@@ -12,7 +12,7 @@ require 'savon'
 #require 'savon_spec'
 require 'sabre'
 
-HTTPI.log = true
+HTTPI.log = false
 #Savon.log = true
 
 #VCR.configure do |c|

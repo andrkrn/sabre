@@ -36,7 +36,7 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 200)
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 100)
       rate_plan_codes = []
       amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.nil?
@@ -75,11 +75,28 @@ module Sabre
               },
               'TimeSpan' => '',
               :attributes! => {
+            #    'AdditionalAvail' => { 'Ind' => 'true' },
                 'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
                 'RatePlanCandidates' => { 'PromotionalSpot' => 'L', 'RateAssured' => 'true','SuppressRackRate' => 'false' },
                 'HotelSearchCriteria' => { 'NumProperties' => num_properties },
                 'GuestCounts' => { 'Count' => guest_count }#,
-                #'AdditionalAvail' => { 'Ind' => 'true' }
+              }
+            }
+          }
+      end
+      construct_response_hash(response)
+    end
+
+    def self.additional(session)
+      client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
+      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
+        Sabre.namespaces(soap)
+        soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
+        soap.body = {
+          'AvailRequestSegment' => {
+            'AdditionalAvail' => '',
+              :attributes! => {
+                'AdditionalAvail' => { 'Ind' => 'true' }
               }
             }
           }
