@@ -121,12 +121,10 @@ describe Sabre do
 
     # Rate Details
     it "should return the rate details for a hotel", :vcr, record: :new_episodes do
-      @check_in = Date.today + 30.days
-      @check_out = @check_in + 45.days
-      hotels = Sabre::Hotel.find_by_geo(@session, @check_in, @check_out,'39.75','-104.87','1')
-      hotel = hotels.sample
-      hotel = Sabre::Hotel.profile(@session,hotel.hotel_code,@check_in, @check_out, '1')
-      debugger
+      @check_in = Date.today + 4.months + 1.day
+      @check_out = @check_in + 2.days
+      Sabre::Hotel.context_change(@session)
+      hotel = Sabre::Hotel.profile(@session,'0005788',@check_in, @check_out, '1',['TV9'])
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
       rate[:nightly_prices].should_not be_empty

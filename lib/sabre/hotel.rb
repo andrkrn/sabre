@@ -379,7 +379,12 @@ module Sabre
     def self.room(response)
       stay = response[:hotel_rate_description_rs][:room_stay]
       if stay[:basic_property_info][:vendor_messages]
-        cancellation = stay[:basic_property_info][:vendor_messages][:cancellation][:text].each{|text|text.to_s}.join(" ")
+        cancel_text = stay[:basic_property_info][:vendor_messages][:cancellation][:text]
+        if cancel_text.kind_of? Array
+          cancellation = cancel_text.each{|text|text.to_s}.join(" ")
+        else
+          cancellation = cancel_text
+        end
       else
         cancellation = nil
       end
