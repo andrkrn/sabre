@@ -142,7 +142,7 @@ describe Sabre do
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
       rate = rates.first
       #rate_orig[:line_number].should == rate[:line_number]
-      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',(Date.today + 8.months),check_in,check_out,'123',"Guest paid #{rate[:total_list_price]} USD")
+      booking = Sabre::Reservation.book(@session, rate[:line_number].to_i,'1','TEST','AX','378282246310005',(Date.today + 8.months),'123',"Guest paid #{rate[:total_list_price]} USD")
       booking.to_hash.should include(:ota_hotel_res_rs)
       booking.to_hash[:ota_hotel_res_rs]
     end
@@ -155,7 +155,7 @@ describe Sabre do
       rate = hotel.rates.sample
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate[:code])
       rate = rates.first
-      res = Sabre::Reservation.book(@session,rate[:line_number].to_i,'1','2','179.00','USD','TEST','VI','4111',(Time.now + 6000000),'123').to_hash.should include(:ota_hotel_res_rs)
+      res = Sabre::Reservation.book(@session,rate[:line_number].to_i,'1','TEST','VI','4111',(Time.now + 6000000),'123').to_hash.should include(:ota_hotel_res_rs)
       res.should raise_exception
     end
 
