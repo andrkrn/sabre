@@ -97,20 +97,9 @@ describe Sabre do
       co = ci + 1.day
       hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'39.7376','-104.9847',2,[],[],['TRH','THH','THV','TV9'])
       hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      hotels += Sabre::Hotel.additional(@session)
-      names = hotels.map(&:address)
-      names.each{|n|puts n}
-      puts hotels.count
+      #names = hotels.map(&:address)
+      #names.each{|n|puts n}
+      #puts hotels.count
       hotels.should_not be_empty
     end
 
