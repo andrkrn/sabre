@@ -223,7 +223,7 @@ describe Sabre do
     end
 
     after(:each) do
-      @pool.destroy_all
+      #@pool.destroy_all
     end
   end
 end
