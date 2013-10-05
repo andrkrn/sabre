@@ -1,6 +1,6 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :awards, :services, :transportation, :policies, :attractions, :cancel_code, :rate_level_code, :taxes
+    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :awards, :services, :transportation, :policies, :attractions, :cancel_code, :rate_level_code, :taxes, :alternates
 
     def initialize(basic_info)
       @area_id = basic_info[:@area_id]
@@ -320,73 +320,80 @@ module Sabre
           end
         end
 
-        rates = []
-        line_number = nil
-        if room_stay[:room_rates]
-          if room_stay[:room_rates][:room_rate]
-            room_rate = room_stay[:room_rates][:room_rate]
-            if room_rate.class.name == 'Array'
-              room_rate.each do |rr|
-                rates = room_rate_builder(rr, rates)
+        if response[:alternate_availability].present? # If there are alternates then there is no vacancy left
+          props = response[:alternate_availability][:basic_property_info]
+          if props.kind_of? Array
+            hotel.alternates = props.map{|alt|alt[:@hotel_code]} if hotel.present?
+          end
+        else
+          rates = []
+          line_number = nil
+          if room_stay[:room_rates]
+            if room_stay[:room_rates][:room_rate]
+              room_rate = room_stay[:room_rates][:room_rate]
+              if room_rate.class.name == 'Array'
+                room_rate.each do |rr|
+                  rates = room_rate_builder(rr, rates)
+                end
+              else
+                rates = room_rate_builder(room_rate, rates)
               end
+            elsif room_stay[:room_plans]
+              room_stay[:room_plans][:room_plan].each do |rr|
+                if rr[:rates]
+                  tax, total = tax_rate(rr)
+
+                  rates << {
+                    description: rate_description(rr),
+                    night_list_price: rr[:rates][:rate][:@amount],
+                    currency: rr[:rates][:rate][:@currency_code],
+                    taxes: tax,
+                    total_list_price: total
+                  }
+                end
+              end
+            end
+            hotel.rates = rates
+          end # End building rates
+
+          points_of_interest = []
+          begin
+            prop_info[:index_data][:index].each do |poi|
+              pt = poi[:@point]
+              distance = poi[:@distance_direction].strip
+            end
+            points_of_interest << {:point => pt, :distance_direction => distance}
+          rescue
+          end
+          #hotel.points_of_interest
+
+          details = {}
+          begin
+            details = prop_info[:vendor_messages]
+            hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
+            hotel.rooms_available = details[:rooms][:text]
+            hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
+            hotel.location_description = details[:location][:text] if details[:location]
+            hotel.services = details[:services][:text]
+            hotel.awards = details[:awards][:text]
+            hotel.transportation = details[:transportation][:text]
+            hotel.policies = details[:policies][:text]
+            hotel.attractions = details[:attractions][:text]
+          rescue
+          end
+
+          hotel.amenities = prop_info[:property_option_info].map do |key, val|
+            if val.is_a? Hash
+              key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
             else
-              rates = room_rate_builder(room_rate, rates)
+              key.to_s.gsub('_', ' ').titleize if val == 'Y'
             end
-          elsif room_stay[:room_plans]
-            room_stay[:room_plans][:room_plan].each do |rr|
-              if rr[:rates]
-                tax, total = tax_rate(rr)
+          end.compact
 
-                rates << {
-                  description: rate_description(rr),
-                  night_list_price: rr[:rates][:rate][:@amount],
-                  currency: rr[:rates][:rate][:@currency_code],
-                  taxes: tax,
-                  total_list_price: total
-                }
-              end
-            end
-          end
-          hotel.rates = rates
-        end # End building rates
-
-        points_of_interest = []
-        begin
-          prop_info[:index_data][:index].each do |poi|
-            pt = poi[:@point]
-            distance = poi[:@distance_direction].strip
-          end
-          points_of_interest << {:point => pt, :distance_direction => distance}
-        rescue
-        end
-        #hotel.points_of_interest
-
-        details = {}
-        begin
-          details = prop_info[:vendor_messages]
-          hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-          hotel.rooms_available = details[:rooms][:text]
-          hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-          hotel.location_description = details[:location][:text] if details[:location]
-          hotel.services = details[:services][:text]
-          hotel.awards = details[:awards][:text]
-          hotel.transportation = details[:transportation][:text]
-          hotel.policies = details[:policies][:text]
-          hotel.attractions = details[:attractions][:text]
-        rescue
-        end
-
-        hotel.amenities = prop_info[:property_option_info].map do |key, val|
-          if val.is_a? Hash
+          hotel.property_types = prop_info[:property_type_info].map do |key, val|
             key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
-          else
-            key.to_s.gsub('_', ' ').titleize if val == 'Y'
-          end
-        end.compact
-
-        hotel.property_types = prop_info[:property_type_info].map do |key, val|
-          key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
-        end.compact
+          end.compact
+        end
       else
         raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
       end
