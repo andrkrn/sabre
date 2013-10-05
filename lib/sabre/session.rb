@@ -10,7 +10,8 @@ module Sabre
       @ipcc = Sabre.ipcc
       @domain = Sabre.domain
       @pcc = Sabre.pcc
-      @conversation_id = [conversation_id,Time.now.to_i].join("-")
+      #@conversation_id = [conversation_id,Time.now.to_i].join("-")
+      @conversation_id = conversation_id
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
       open
@@ -48,8 +49,8 @@ module Sabre
                   'eb:MessageData' => {
                      'eb:MessageId' => "mid:#{Time.now.strftime('%Y%m%d-%H%M%S')}@#{self.domain}",
                      'eb:RefToMessageId' => self.ref_message_id,
-                     'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                     'eb:Timeout' => 300
+                     'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')#,
+                     #'eb:Timeout' => 300
                   } }
       { 'eb:MessageHeader' => msg_header.to_hash,
         'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'SOAP-ENV:mustUnderstand' => "1", 'eb:version' => "2.0" } }
