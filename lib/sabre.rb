@@ -18,7 +18,6 @@ module Sabre
     begin
       session = Session.new(self.conversation_id)
       block.call(session)
-      session.close
     #rescue SabreException::ConnectionError => e
     #  @errors << {:type => e.class.name, :message => Sabre.clean_error_message(e.message)}
     #rescue SabreException::ReservationError => e
