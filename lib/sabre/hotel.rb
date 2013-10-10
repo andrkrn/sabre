@@ -203,7 +203,7 @@ module Sabre
             },
             'RatePlanCandidates' => {
               'ContractNegotiatedRateCode' => contract_rate_plans,
-              'RatePlanCode' => ['T']
+              'RatePlanCode' => 'T'
             },
             'TimeSpan' => '',
               :attributes! => {

@@ -117,7 +117,7 @@ describe Sabre do
     # 0112273 is Best Western Denver
     it "should return a hotels description response" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      ci = Date.today + 3.months
+      ci = Date.today + 2.months + 23.days
       co = ci + 1.day
       hotel = Sabre::Hotel.profile(@session,'0033375',ci, co, '1',['VHV'])
       #hotel = Sabre::Hotel.profile(@session,'0006016',Date.today+67.days, Date.today+68.days, '1',[])
