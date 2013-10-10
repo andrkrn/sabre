@@ -70,7 +70,7 @@ module Sabre
             },
             'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => ['C','R','W'],
+                'RatePlanCode' => 'ALL',
                 'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Min' => '20.00' }}
               },
               'TimeSpan' => '',
@@ -203,7 +203,7 @@ module Sabre
             },
             'RatePlanCandidates' => {
               'ContractNegotiatedRateCode' => contract_rate_plans,
-              'RatePlanCode' => ['C','R','W']
+              'RatePlanCode' => 'ALL'
             },
             'TimeSpan' => '',
               :attributes! => {
