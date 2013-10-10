@@ -10,8 +10,8 @@ module Sabre
       @ipcc = Sabre.ipcc
       @domain = Sabre.domain
       @pcc = Sabre.pcc
-      #@conversation_id = [conversation_id,Time.now.to_i].join("-")
-      @conversation_id = conversation_id
+      @conversation_id = [conversation_id,Time.now.to_i].join("-")
+      #@conversation_id = conversation_id
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
       open
@@ -28,7 +28,6 @@ module Sabre
       @binary_security_token = response.xpath("//wsse:BinarySecurityToken")[0].content
       @ref_message_id = response.xpath("//eb:RefToMessageId")[0].content
     end
-
 
     def close
       client = Savon::Client.new(Sabre.cert_wsdl_url.gsub('SessionCreate','SessionClose'))

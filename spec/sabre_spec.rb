@@ -95,7 +95,7 @@ describe Sabre do
       
       ci = Date.today + 1.day
       co = ci + 1.day
-      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'39.7376','-104.9847',2,[],[],['TRH','THH','THV','TV9'])
+      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',2,[],[],['VHV','THH','THV','TV9'])
       hotels += Sabre::Hotel.additional(@session)
       #names = hotels.map(&:address)
       #names.each{|n|puts n}
@@ -117,20 +117,21 @@ describe Sabre do
     # 0112273 is Best Western Denver
     it "should return a hotels description response" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.change_aaa(@session)
-      hotel = Sabre::Hotel.profile(@session,'0005788',Date.today, Date.today+1.day, '1',['THH'])
+      ci = Date.today + 3.months
+      co = ci + 1.day
+      hotel = Sabre::Hotel.profile(@session,'0033375',ci, co, '1',['VHV'])
       #hotel = Sabre::Hotel.profile(@session,'0006016',Date.today+67.days, Date.today+68.days, '1',[])
       #hotel = Sabre::Hotel.profile(@session,'0050264',Date.today, Date.today+1.days, '1',[])
-      debugger
       hotel.latitude.should_not be_nil
       hotel.cancellation.should_not be_nil
     end
 
     # Rate Details
     it "should return the rate details for a hotel", :vcr, record: :new_episodes do
-      @check_in = Date.today + 4.months + 1.day
-      @check_out = @check_in + 2.days
+      @check_in = Date.today + 2.months + 24.days
+      @check_out = @check_in + 1.day
       Sabre::Hotel.context_change(@session)
-      hotel = Sabre::Hotel.profile(@session,'0058577',@check_in, @check_out, '1',['TV9'])
+      hotel = Sabre::Hotel.profile(@session,'0033375',@check_in, @check_out, '1',['VHV'])
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
       rate[:nightly_prices].should_not be_empty
@@ -212,7 +213,7 @@ describe Sabre do
       Sabre.orig_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/tpf/' # 1.0
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
-      Sabre.conversation_id = 'elia@mytravelershaven.com'
+      Sabre.conversation_id = ['elia@mytravelershaven.com',Time.now.to_i].join("-")
       Sabre.domain = 'hotelengine.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
@@ -221,10 +222,14 @@ describe Sabre do
 
     it "should have a connection manager that initiate connections" do
       @pool.connections.size.should == 5
+      connection = @pool.connections.first
+      hotels = Sabre::Hotel.find_by_iata(connection.session,Time.now+172800, Time.now+432000,'DFW','1')
+      debugger
+      connection.clear
     end
 
     after(:each) do
-      #@pool.destroy_all
+      @pool.destroy_all
     end
   end
 end

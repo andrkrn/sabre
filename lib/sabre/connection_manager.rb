@@ -1,4 +1,4 @@
-=begin
+begin
   module Sabre
     class ConnectionManager
       attr_accessor :pool_size, :connections
@@ -8,7 +8,7 @@
           h.first.each { |k,v| send("#{k}=",v) }
         end
         destroy_all
-        #build_pool
+        build_pool
       end
 
       def build_pool
@@ -25,4 +25,4 @@
       end
     end
   end
-=end
+end
