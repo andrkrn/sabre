@@ -93,10 +93,10 @@ describe Sabre do
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       Sabre::Hotel.context_change(@session)
       
-      ci = Date.today + 1.day
+      ci = Date.today + 2.months + 22.days
       co = ci + 1.day
-      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',2,[],[],['VHV','THH','THV','TV9'])
-      hotels += Sabre::Hotel.additional(@session)
+      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 20)
+      #hotels += Sabre::Hotel.additional(@session)
       #names = hotels.map(&:address)
       #names.each{|n|puts n}
       #puts hotels.count

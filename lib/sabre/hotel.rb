@@ -70,14 +70,14 @@ module Sabre
             },
             'RatePlanCandidates' => {
                 'ContractNegotiatedRateCode' => contract_rate_plans,
-                #'RatePlanCode' => rate_plan_codes,
-                'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Max' => '9000.00', 'Min' => '20.00' }}
+                'RatePlanCode' => 'T',
+                'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Min' => '20.00' }}
               },
               'TimeSpan' => '',
               :attributes! => {
             #    'AdditionalAvail' => { 'Ind' => 'true' },
                 'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
-                'RatePlanCandidates' => { 'PromotionalSpot' => 'L', 'RateAssured' => 'true','SuppressRackRate' => 'false' },
+                #'RatePlanCandidates' => { 'PromotionalSpot' => 'L', 'RateAssured' => 'true','SuppressRackRate' => 'false' },
                 'HotelSearchCriteria' => { 'NumProperties' => num_properties },
                 'GuestCounts' => { 'Count' => guest_count }#,
               }
