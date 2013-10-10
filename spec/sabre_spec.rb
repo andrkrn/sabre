@@ -180,14 +180,14 @@ describe Sabre do
       rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
       rate = rates.first
       #rate_orig[:line_number].should == rate[:line_number]
-      booking = Sabre::Reservation.book(@session,rate_orig[:code], rate[:line_number].to_i,'1','1',rate[:total_list_price],'USD','TEST','AX','378282246310005',expire_date,check_in,check_out,'123',"DO NOT DISCLOSE RATES - PREPAID BOOKING FROM HOTELENGINE.COM GUEST CHARGED $#{rate[:total_list_price]} USD. TAXES $12.47 USD. FEES $2.65 USD.")
+      booking = Sabre::Reservation.book(@session,rate[:line_number].to_i,'1','TEST','AX','378282246310005',expire_date,'123',"DO NOT DISCLOSE RATES - PREPAID BOOKING FROM HOTELENGINE.COM GUEST CHARGED $#{rate[:total_list_price]} USD. TAXES $12.47 USD. FEES $2.65 USD.")
       response = Sabre::Reservation.confirm(@session,'TEST USER')
       booking.to_hash.should include(:ota_hotel_res_rs)
       puts response.to_hash
       unique_num = response.to_hash[:end_transaction_rs][:itinerary_ref][:@id]
       puts unique_num
       unique_num.should_not be_nil
-      response = Sabre::Traveler.locate(@session,'PNR',unique_num)
+      response = Sabre::Traveler.locate(@session,unique_num)
       a = Sabre::Reservation.cancel_stay(@session)
       b = Sabre::Reservation.confirm(@session, 'TEST USER')
       b.should_not be_nil
