@@ -29,6 +29,39 @@ module Sabre
       @ref_message_id = response.xpath("//eb:RefToMessageId")[0].content
     end
 
+    def validate
+      client = Savon::Client.new(Sabre.cert_wsdl_url)
+      response = client.request(:session_validate_rq) do
+        Sabre.namespaces(soap)
+        soap.header = header('Session','sabreXML','SessionValidateRQ')
+        soap.body = { 'POS' => { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } } }
+      end
+    end
+
+    def ping
+      client = Sabre.client('OTA_PingRQ.wsdl',0)
+      response = client.request('OTA_PingRQ', Sabre.request_header('1.0.0')) do
+        Sabre.namespaces(soap)
+        soap.header = header('Session Ping','sabreXML','OTA_PingRQ')
+        soap.body = {
+          'EchoData' => 'Ping'
+        }
+      end
+      response.to_hash
+    end
+
+    def clear
+      client = Sabre.client('IgnoreTransactionLLS2.0.0RQ.wsdl')
+      response = client.request('IgnoreTransactionRQ', Sabre.request_header('2.0.0')) do
+        Sabre.namespaces(soap)
+        soap.header = header('Session Clear','sabreXML','IgnoreTransactionRQ')
+        #soap.body = {
+        #  'EchoData' => 'Ping'
+        #}
+      end
+      response.to_hash
+    end
+
     def close
       client = Savon::Client.new(Sabre.cert_wsdl_url.gsub('SessionCreate','SessionClose'))
       client.request(:session_close_rq) do

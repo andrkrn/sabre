@@ -11,7 +11,7 @@ require 'sabre/reservation'
 require 'sabre/sabre_exception'
 
 module Sabre
-  mattr_accessor :cert_wsdl_url, :wsdl_url, :orig_wsdl_url, :endpoint_url, :username, :password, :ipcc, :pcc, :conversation_id, :domain, :binary_security_token, :ref_message_id
+  mattr_accessor :cert_wsdl_url, :wsdl_url, :usg_wsdl_url, :orig_wsdl_url, :endpoint_url, :username, :password, :ipcc, :pcc, :conversation_id, :domain, :binary_security_token, :ref_message_id
 
   def self.connect(&block)
     @errors = []
@@ -35,6 +35,8 @@ module Sabre
   def self.client(service, version=2)
     if version == 1
       client = Savon::Client.new(self.orig_wsdl_url+service)
+    elsif version == 0
+      client = Savon::Client.new([self.usg_wsdl_url,service].join(""))
     else
       client = Savon::Client.new(self.wsdl_url+service)
     end

@@ -25,6 +25,7 @@ describe Sabre do
       #endpoint_url: https://webservices.sabre.com/websvc
       Sabre.cert_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl'
       Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
+      Sabre.usg_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/' # 1.0
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
       Sabre.conversation_id = 'elia@mytravelershaven.com'
@@ -56,6 +57,7 @@ describe Sabre do
       #Sabre.cert_wsdl_url = 'http://sws-crt.cert.sabre.com/sabreXML1.0.00/usg/SessionCreateRQ.wsdl' # Stopped working... I hate you Sabre
       #Sabre.orig_wsdl_url = 'http://wsdl-crt.cert.sabre.com/sabreXML1.0.00/tpf/'
       Sabre.orig_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/tpf/' # 1.0
+      Sabre.usg_wsdl_url = 'http://webservices.sabre.com/wsdl/sabreXML1.0.00/usg/' # 1.0
       Sabre.ipcc = 'P40G'
       Sabre.pcc = 'N10G'
       Sabre.conversation_id = 'elia@mytravelershaven.com'
@@ -68,6 +70,21 @@ describe Sabre do
     it "should change the AAA for rates" do
       changed = Sabre::Hotel.context_change(@session)
       changed.should_not be_nil
+    end
+
+    it "should validate the session" do
+      valid = @session.validate
+      valid.should_not be_nil
+    end
+
+    it "should ping the session" do
+      valid = @session.ping
+      valid.should_not be_nil
+    end
+
+    it "should clear the session" do
+      valid = @session.clear
+      valid.should_not be_nil
     end
 
     it "should create a travel itinerary" do #, :vcr, record: :new_episodes do
