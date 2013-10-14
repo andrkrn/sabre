@@ -477,9 +477,13 @@ module Sabre
           visit_range = hotel_total_pricing[:rate_range]
           unless visit_range.nil?
             visit_range.each_with_index do |day,i|
-              d = Date.strptime(day[:@effective_date], '%m-%d')
-              d += 1.year if d < Date.today
-              nightly_rates.merge!({d.strftime('%a %B %d, %Y') => day[:@amount]})
+              d_start = Date.strptime(day[:@effective_date], '%m-%d')
+              d_end = Date.strptime(day[:@expire_date], '%m-%d')
+              d_start += 1.year if d_start < Date.today
+              d_end += 1.year if d_end < Date.today
+              (d_start..(d_end - 1.day)).map do |date|
+                nightly_rates.merge!({date.strftime('%a %B %d, %Y') => day[:@amount]})
+              end
             end
           end
         end
