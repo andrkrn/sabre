@@ -36,7 +36,7 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 100)
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 100, &message)
       rate_plan_codes = []
       amenities = amenities.each{|a|a.upcase} unless amenities.empty?
       unless contract_rate_plans.nil?
@@ -60,7 +60,6 @@ module Sabre
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
           'AvailRequestSegment' => {
-            #'AdditionalAvail' => '',
             'GuestCounts' => '',
             'HotelSearchCriteria' => {
                'Criterion' => {
@@ -75,7 +74,6 @@ module Sabre
               },
               'TimeSpan' => '',
               :attributes! => {
-            #    'AdditionalAvail' => { 'Ind' => 'true' },
                 'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
                 #'RatePlanCandidates' => { 'PromotionalSpot' => 'L', 'RateAssured' => 'true','SuppressRackRate' => 'false' },
                 'HotelSearchCriteria' => { 'NumProperties' => num_properties },
@@ -84,7 +82,11 @@ module Sabre
             }
           }
       end
-      construct_response_hash(response)
+      if block_given?
+        construct_response_hash(response, &message)
+      else
+        construct_response_hash(response)
+      end
     end
 
     def self.additional(session)
@@ -289,6 +291,8 @@ module Sabre
               hotel.amenities = prop_info[:property_option_info].map do |key, val|
                  key.to_s if val[:@ind] == 'true'
               end.compact.uniq
+
+              yield hotel if block_given?
 
               hotels << hotel
             end

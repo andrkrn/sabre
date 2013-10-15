@@ -112,7 +112,7 @@ describe Sabre do
       
       ci = Date.today + 2.months + 22.days
       co = ci + 1.day
-      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 20)
+      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100)
       #hotels += Sabre::Hotel.additional(@session)
       #names = hotels.map(&:address)
       #names.each{|n|puts n}
@@ -120,6 +120,15 @@ describe Sabre do
       hotels.should_not be_empty
     end
 
+    it "should return a list of hotels within a block" do #, :vcr, record: :new_episodes do
+      Sabre::Hotel.context_change(@session)
+      
+      ci = Date.today + 2.months + 22.days
+      co = ci + 1.day
+      hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100) do |hotel|
+        puts hotel.name
+      end
+    end
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
       hotels = Sabre::Hotel.find_by_iata(@session,Time.now+172800, Time.now+432000,'DFW','1')
       hotels.first.latitude.should_not be_nil
