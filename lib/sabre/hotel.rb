@@ -245,6 +245,7 @@ module Sabre
     def self.construct_response_hash(results)
       hotels = []
       response = results.to_hash[:ota_hotel_avail_rs]
+      more_available = response[:additional_avail][:@ind] == 'true'
       unless response[:application_results][:error]
         if response[:errors].nil?
           options = response[:availability_options]
@@ -303,7 +304,7 @@ module Sabre
           raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
         end
       end
-      return hotels
+      return hotels, more_available
     end
 
     def self.construct_full_response_hash(result)
