@@ -89,7 +89,7 @@ module Sabre
       end
     end
 
-    def self.additional(session)
+    def self.additional(session, &message)
       client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
       response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
         Sabre.namespaces(soap)
@@ -103,7 +103,7 @@ module Sabre
             }
           }
       end
-      construct_response_hash(response)
+      construct_response_hash(response, &message)
     end
 
     def self.find_by_iata(session, start_time, end_time, iata_city_code, guest_count, amenities = [])
