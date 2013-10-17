@@ -11,16 +11,24 @@ begin
         build_pool
       end
 
-      def build_pool
-        self.connections = []
-        self.pool_size.times do
-          self.connections << Connection.new(conversation_id: 'elia@mytravelershaven.com')
-        end
+      def resource
+        connection = self.connections.select{|c|c.status == 'available'}.sample
+        connection.status = 'busy'
+        connection.clear
+        return connection
       end
 
       def destroy_all
         if self.connections
           self.connections.each{|c|c.destroy} 
+        end
+      end
+
+      private
+      def build_pool
+        self.connections = []
+        self.pool_size.times do
+          self.connections << Connection.new(conversation_id: "hotelengine-#{Time.now.to_i}", status: 'available')
         end
       end
     end

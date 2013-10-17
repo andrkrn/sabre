@@ -10,7 +10,7 @@ module Sabre
       @ipcc = Sabre.ipcc
       @domain = Sabre.domain
       @pcc = Sabre.pcc
-      @conversation_id = [conversation_id,Time.now.to_i].join("-")
+      @conversation_id = conversation_id
       #@conversation_id = conversation_id
 
       #@client = Savon::Client.new(config[Rails.env]['wsdl_url'])
@@ -40,9 +40,9 @@ module Sabre
 
     def ping
       client = Sabre.client('OTA_PingRQ.wsdl',0)
-      response = client.request('OTA_PingRQ', Sabre.request_header('1.0.0')) do
+      response = client.request('OTA_PingRQ', Sabre.request_ping_header('1.0.0')) do
         Sabre.namespaces(soap)
-        soap.header = header('Session Ping','sabreXML','OTA_PingRQ')
+        soap.header = header('OTA_PingRQ','sabreXML','OTA_PingRQ', '1.0')
         soap.body = {
           'EchoData' => 'Ping'
         }
@@ -71,7 +71,7 @@ module Sabre
       end
     end
 
-    def header(service, type, action)
+    def header(service, type, action, version = '2.0')
         msg_header = { 'eb:ConversationId' => self.conversation_id,
                   'eb:From' => { 'eb:PartyId' => self.domain, 
                     :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
@@ -87,7 +87,7 @@ module Sabre
                      #'eb:Timeout' => 300
                   } }
       { 'eb:MessageHeader' => msg_header.to_hash,
-        'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'SOAP-ENV:mustUnderstand' => "1", 'eb:version' => "2.0" } }
+        'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'SOAP-ENV:mustUnderstand' => "1", 'eb:version' => version } }
       }
     end
 

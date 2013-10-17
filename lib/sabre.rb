@@ -70,6 +70,15 @@ module Sabre
 #    end
   end
 
+  def self.request_ping_header(version)
+    { 'xmlns' => 'http://www.opentravel.org/OTA/2003/05',
+      'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
+      'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+      'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'),
+      'Version' => version
+    }
+  end
+
   def self.request_old_header(version, timestamp = true)
     { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2003/07',
       'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',

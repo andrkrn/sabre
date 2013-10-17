@@ -9,6 +9,7 @@ begin
         end
 
         self.session = Sabre::Session.new(self.conversation_id)
+        self.created_at = DateTime.now
         self.session.open
       end
 
@@ -20,9 +21,15 @@ begin
         client = Sabre.client('IgnoreTransactionLLS2.0.0RQ.wsdl')
         response = client.request('IgnoreTransactionRQ', Sabre.request_header('2.0.0','skip')) do
           Sabre.namespaces(soap)
-          soap.header = self.session.header('Ignore','sabreXML',nil)
+          soap.header = self.session.header('IgnoreTransactionLLSRQ','sabreXML','IgnoreTransactionLLSRQ')
         end
+        self.updated_at = DateTime.now
         response.to_hash[:ignore_transaction_rs]
+      end
+
+      def release
+        self.status = 'available'
+        self.updated_at = DateTime.now
       end
 
       def destroy
