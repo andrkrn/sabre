@@ -220,7 +220,7 @@ describe Sabre do
     end
 
     it "should cancel a hotel reservation" do
-      response = Sabre::Traveler.locate(@session,'PNR','PYXGPA')
+      response = Sabre::Traveler.locate(@session,'PYXGPA')
       a = Sabre::Reservation.cancel_stay(@session)
       b = Sabre::Reservation.confirm(@session, 'TEST USER')
       b.should_not be_nil
@@ -243,15 +243,21 @@ describe Sabre do
       Sabre.domain = 'hotelengine.com'
       Sabre.username = '7971'
       Sabre.password = 'WS020212'
-      @pool = Sabre::ConnectionManager.new(:pool_size => 5)
+      @pool = Sabre::ConnectionManager.new(:pool_size => 1)
     end
 
     it "should have a connection manager that initiate connections" do
-      @pool.connections.size.should == 5
+      @pool.connections.size.should == 1
       connection = @pool.connections.first
-      hotels = Sabre::Hotel.find_by_iata(connection.session,Time.now+172800, Time.now+432000,'DFW','1')
-      debugger
-      connection.clear
+      connection.session.clear
+      ci = Date.today + 2.months + 22.days
+      co = ci + 1.day
+      #Sabre::Hotel.context_change(connection.session)
+      #hotels = Sabre::Hotel.find_by_geo(connection.session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100)
+      #hotels, more_available = Sabre::Hotel.find_by_geo(connection.session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100)
+      #if more_available
+      #  hotels, more_available = Sabre::Hotel.additional(connection.session)
+      #end
     end
 
     after(:each) do

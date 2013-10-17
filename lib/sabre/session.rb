@@ -52,9 +52,9 @@ module Sabre
 
     def clear
       client = Sabre.client('IgnoreTransactionLLS2.0.0RQ.wsdl')
-      response = client.request('IgnoreTransactionRQ', Sabre.request_header('2.0.0')) do
+      response = client.request('IgnoreTransactionRQ', Sabre.request_header('2.0.0',true)) do
         Sabre.namespaces(soap)
-        soap.header = header('Session Clear','sabreXML','IgnoreTransactionRQ')
+        soap.header = header('IgnoreTransactionLLSRQ','sabreXML', 'IgnoreTransactionLLSRQ')
         #soap.body = {
         #  'EchoData' => 'Ping'
         #}
@@ -72,9 +72,11 @@ module Sabre
     end
 
     def header(service, type, action)
-      msg_header = { 'eb:ConversationId' => self.conversation_id,
-                  'eb:From' => { 'eb:PartyId' => self.domain, :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
-                  'eb:To' => { 'eb:PartyId' => "webservices.sabre.com", :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
+        msg_header = { 'eb:ConversationId' => self.conversation_id,
+                  'eb:From' => { 'eb:PartyId' => self.domain, 
+                    :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
+                  'eb:To' => { 'eb:PartyId' => "webservices.sabre.com", 
+                    :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
                   'eb:CPAId' => self.ipcc,
                   'eb:Service' => service, :attributes! => { 'eb:Service' => { 'eb:type' => type } },
                   'eb:Action' => action,

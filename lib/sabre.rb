@@ -44,8 +44,15 @@ module Sabre
     return client
   end
 
-  def self.request_header(version, timestamp = true)
+  def self.request_header(version, skip_return_host = false)
 #    if timestamp
+    if skip_return_host
+      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10',
+        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
+        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+        'Version' => version
+      }
+    else
       { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10',
         'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
         'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
@@ -53,6 +60,7 @@ module Sabre
         'TimeStamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%S'),
         'Version' => version
       }
+    end
 #    else
 #      { 'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10',
 #        'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',

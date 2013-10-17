@@ -18,7 +18,7 @@ begin
 
       def clear
         client = Sabre.client('IgnoreTransactionLLS2.0.0RQ.wsdl')
-        response = client.request('IgnoreTransactionRQ', Sabre.request_header('2.0.0')) do
+        response = client.request('IgnoreTransactionRQ', Sabre.request_header('2.0.0','skip')) do
           Sabre.namespaces(soap)
           soap.header = self.session.header('Ignore','sabreXML',nil)
         end
