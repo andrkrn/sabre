@@ -18,6 +18,10 @@ begin
         return connection
       end
 
+      def refresh
+        connection = self.connections.each{|c|c.session.validate if c.status = 'available'}
+      end
+
       def destroy_all
         if self.connections
           self.connections.each{|c|c.destroy} 
