@@ -11,6 +11,7 @@ begin
         build_pool
       end
 
+      # Allocate a connection from the pool
       def resource
         connection = self.connections.select{|c|c.status == 'available'}.sample
         connection.status = 'busy'
@@ -18,10 +19,12 @@ begin
         return connection
       end
 
+      # Refresh all available connections
       def refresh
         connection = self.connections.each{|c|c.session.validate if c.status = 'available'}
       end
 
+      # Destroy all connections
       def destroy_all
         if self.connections
           self.connections.each{|c|c.destroy} 
