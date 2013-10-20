@@ -171,9 +171,7 @@ describe Sabre do
       check_out = check_in + 2.days
       Sabre::Traveler.profile(@session, 'Test', 'User', '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0012659',check_in, check_out, '1')
-      rate_orig = hotel.rates.sample
-      rates, cancellation = Sabre::Hotel.rate_details(@session,rate_orig[:line_number])
-      rate = rates.first
+      rate = hotel.rates.sample
       #rate_orig[:line_number].should == rate[:line_number]
       booking = Sabre::Reservation.book(@session, rate[:line_number].to_i,'1','TEST','AX','378282246310005',(Date.today + 8.months),'123',"Guest paid #{rate[:total_list_price]} USD")
       booking.to_hash.should include(:ota_hotel_res_rs)

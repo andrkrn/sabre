@@ -13,7 +13,10 @@ begin
 
       # Allocate a connection from the pool
       def resource
-        connection = self.connections.select{|c|c.status == 'available'}.sample
+        connection = nil
+        while connection.nil? do
+          connection = self.connections.select{|c|c.status == 'available'}.sample
+        end
         connection.status = 'busy'
         connection.clear
         return connection

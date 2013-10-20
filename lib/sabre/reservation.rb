@@ -8,6 +8,7 @@ module Sabre
         soap.body = {
           'Hotel' => {
             'BasicPropertyInfo' => '', #{ 'ConfirmationNumber' => confirmation_number },
+            #'Customer' => {},
             'Guarantee' => {
               'CC_Info' => {
                 'PaymentCard' => '',
@@ -24,6 +25,7 @@ module Sabre
             },
             :attributes! => {
               'BasicPropertyInfo' => { 'RPH' => line_number },
+              #'Customer' => {'NameNumber' => '1.1'},
               'Guarantee' => { 'Type' => 'G' }, # Took out GDPST
               'RoomType' => { 'NumberOfUnits' => unit_count } 
             }
