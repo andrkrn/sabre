@@ -34,7 +34,7 @@ begin
 
       def destroy
         self.session.close
-        puts "Destroyed session #{self.session}"
+        puts "Destroyed session #{self.session.conversation_id}"
       end
     end
   end
