@@ -2,7 +2,7 @@ module Sabre
   class Reservation
     def self.book(session, line_number, unit_count, name, card_code, card_number, expire_date, confirmation_number, memo )
       client = Sabre.client('OTA_HotelResLLS2.1.1RQ.wsdl')
-      response = client.request('OTA_HotelResRQ', Sabre.request_header('2.1.1')) do
+      response = client.call('OTA_HotelResRQ', Sabre.request_header('2.1.1')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Booking','sabreXML','OTA_HotelResLLSRQ')
         soap.body = {
@@ -39,7 +39,7 @@ module Sabre
 
     def self.confirm(session, full_name)
       client = Sabre.client('EndTransactionLLS2.0.2RQ.wsdl')
-      response = client.request('EndTransactionRQ', Sabre.request_header('2.0.2', false)) do
+      response = client.call('EndTransactionRQ', Sabre.request_header('2.0.2', false)) do
         Sabre.namespaces(soap)
         soap.header = session.header('End Transaction','sabreXML','EndTransactionLLSRQ')
         soap.body = {
@@ -56,7 +56,7 @@ module Sabre
 
     def self.cancel_stay(session,reservation_id = '1')
       client = Sabre.client('OTA_CancelLLS2.0.0RQ.wsdl')
-      response = client.request('OTA_CancelRQ', Sabre.request_header('2.0.0')) do
+      response = client.call('OTA_CancelRQ', Sabre.request_header('2.0.0')) do
       Sabre.namespaces(soap)
       soap.header = session.header('Cancel Reservation','sabreXML','OTA_CancelLLSRQ')
       soap.body = {

@@ -98,10 +98,18 @@ describe Sabre do
       check_out = check_in + 1.day
       #hotels = Sabre::Hotel.find_by_geo(@session, (Date.today+25.days), (Date.today+27.days),
       #  '29.9680', '-92.0861','1',[],[],[],25)
-      hotels = Sabre::Hotel.find_by_geo(@session, check_in, check_out, 
+      response = Sabre::Hotel.find_by_geo(@session, check_in, check_out, 
         '39.7417','-104.9894', 2, [], [], [], 1000)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
-      hotel = hotels.sample
+
+      hotels = response.first
+
+      puts "*********************"
+      puts "*********************"
+      puts hotels.first.to_yaml
+      puts "*********************"
+      puts "*********************"
+      hotel = hotels.first
       hotel.latitude.should_not be_nil
       hotels.map(&:cancel_code).should include('06P')
       hotels.size.should > 0

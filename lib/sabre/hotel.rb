@@ -1,6 +1,10 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, :property_types, :description, :cancellation, :rooms_available, :awards, :services, :transportation, :policies, :attractions, :cancel_code, :rate_level_code, :taxes, :alternates
+    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, 
+                  :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, 
+                  :property_types, :description, :cancellation, :rooms_available, :awards, 
+                  :services, :transportation, :policies, :attractions, :cancel_code, 
+                  :rate_level_code, :taxes, :alternates
 
     def initialize(basic_info)
       @area_id = basic_info[:@area_id]
@@ -36,52 +40,49 @@ module Sabre
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, amenities = [], chain_codes = [], contract_rate_plans = [], num_properties = 100, &message)
-      rate_plan_codes = []
-      amenities = amenities.each{|a|a.upcase} unless amenities.empty?
-      unless contract_rate_plans.nil?
-        unless contract_rate_plans.empty?
-          rate_plan_codes = ['GOV','N']
-        end
-      end
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, num_properties = 100, &message)
+
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
-      hotel_attr = {
-        'HotelRef' => { 'Latitude' => latitude, 'Longitude' => longitude },
-        'RefPoint' => { 'Sort' => 'true', 'GeoCode' => 'true' },
-      }
-      unless chain_codes.nil?
-        chain_codes.each do |cc|
-          hotel_attr.merge!({'HotelRef' => { 'ChainCode' => cc }})
+
+      ntm_rating = "5"
+
+      xml = Builder::XmlMarkup.new
+
+      xml.OTA_HotelAvailRQ('Version' => "2.1.0", 
+        'xmlns' => "http://webservices.sabre.com/sabreXML/2011/10", 
+        'xmlns:xs' => "http://www.w3.org/2001/XMLSchema", 
+        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance") do
+
+        xml.AvailRequestSegment do
+          xml.GuestCounts('Count' => guest_count)
+          xml.HotelSearchCriteria('NumProperties' => num_properties) do
+            xml.Criterion do
+              xml.Award('Provider' => 'NTM', 'Rating' => ntm_rating)
+              xml.HotelRef('Latitude' => latitude, 'Longitude' => longitude)
+            end
+          end
+          xml.TimeSpan('Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d'))
         end
       end
-      client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
-      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
-        Sabre.namespaces(soap)
-        soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
-        soap.body = {
-          'AvailRequestSegment' => {
-            'GuestCounts' => '',
-            'HotelSearchCriteria' => {
-               'Criterion' => {
-                 'HotelAmenity' => amenities, 'HotelRef' => '', 'RefPoint' => '',
-                  :attributes! => hotel_attr
-               }
-            },
-            'RatePlanCandidates' => {
-                'ContractNegotiatedRateCode' => contract_rate_plans,
-                'RatePlanCode' => 'ALL',
-                'RateRange' => '', :attributes! => { 'RateRange' => { 'CurrencyCode' => 'USD', 'Min' => '20.00' }}
-              },
-              'TimeSpan' => '',
-              :attributes! => {
-                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
-                #'RatePlanCandidates' => { 'PromotionalSpot' => 'L', 'RateAssured' => 'true','SuppressRackRate' => 'false' },
-                'HotelSearchCriteria' => { 'NumProperties' => num_properties },
-                'GuestCounts' => { 'Count' => guest_count }#,
-              }
-            }
-          }
+
+      namespaces = {
+       "xmlns:soap-env" => "http://schemas.xmlsoap.org/soap/envelope/",
+       "xmlns:eb" => "http://www.ebxml.org/namespaces/messageHeader",
+       "xmlns:xlink" => "http://www.w3.org/1999/xlink"
+      }
+
+      client = Savon.client do
+        convert_request_keys_to(:camelcase)
+        wsdl(Sabre.wsdl_url + 'OTA_HotelAvailLLS2.1.0RQ.wsdl')
+        env_namespace("soap-env")
+        soap_header(session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ'))
+        namespaces(namespaces)
       end
+
+      response = client.call(:ota_hotel_avail_rq) do 
+        message(xml.target!)
+      end
+
       if block_given?
         construct_response_hash(response, &message)
       else
@@ -91,7 +92,7 @@ module Sabre
 
     def self.additional(session, &message)
       client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
-      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
+      response = client.call('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
@@ -107,9 +108,9 @@ module Sabre
     end
 
     def self.find_by_iata(session, start_time, end_time, iata_city_code, guest_count, amenities = [])
-      raise SabreException::SearchError, 'Missing IATA City Code - No search results found' if iata_city_code.nil?
+      raise SabreException::HotelSearchCriteriarror, 'Missing IATA City Code - No search results found' if iata_city_code.nil?
       client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
-      response = client.request('OTA_HotelAvailRQ', Sabre.request_header('2.0.0')) do
+      response = client.call(:ota_hotel_avail_rq, Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
         soap.body = {
@@ -135,7 +136,7 @@ module Sabre
 
     def self.change_aaa(session)
       client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl',1)
-      response = client.request('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
+      response = client.call('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Change AAA','sabreXML','ChangeAAALLSRQ')
         soap.body = {
@@ -154,7 +155,7 @@ module Sabre
 
     def self.context_change(session)
       client = Sabre.client('ContextChangeLLS2.0.3RQ.wsdl')
-      response = client.request('ContextChangeRQ', Sabre.request_header('2.0.3')) do
+      response = client.call('ContextChangeRQ', Sabre.request_header('2.0.3')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Change AAA','sabreXML','ContextChangeLLSRQ')
         soap.body = {
@@ -172,7 +173,7 @@ module Sabre
 
     def self.rate_details(session, line_number)
       client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
-      response = client.request('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
+      response = client.call('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Rates','sabreXML','HotelRateDescriptionLLSRQ')
         soap.body = {
@@ -190,7 +191,7 @@ module Sabre
 
     def self.profile(session,hotel_id, start_time, end_time, guest_count, contract_rate_plans = [])
       client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-      response = client.request('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
+      response = client.call('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
         Sabre.namespaces(soap)
         soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
         soap.body = {
@@ -223,7 +224,7 @@ module Sabre
 
     def self.find_by_code(session,hotel_id)
     	client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-	    response = client.request('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
+	    response = client.call('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
         Sabre.namespaces(soap)
 		    soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
 		    soap.body = {
@@ -242,6 +243,7 @@ module Sabre
     end
 
     private
+
     def self.construct_response_hash(results)
       hotels = []
       response = results.to_hash[:ota_hotel_avail_rs]
@@ -511,5 +513,6 @@ module Sabre
       end
       return rates
     end
+    
   end
 end

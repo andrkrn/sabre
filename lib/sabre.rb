@@ -7,11 +7,14 @@ require 'sabre/connection_manager'
 require 'sabre/session'
 require 'sabre/traveler'
 require 'sabre/hotel'
+require 'sabre/fare'
 require 'sabre/reservation'
 require 'sabre/sabre_exception'
 
 module Sabre
-  mattr_accessor :cert_wsdl_url, :wsdl_url, :usg_wsdl_url, :orig_wsdl_url, :endpoint_url, :username, :password, :ipcc, :pcc, :conversation_id, :domain, :binary_security_token, :ref_message_id
+  mattr_accessor :cert_wsdl_url, :wsdl_url, :usg_wsdl_url, :orig_wsdl_url, :endpoint_url, 
+                 :username, :password, :ipcc, :pcc, :conversation_id, :domain, 
+                 :binary_security_token, :ref_message_id
 
   def self.connect(&block)
     @errors = []
@@ -32,16 +35,31 @@ module Sabre
     return @errors if @errors.any?
   end
 
-  def self.client(service, version=2)
-    if version == 1
-      client = Savon::Client.new(self.orig_wsdl_url+service)
-    elsif version == 0
-      client = Savon::Client.new([self.usg_wsdl_url,service].join(""))
-    else
-      client = Savon::Client.new(self.wsdl_url+service)
+  def self.client(service, version = 2, args = {})
+
+    wsdl = case version
+      when 0 then [self.usg_wsdl_url,service].join("")
+      when 1 then self.orig_wsdl_url + service
+      else self.wsdl_url + service
     end
-    client.http.headers["Content-Type"] = "text/xml;charset=UTF-8"
+
+    default_options = {
+      wsdl: wsdl,
+      headers: { "Content-Type" => "text/xml;charset=UTF-8" }
+    }
+    options = default_options.merge(args)
+
+    client = Savon::Client.new(options)
+
     return client
+  end
+
+  def self.request_namespaces
+   {
+     'xmlns' => 'http://webservices.sabre.com/sabreXML/2011/10',
+     'xmlns:xs' => 'http://www.w3.org/2001/XMLSchema',
+     'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+   }
   end
 
   def self.request_header(version, skip_return_host = false)
@@ -96,21 +114,21 @@ module Sabre
     { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } }
   end
 
-  def self.namespaces(soap)
-    soap.namespaces["xmlns:SOAP-ENV"] = "http://schemas.xmlsoap.org/soap/envelope/"
+  def self.soap_namespaces(soap)
+    soap.namespaces["xmlns:soap-env"] = "http://schemas.xmlsoap.org/soap/envelope/"
     soap.namespaces["xmlns:eb"] = "http://www.ebxml.org/namespaces/messageHeader"
     soap.namespaces["xmlns:xlinx"] = "http://www.w3.org/1999/xlink"
     soap.version = 1
     return soap
   end
 
-  #def self.namespaces
-  #  {
-  #    "xmlns:SOAP-ENV" => "http://schemas.xmlsoap.org/soap/envelope/",
-  #    "xmlns:eb" => "http://www.ebxml.org/namespaces/messageHeader",
-  #    "xmlns:xlinx" => "http://www.w3.org/1999/xlink"
-  #  }
-  #end
+  def self.namespaces
+   {
+     "xmlns:soap-env" => "http://schemas.xmlsoap.org/soap/envelope/",
+     "xmlns:eb" => "http://www.ebxml.org/namespaces/messageHeader",
+     "xmlns:xlinx" => "http://www.w3.org/1999/xlink"
+   }
+  end
 
   def self.error_message(msg)
     msg = "#{msg[:application_results][:error][:system_specific_results][:host_command]}: #{msg[:application_results][:error][:system_specific_results][:message]}: #{msg[:application_results][:error][:system_specific_results][:short_text]}"
