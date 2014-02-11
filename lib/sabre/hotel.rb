@@ -53,6 +53,17 @@ module Sabre
       return client
     end
 
+    def self.profile_client(session)
+      client = Savon.client(
+        :wsdl => (Sabre.wsdl_url + 'HotelPropertyDescriptionLLS2.0.1RQ.wsdl'),
+        :convert_request_keys_to => :camelcase,
+        :env_namespace => 'soap-env',
+        :soap_header => session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ'),
+        :namespaces => Sabre.namespaces
+      )
+      return client
+    end
+
 
     def self.search(session, start_time, end_time, args = {})
 
@@ -143,6 +154,43 @@ module Sabre
     # /HOTEL AVAILABILITY SEARCH METHODS
 
 
+    # HOTEL PROFILE DETAILS
+
+
+    def self.profile(session, start_time, end_time, hotel_code, args = {})
+
+      default_options = {
+        guest_count:    2
+      }
+
+      options = default_options.merge(args)
+      guest_count    = options[:guest_count]
+
+      xml = Builder::XmlMarkup.new
+      xml.HotelPropertyDescriptionRQ({'Version' => "2.0.1"}.merge(Sabre.request_namespaces)) do 
+        xml.AvailRequestSegment do
+          xml.GuestCounts('Count' => guest_count)
+          xml.HotelSearchCriteria do
+            xml.Criterion do
+              xml.HotelRef('HotelCode' => hotel_code) if hotel_code
+            end
+          end
+          xml.TimeSpan('Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d'))
+        end
+      end
+
+      response = profile_client(session).call(:hotel_property_description_rq, :message => xml.target!)
+
+      filename = "hotel-profile-#{hotel_code}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
+      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) } 
+      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:hotel_property_description_rs]) } 
+
+      return response.to_xml
+    end
+
+    # /HOTEL PROFILE DETAILS
+
+
     def self.change_aaa(session)
       client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl',1)
       response = client.call('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
@@ -198,40 +246,6 @@ module Sabre
       result = response.to_hash[:hotel_rate_description_rs]
       raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
       return room(response)
-    end
-
-
-    def self.profile(session,hotel_id, start_time, end_time, guest_count, contract_rate_plans = [])
-      client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-      response = client.call('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
-        Sabre.namespaces(soap)
-        soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
-        soap.body = {
-          'AvailRequestSegment' => {
-            'GuestCounts' => '',
-            'HotelSearchCriteria' => {
-               'Criterion' => {
-                  'HotelRef' => '', :attributes! => {
-                    'HotelRef' => { 'HotelCode' => hotel_id }
-                  }
-               }
-            },
-            'RatePlanCandidates' => {
-              'ContractNegotiatedRateCode' => contract_rate_plans,
-              'RatePlanCode' => 'ALL'
-            },
-            'TimeSpan' => '',
-              :attributes! => {
-                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
-                'GuestCounts' => { 'Count' => guest_count }
-            }
-          }
-	    	}
-	    end
-	    result = response.to_hash[:hotel_property_description_rs]
-
-	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-	    return construct_full_response_hash(response)
     end
 
 
