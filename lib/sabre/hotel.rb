@@ -7,44 +7,62 @@ module Sabre
                   :rate_level_code, :taxes, :alternates
 
     def initialize(basic_info)
-      @area_id = basic_info[:@area_id]
-      @name = basic_info[:@hotel_name].titleize
-      if basic_info[:address][:tpa_extensions]
-        @address = basic_info[:address][:tpa_extensions][:address_line].compact
-      else
-        @address = basic_info[:address][:address_line].compact
-      end
-      @country = basic_info[:address][:country_code]
-      @phone = basic_info[:contact_numbers][:contact_number][:@phone]
-      @fax = basic_info[:contact_numbers][:contact_number][:@fax]
+      @area_id    = basic_info[:@area_id]
+      @name       = basic_info[:@hotel_name].titleize
+      @country    = basic_info[:address][:country_code]
+      @phone      = basic_info[:contact_numbers][:contact_number][:@phone]
+      @fax        = basic_info[:contact_numbers][:contact_number][:@fax]
       @chain_code = basic_info[:@chain_code]
       @hotel_code = basic_info[:@hotel_code]
+      if basic_info[:address][:tpa_extensions]
+        @address  = basic_info[:address][:tpa_extensions][:address_line].compact
+      else
+        @address  = basic_info[:address][:address_line].compact
+      end
       if basic_info[:position]
-        @latitude = basic_info[:position][:@latitude]
+        @latitude  = basic_info[:position][:@latitude]
         @longitude = basic_info[:position][:@longitude]
       else
-        @latitude = basic_info[:@latitude]
+        @latitude  = basic_info[:@latitude]
         @longitude = basic_info[:@longitude]
       end
       if basic_info[:award]
-        @rating = basic_info[:award][:@provider].gsub("NTM","").gsub(" CROWN","").strip
+        @rating   = basic_info[:award][:@provider].gsub("NTM","").gsub(" CROWN","").strip
       elsif basic_info[:property]
-        @rating = basic_info[:property][:text].gsub("NTM","").gsub(" CROWN","").strip
+        @rating   = basic_info[:property][:text].gsub("NTM","").gsub(" CROWN","").strip
       end
       if basic_info[:taxes]
-        tax = basic_info[:taxes][:text]
-        tax = tax.first if tax.is_a? Array
+        tax       = basic_info[:taxes][:text]
+        tax       = tax.first if tax.is_a? Array
         unless tax.nil?
-          @taxes = tax.gsub("PCT","").gsub("TTL","").strip
+          @taxes  = tax.gsub("PCT","").gsub("TTL","").strip
         end
       end
     end
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, guest_count = 2, num_properties = 100, &message)
 
-      raise SabreException::SearchError, 'No results found when missing latitude and longitude' if latitude.to_f == 0.0 || longitude.to_f == 0.0
 
-      ntm_rating = "5"
+    def self.search(session, start_time, end_time, args = {})
+
+      default_options = {
+        guest_count:    2,
+        ntm_rating:     5,
+        num_properties: 100
+      }
+
+      options = default_options.merge(args)
+
+      guest_count    = options[:guest_count]
+      ntm_rating     = options[:ntm_rating]
+      num_properties = options[:num_properties]
+      latitude       = options[:latitude]
+      longitude      = options[:longitude]
+      city_code      = options[:city_code]
+      hotel_code     = options[:hotel_code]
+      chain_code     = options[:chain_code]
+      amenities      = options[:amenities]
+
+      raise SabreException::SearchError, 'No results found when missing latitude and longitude' if (latitude || longitude) && (latitude.to_f == 0.0 || longitude.to_f == 0.0)
 
       xml = Builder::XmlMarkup.new
 
@@ -57,8 +75,14 @@ module Sabre
           xml.GuestCounts('Count' => guest_count)
           xml.HotelSearchCriteria('NumProperties' => num_properties) do
             xml.Criterion do
-              xml.Award('Provider' => 'NTM', 'Rating' => ntm_rating)
-              xml.HotelRef('Latitude' => latitude, 'Longitude' => longitude)
+              xml.Award('Provider' => 'NTM', 'Rating' => ntm_rating) if ntm_rating > 0
+              xml.HotelRef('HotelCityCode' => city_code) unless city_code.blank?
+              xml.HotelRef('Latitude' => latitude, 'Longitude' => longitude) if latitude && longitude
+              xml.HotelRef('HotelCode' => hotel_code) if hotel_code
+              xml.HotelRef('ChainCode' => chain_code) if chain_code
+              amenities.each do |amenity|
+                xml.HotelAmenity(amenity.upcase)
+              end
             end
           end
           xml.TimeSpan('Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d'))
@@ -83,12 +107,27 @@ module Sabre
         message(xml.target!)
       end
 
-      if block_given?
-        construct_response_hash(response, &message)
-      else
-        construct_response_hash(response)
-      end
+      filename = "hotel-search-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
+
+      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) } 
+      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_hotel_avail_rs]) } 
+
+      return response.to_xml
     end
+
+
+    def self.find_by_city_code(session, start_time, end_time, city_code, args = {})
+      self.search(session, start_time, end_time, {city_code: city_code}.merge(args))
+    end
+
+    def self.find_by_geo(session, start_time, end_time, latitude, longitude, args = {})
+      self.search(session, start_time, end_time, {latitude: latitude, longitude: longitude}.merge(args))
+    end
+
+    def self.find_by_hotel_code(session, start_time, end_time, hotel_code, chain_code, args = {})
+      self.search(session, start_time, end_time, {hotel_code: hotel_code, chain_code: chain_code}.merge(args))
+    end
+
 
     def self.additional(session, &message)
       client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
@@ -107,32 +146,6 @@ module Sabre
       construct_response_hash(response, &message)
     end
 
-    def self.find_by_iata(session, start_time, end_time, iata_city_code, guest_count, amenities = [])
-      raise SabreException::HotelSearchCriteriarror, 'Missing IATA City Code - No search results found' if iata_city_code.nil?
-      client = Sabre.client('OTA_HotelAvailLLS2.0.0RQ.wsdl')
-      response = client.call(:ota_hotel_avail_rq, Sabre.request_header('2.0.0')) do
-        Sabre.namespaces(soap)
-        soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
-        soap.body = {
-          'AvailRequestSegment' => {
-              'GuestCounts' => '',
-              'HotelSearchCriteria' => {
-                'Criterion' => {
-                  'HotelAmenity' => amenities.map(&:upcase), 'HotelRef' => '', :attributes! => {
-                    'HotelRef' => { 'HotelCityCode' => iata_city_code }
-                  } }
-              },
-              'TimeSpan' => '',
-              :attributes! => {
-                'TimeSpan' => { 'Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d') },
-                'HotelSearchCriteria' => { 'NumProperties' => 20 },
-                'GuestCounts' => { 'Count' => guest_count }
-              }
-           }
-       }
-      end
-      construct_response_hash(response)
-    end
 
     def self.change_aaa(session)
       client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl',1)
@@ -153,6 +166,7 @@ module Sabre
       #return response
     end
 
+
     def self.context_change(session)
       client = Sabre.client('ContextChangeLLS2.0.3RQ.wsdl')
       response = client.call('ContextChangeRQ', Sabre.request_header('2.0.3')) do
@@ -171,6 +185,7 @@ module Sabre
       #return response
     end
 
+
     def self.rate_details(session, line_number)
       client = Sabre.client('HotelRateDescriptionLLS2.0.0RQ.wsdl')
       response = client.call('HotelRateDescriptionRQ', Sabre.request_header('2.0.0')) do
@@ -188,6 +203,7 @@ module Sabre
       raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
       return room(response)
     end
+
 
     def self.profile(session,hotel_id, start_time, end_time, guest_count, contract_rate_plans = [])
       client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
@@ -222,27 +238,9 @@ module Sabre
 	    return construct_full_response_hash(response)
     end
 
-    def self.find_by_code(session,hotel_id)
-    	client = Sabre.client('HotelPropertyDescriptionLLS2.0.1RQ.wsdl')
-	    response = client.call('HotelPropertyDescriptionRQ', Sabre.request_header('2.0.1')) do
-        Sabre.namespaces(soap)
-		    soap.header = session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ')
-		    soap.body = {
-            'AvailRequestSegment' => {
-                'HotelSearchCriteria' => {
-                      'Criterion' => { 'HotelRef' => '', :attributes! => {
-                        'HotelRef' => { 'HotelCode' => hotel_id }
-                      } }
-                 }
-            }
-	    	}
-	    end
-	    result = response.to_hash[:hotel_property_description_rs]
-	    raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-	    return construct_full_response_hash(response)
-    end
 
     private
+
 
     def self.construct_response_hash(results)
       hotels = []
