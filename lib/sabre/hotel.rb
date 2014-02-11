@@ -40,6 +40,18 @@ module Sabre
       end
     end
 
+    # HOTEL AVAILABILITY SEARCH METHODS
+
+    def self.search_client(session)
+      client = Savon.client(
+        :wsdl => (Sabre.wsdl_url + 'OTA_HotelAvailLLS2.1.0RQ.wsdl'),
+        :convert_request_keys_to => :camelcase,
+        :env_namespace => 'soap-env',
+        :soap_header => session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ'),
+        :namespaces => Sabre.namespaces
+      )
+      return client
+    end
 
 
     def self.search(session, start_time, end_time, args = {})
@@ -47,7 +59,8 @@ module Sabre
       default_options = {
         guest_count:    2,
         ntm_rating:     5,
-        num_properties: 100
+        num_properties: 100,
+        amenities: []
       }
 
       options = default_options.merge(args)
@@ -65,12 +78,7 @@ module Sabre
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if (latitude || longitude) && (latitude.to_f == 0.0 || longitude.to_f == 0.0)
 
       xml = Builder::XmlMarkup.new
-
-      xml.OTA_HotelAvailRQ('Version' => "2.1.0", 
-        'xmlns' => "http://webservices.sabre.com/sabreXML/2011/10", 
-        'xmlns:xs' => "http://www.w3.org/2001/XMLSchema", 
-        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance") do
-
+      xml.OTA_HotelAvailRQ({'Version' => "2.1.0"}.merge(Sabre.request_namespaces)) do 
         xml.AvailRequestSegment do
           xml.GuestCounts('Count' => guest_count)
           xml.HotelSearchCriteria('NumProperties' => num_properties) do
@@ -89,26 +97,9 @@ module Sabre
         end
       end
 
-      namespaces = {
-       "xmlns:soap-env" => "http://schemas.xmlsoap.org/soap/envelope/",
-       "xmlns:eb" => "http://www.ebxml.org/namespaces/messageHeader",
-       "xmlns:xlink" => "http://www.w3.org/1999/xlink"
-      }
-
-      client = Savon.client do
-        convert_request_keys_to(:camelcase)
-        wsdl(Sabre.wsdl_url + 'OTA_HotelAvailLLS2.1.0RQ.wsdl')
-        env_namespace("soap-env")
-        soap_header(session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ'))
-        namespaces(namespaces)
-      end
-
-      response = client.call(:ota_hotel_avail_rq) do 
-        message(xml.target!)
-      end
+      response = search_client(session).call(:ota_hotel_avail_rq, :message => xml.target!)
 
       filename = "hotel-search-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
-
       File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) } 
       File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_hotel_avail_rs]) } 
 
@@ -120,9 +111,11 @@ module Sabre
       self.search(session, start_time, end_time, {city_code: city_code}.merge(args))
     end
 
+
     def self.find_by_geo(session, start_time, end_time, latitude, longitude, args = {})
       self.search(session, start_time, end_time, {latitude: latitude, longitude: longitude}.merge(args))
     end
+
 
     def self.find_by_hotel_code(session, start_time, end_time, hotel_code, chain_code, args = {})
       self.search(session, start_time, end_time, {hotel_code: hotel_code, chain_code: chain_code}.merge(args))
@@ -145,6 +138,9 @@ module Sabre
       end
       construct_response_hash(response, &message)
     end
+
+
+    # /HOTEL AVAILABILITY SEARCH METHODS
 
 
     def self.change_aaa(session)
