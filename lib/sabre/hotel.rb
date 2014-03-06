@@ -1,9 +1,9 @@
 module Sabre
   class Hotel
-    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description, 
-                  :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities, 
-                  :property_types, :description, :cancellation, :rooms_available, :awards, 
-                  :services, :transportation, :policies, :attractions, :cancel_code, 
+    attr_accessor :area_id, :name, :address, :country, :phone, :fax, :location_description,
+                  :chain_code, :hotel_code, :latitude, :longitude, :rates, :rating, :amenities,
+                  :property_types, :description, :cancellation, :rooms_available, :awards,
+                  :services, :transportation, :policies, :attractions, :cancel_code,
                   :rate_level_code, :taxes, :alternates
 
     def initialize(basic_info)
@@ -89,7 +89,7 @@ module Sabre
       raise SabreException::SearchError, 'No results found when missing latitude and longitude' if (latitude || longitude) && (latitude.to_f == 0.0 || longitude.to_f == 0.0)
 
       xml = Builder::XmlMarkup.new
-      xml.OTA_HotelAvailRQ({'Version' => "2.1.0"}.merge(Sabre.request_namespaces)) do 
+      xml.OTA_HotelAvailRQ({'Version' => "2.1.0"}.merge(Sabre.request_namespaces)) do
         xml.AvailRequestSegment do
           xml.GuestCounts('Count' => guest_count)
           xml.HotelSearchCriteria('NumProperties' => num_properties) do
@@ -111,8 +111,8 @@ module Sabre
       response = search_client(session).call(:ota_hotel_avail_rq, :message => xml.target!)
 
       filename = "hotel-search-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
-      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) } 
-      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_hotel_avail_rs]) } 
+      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) }
+      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_hotel_avail_rs]) }
 
       return response.to_xml
     end
@@ -157,7 +157,9 @@ module Sabre
     # HOTEL PROFILE DETAILS
 
 
-    def self.profile(session, start_time, end_time, hotel_code, args = {})
+    def self.profile(session, start_time, end_time, hotel_codes, args = {})
+
+      hotel_codes = [hotel_codes].flatten
 
       default_options = {
         guest_count:    2
@@ -167,12 +169,14 @@ module Sabre
       guest_count    = options[:guest_count]
 
       xml = Builder::XmlMarkup.new
-      xml.HotelPropertyDescriptionRQ({'Version' => "2.0.1"}.merge(Sabre.request_namespaces)) do 
+      xml.HotelPropertyDescriptionRQ({'Version' => "2.0.1"}.merge(Sabre.request_namespaces)) do
         xml.AvailRequestSegment do
           xml.GuestCounts('Count' => guest_count)
           xml.HotelSearchCriteria do
             xml.Criterion do
-              xml.HotelRef('HotelCode' => hotel_code) if hotel_code
+              hotel_codes.each do |hotel_code|
+                xml.HotelRef('HotelCode' => hotel_code)
+              end
             end
           end
           xml.TimeSpan('Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d'))
@@ -181,9 +185,17 @@ module Sabre
 
       response = profile_client(session).call(:hotel_property_description_rq, :message => xml.target!)
 
-      filename = "hotel-profile-#{hotel_code}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
-      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) } 
-      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:hotel_property_description_rs]) } 
+      filename = "hotel-profile-#{hotel_codes.join("-")}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
+      # begin
+
+      xml_output  = response.to_xml.to_s.encode('UTF-8', {:invalid => :replace, :undef => :replace, :replace => '?'})
+      ruby_output = response.to_hash[:hotel_property_description_rs].to_s.encode('UTF-8', {:invalid => :replace, :undef => :replace, :replace => '?'})
+
+      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(xml_output) }
+      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(ruby_output) }
+      # rescue
+
+      # end
 
       return response.to_xml
     end
@@ -521,6 +533,6 @@ module Sabre
       end
       return rates
     end
-    
+
   end
 end
