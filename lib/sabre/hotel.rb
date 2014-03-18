@@ -111,8 +111,10 @@ module Sabre
       response = search_client(session).call(:ota_hotel_avail_rq, :message => xml.target!)
 
       filename = "hotel-search-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
-      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) }
-      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_hotel_avail_rs]) }
+      unless Sabre.tmp_directory.blank?
+        File.open("#{Sabre.tmp_directory}/#{filename}.xml", 'w') {|f| f.write(response.to_xml) }
+        File.open("#{Sabre.tmp_directory}/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_hotel_avail_rs]) }
+      end
 
       return response.to_xml
     end
@@ -186,16 +188,14 @@ module Sabre
       response = profile_client(session).call(:hotel_property_description_rq, :message => xml.target!)
 
       filename = "hotel-profile-#{hotel_codes.join("-")}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
-      # begin
 
       xml_output  = response.to_xml.to_s.encode('UTF-8', {:invalid => :replace, :undef => :replace, :replace => '?'})
       ruby_output = response.to_hash[:hotel_property_description_rs].to_s.encode('UTF-8', {:invalid => :replace, :undef => :replace, :replace => '?'})
 
-      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(xml_output) }
-      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(ruby_output) }
-      # rescue
-
-      # end
+      unless Sabre.tmp_directory.blank?
+        File.open("#{Sabre.tmp_directory}/#{filename}.xml", 'w') {|f| f.write(xml_output) }
+        File.open("#{Sabre.tmp_directory}/#{filename}.rb", 'w') {|f| f.write(ruby_output) }
+      end
 
       return response.to_xml
     end

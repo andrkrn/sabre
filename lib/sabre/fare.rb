@@ -174,8 +174,10 @@ module Sabre
 
       filename = "#{origin}-#{destination}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
 
-      File.open("/sabre_cache/#{filename}.xml", 'w') {|f| f.write(response.to_xml) }
-      File.open("/sabre_cache/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_air_low_fare_search_rs]) }
+      unless Sabre.tmp_directory.blank?
+        File.open("#{Sabre.tmp_directory}/#{filename}.xml", 'w') {|f| f.write(response.to_xml) }
+        File.open("#{Sabre.tmp_directory}/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_air_low_fare_search_rs]) }
+      end
 
       # if block_given?
       #   construct_response_hash(response, &message)

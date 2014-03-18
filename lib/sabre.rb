@@ -12,9 +12,9 @@ require 'sabre/reservation'
 require 'sabre/sabre_exception'
 
 module Sabre
-  mattr_accessor :cert_wsdl_url, :wsdl_url, :usg_wsdl_url, :orig_wsdl_url, :endpoint_url, 
-                 :username, :password, :ipcc, :pcc, :conversation_id, :domain, 
-                 :binary_security_token, :ref_message_id
+  mattr_accessor :cert_wsdl_url, :wsdl_url, :usg_wsdl_url, :orig_wsdl_url, :endpoint_url,
+                 :username, :password, :ipcc, :pcc, :conversation_id, :domain,
+                 :binary_security_token, :ref_message_id, :tmp_directory
 
   def self.connect(&block)
     @errors = []

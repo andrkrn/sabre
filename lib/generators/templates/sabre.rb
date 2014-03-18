@@ -8,3 +8,5 @@ USERNAME = <provided by Sabre>
 PASSWORD = <provided by Sabre>
 ACCOUNT_EMAIL = <provided by Sabre>
 DOMAIN = <provided by Sabre>
+
+TMP_DIRECTORY = "/sabre_cache
