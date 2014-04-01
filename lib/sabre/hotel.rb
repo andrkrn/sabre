@@ -42,9 +42,9 @@ module Sabre
 
     # HOTEL AVAILABILITY SEARCH METHODS
 
-    def self.search_client(session)
+    def self.search_client(session, wsdl_url_root)
       client = Savon.client(
-        :wsdl => (Sabre.wsdl_url + 'OTA_HotelAvailLLS2.1.0RQ.wsdl'),
+        :wsdl => (wsdl_url_root + 'OTA_HotelAvailLLS2.1.0RQ.wsdl'),
         :convert_request_keys_to => :camelcase,
         :env_namespace => 'soap-env',
         :soap_header => session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ'),
@@ -53,9 +53,9 @@ module Sabre
       return client
     end
 
-    def self.profile_client(session)
+    def self.profile_client(session, wsdl_url_root)
       client = Savon.client(
-        :wsdl => (Sabre.wsdl_url + 'HotelPropertyDescriptionLLS2.0.1RQ.wsdl'),
+        :wsdl => (wsdl_url_root + 'HotelPropertyDescriptionLLS2.0.1RQ.wsdl'),
         :convert_request_keys_to => :camelcase,
         :env_namespace => 'soap-env',
         :soap_header => session.header('Hotel Description','sabreXML','HotelPropertyDescriptionLLSRQ'),
@@ -65,7 +65,7 @@ module Sabre
     end
 
 
-    def self.search(session, start_time, end_time, args = {})
+    def self.search(session, wsdl_url_root, start_time, end_time, args = {})
 
       default_options = {
         guest_count:    2,
@@ -108,7 +108,7 @@ module Sabre
         end
       end
 
-      response = search_client(session).call(:ota_hotel_avail_rq, :message => xml.target!)
+      response = search_client(session, wsdl_url_root).call(:ota_hotel_avail_rq, :message => xml.target!)
 
       filename = "hotel-search-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
       unless Sabre.tmp_directory.blank?
@@ -120,37 +120,37 @@ module Sabre
     end
 
 
-    def self.find_by_city_code(session, start_time, end_time, city_code, args = {})
-      self.search(session, start_time, end_time, {city_code: city_code}.merge(args))
+    def self.find_by_city_code(session, wsdl_url_root, start_time, end_time, city_code, args = {})
+      self.search(session, wsdl_url_root, start_time, end_time, {city_code: city_code}.merge(args))
     end
 
 
-    def self.find_by_geo(session, start_time, end_time, latitude, longitude, args = {})
-      self.search(session, start_time, end_time, {latitude: latitude, longitude: longitude}.merge(args))
+    def self.find_by_geo(session, wsdl_url_root, start_time, end_time, latitude, longitude, args = {})
+      self.search(session, wsdl_url_root, start_time, end_time, {latitude: latitude, longitude: longitude}.merge(args))
     end
 
 
-    def self.find_by_hotel_code(session, start_time, end_time, hotel_code, chain_code, args = {})
-      self.search(session, start_time, end_time, {hotel_code: hotel_code, chain_code: chain_code}.merge(args))
+    def self.find_by_hotel_code(session, wsdl_url_root, start_time, end_time, hotel_code, chain_code, args = {})
+      self.search(session, wsdl_url_root, start_time, end_time, {hotel_code: hotel_code, chain_code: chain_code}.merge(args))
     end
 
 
-    def self.additional(session, &message)
-      client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
-      response = client.call('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
-        Sabre.namespaces(soap)
-        soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
-        soap.body = {
-          'AvailRequestSegment' => {
-            'AdditionalAvail' => '',
-              :attributes! => {
-                'AdditionalAvail' => { 'Ind' => 'true' }
-              }
-            }
-          }
-      end
-      construct_response_hash(response, &message)
-    end
+    # def self.additional(session, &message)
+    #   client = Sabre.client('OTA_HotelAvailLLS2.1.0RQ.wsdl')
+    #   response = client.call('OTA_HotelAvailRQ', Sabre.request_header('2.1.0')) do
+    #     Sabre.namespaces(soap)
+    #     soap.header = session.header('Hotel Availability','sabreXML','OTA_HotelAvailLLSRQ')
+    #     soap.body = {
+    #       'AvailRequestSegment' => {
+    #         'AdditionalAvail' => '',
+    #           :attributes! => {
+    #             'AdditionalAvail' => { 'Ind' => 'true' }
+    #           }
+    #         }
+    #       }
+    #   end
+    #   construct_response_hash(response, &message)
+    # end
 
 
     # /HOTEL AVAILABILITY SEARCH METHODS
@@ -159,7 +159,7 @@ module Sabre
     # HOTEL PROFILE DETAILS
 
 
-    def self.profile(session, start_time, end_time, hotel_codes, args = {})
+    def self.profile(session, wsdl_url_root, start_time, end_time, hotel_codes, args = {})
 
       hotel_codes = [hotel_codes].flatten
 
@@ -167,8 +167,10 @@ module Sabre
         guest_count:    2
       }
 
-      options = default_options.merge(args)
-      guest_count    = options[:guest_count]
+      options     = default_options.merge(args)
+      guest_count = options[:guest_count]
+
+      rate_codes  = options[:rate_codes].flatten if options[:rate_codes]
 
       xml = Builder::XmlMarkup.new
       xml.HotelPropertyDescriptionRQ({'Version' => "2.0.1"}.merge(Sabre.request_namespaces)) do
@@ -181,11 +183,18 @@ module Sabre
               end
             end
           end
+          if rate_codes.present?
+            xml.RatePlanCandidates do
+              rate_codes.each do |rate_code|
+                xml.ContractNegotiatedRateCode(rate_code)
+              end
+            end
+          end
           xml.TimeSpan('Start' => start_time.strftime('%m-%d'), 'End' => end_time.strftime('%m-%d'))
         end
       end
 
-      response = profile_client(session).call(:hotel_property_description_rq, :message => xml.target!)
+      response = profile_client(session, wsdl_url_root).call(:hotel_property_description_rq, :message => xml.target!)
 
       filename = "hotel-profile-#{hotel_codes.join("-")}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
 
@@ -201,45 +210,6 @@ module Sabre
     end
 
     # /HOTEL PROFILE DETAILS
-
-
-    def self.change_aaa(session)
-      client = Sabre.client('ChangeAAALLS1.1.1RQ.wsdl',1)
-      response = client.call('ChangeAAARQ', Sabre.request_old_header('1.1.1')) do
-        Sabre.namespaces(soap)
-        soap.header = session.header('Change AAA','sabreXML','ChangeAAALLSRQ')
-        soap.body = {
-          'POS' => Sabre.pos,
-          'AAA' => '',
-          :attributes! => {
-            'AAA' => { 'PseudoCityCode' => Sabre.pcc }
-          }
-        }
-      end
-      #result = response.to_hash[:change_aaars]
-      response.to_hash[:change_aaars]
-      #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-      #return response
-    end
-
-
-    def self.context_change(session)
-      client = Sabre.client('ContextChangeLLS2.0.3RQ.wsdl')
-      response = client.call('ContextChangeRQ', Sabre.request_header('2.0.3')) do
-        Sabre.namespaces(soap)
-        soap.header = session.header('Change AAA','sabreXML','ContextChangeLLSRQ')
-        soap.body = {
-          'ChangeAAA' => '',
-          :attributes! => {
-            'ChangeAAA' => { 'PseudoCityCode' => Sabre.pcc }
-          }
-        }
-      end
-      #result = response.to_hash[:change_aaars]
-      response.to_hash[:context_change_rs]
-      #raise SabreException::ConnectionError, Sabre.error_message(result) if result[:errors]
-      #return response
-    end
 
 
     def self.rate_details(session, line_number)
@@ -263,170 +233,6 @@ module Sabre
 
     private
 
-
-    def self.construct_response_hash(results)
-      hotels = []
-      response = results.to_hash[:ota_hotel_avail_rs]
-      more_available = response[:additional_avail][:@ind] == 'true'
-      unless response[:application_results][:error]
-        if response[:errors].nil?
-          options = response[:availability_options]
-
-          if options
-            options[:availability_option].each do |p|
-              prop_info = p[:basic_property_info]
-              #street, city, state, postal_code = sanitize_address(
-              #  prop_info[:address][:address_line].first.titleize,
-              #  prop_info[:address][:address_line].last.split(' ')
-              #)
-
-              hotel = Hotel.new(prop_info)
-              hotel.location_description = prop_info[:location_description][:text]
-
-              rate_level_code = 'RAC'
-
-              if prop_info[:room_rate].is_a? Array
-                prop_info[:room_rate].each do |room_rate|
-                  if room_rate.is_a? Hash
-                    cp = room_rate[:additional_info][:cancel_policy]
-                    hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                    rate_level_code = room_rate[:@rate_level_code]
-                    #hotel.rate_code = room_rate[:hotel_rate_code]
-                  end
-                end
-              else
-                room_rate = prop_info[:room_rate]
-                if room_rate
-                  cp = room_rate[:additional_info][:cancel_policy]
-                  hotel.cancel_code = [cp[:@numeric],cp[:@option]].join('')
-                  rate_level_code = room_rate[:@rate_level_code]
-                end
-              end
-
-              rates = []
-              if rate_range = prop_info[:rate_range]
-                rates << {description: 'Minimum', rate_level_code: rate_level_code, amount: rate_range[:@min], currency: rate_range[:@currency_code]}
-                rates << {description: 'Maximum', rate_level_code: rate_level_code, amount: rate_range[:@max], currency: rate_range[:@currency_code]}
-              end
-
-              hotel.rates = rates
-
-              hotel.amenities = prop_info[:property_option_info].map do |key, val|
-                 key.to_s if val[:@ind] == 'true'
-              end.compact.uniq
-
-              yield hotel if block_given?
-
-              hotels << hotel
-            end
-          else
-            raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
-          end
-        else
-          raise SabreException::SearchError, Sabre.error_message(response) if response[:errors]
-        end
-      end
-      return hotels, more_available
-    end
-
-    def self.construct_full_response_hash(result)
-      hotel = nil
-      response = result.to_hash[:hotel_property_description_rs]
-      if response[:errors].nil?
-        room_stay = response[:room_stay]
-        #puts "Room stay is #{room_stay}"
-        if room_stay[:basic_property_info]
-          prop_info = room_stay[:basic_property_info]
-
-          hotel = Hotel.new(prop_info)
-          cards = []
-          room_stay = response[:room_stay]
-          if room_stay[:rate_plans]
-            room_stay[:rate_plans][:rate_plan][:guarantee][:guarantees_accepted][:guarantee_accepted][:payment_card].each do |cc|
-              cards << cc[:@card_type]
-            end
-          end
-        end
-
-        if response[:alternate_availability].present? # If there are alternates then there is no vacancy left
-          props = response[:alternate_availability][:basic_property_info]
-          if props.kind_of? Array
-            hotel.alternates = props.map{|alt|alt[:@hotel_code]} if hotel.present?
-          end
-        else
-          rates = []
-          line_number = nil
-          if room_stay[:room_rates]
-            if room_stay[:room_rates][:room_rate]
-              room_rate = room_stay[:room_rates][:room_rate]
-              if room_rate.class.name == 'Array'
-                room_rate.each do |rr|
-                  rates = room_rate_builder(rr, rates)
-                end
-              else
-                rates = room_rate_builder(room_rate, rates)
-              end
-            elsif room_stay[:room_plans]
-              room_stay[:room_plans][:room_plan].each do |rr|
-                if rr[:rates]
-                  tax, total = tax_rate(rr)
-
-                  rates << {
-                    description: rate_description(rr),
-                    night_list_price: rr[:rates][:rate][:@amount],
-                    currency: rr[:rates][:rate][:@currency_code],
-                    taxes: tax,
-                    total_list_price: total
-                  }
-                end
-              end
-            end
-            hotel.rates = rates
-          end # End building rates
-
-          points_of_interest = []
-          begin
-            prop_info[:index_data][:index].each do |poi|
-              pt = poi[:@point]
-              distance = poi[:@distance_direction].strip
-            end
-            points_of_interest << {:point => pt, :distance_direction => distance}
-          rescue
-          end
-          #hotel.points_of_interest
-
-          details = {}
-          begin
-            details = prop_info[:vendor_messages]
-            hotel.description = details[:description][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-            hotel.rooms_available = details[:rooms][:text]
-            hotel.cancellation = details[:cancellation][:text].join(' ').split('. ').map{|sentence| sentence.capitalize}.join('. ')
-            hotel.location_description = details[:location][:text] if details[:location]
-            hotel.services = details[:services][:text]
-            hotel.awards = details[:awards][:text]
-            hotel.transportation = details[:transportation][:text]
-            hotel.policies = details[:policies][:text]
-            hotel.attractions = details[:attractions][:text]
-          rescue
-          end
-
-          hotel.amenities = prop_info[:property_option_info].map do |key, val|
-            if val.is_a? Hash
-              key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
-            else
-              key.to_s.gsub('_', ' ').titleize if val == 'Y'
-            end
-          end.compact
-
-          hotel.property_types = prop_info[:property_type_info].map do |key, val|
-            key.to_s.gsub('_', ' ').titleize if val[:@ind] == 'true'
-          end.compact
-        end
-      else
-        raise SabreException::SearchError, Sabre.error_message(p) if response[:errors]
-      end
-      return hotel
-    end
 
     def self.room(response)
       stay = response[:hotel_rate_description_rs][:room_stay]

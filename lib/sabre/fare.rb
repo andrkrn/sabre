@@ -1,4 +1,5 @@
 module Sabre
+
   class Fare
 
     # attr_accessor
@@ -8,7 +9,7 @@ module Sabre
     end
 
 
-    def self.low_fare_search_round_trip(session, origin, destination, args)
+    def self.low_fare_search_round_trip(session, wsdl_url_root, origin, destination, args)
       request_wsdl    = 'OTA_AirLowFareSearchLLS2.3.0RQ.wsdl'
       request_method  = 'OTA_AirLowFareSearchRQ'
       request_version = '2.3.0'
@@ -55,15 +56,6 @@ module Sabre
       return_segment_attrs['ArrivalDateTime'] = return_arrives_at.strftime('%Y-%m-%dT%H:%M:%S') if return_arrives_at
       # return_segment_attrs['ResBookDesigCode'] = nil if 0 == 1
 
-
-      # client = Sabre.client('OTA_AirLowFareSearchLLS2.3.0RQ.wsdl', {
-      #   :namespaces => Sabre.request_namespaces,
-      #   env_namespace: "soap-env",
-      #   soap_header: session.header('OTA_AirLowFareSearchRQ','OTA','OTA_AirLowFareSearchLLSRQ'),
-      #   'Version' => '2.3.0'
-      # })
-
-
       xml = Builder::XmlMarkup.new
 
       xml.OTA_AirLowFareSearchRQ('Version' => "2.3.0",
@@ -103,7 +95,11 @@ module Sabre
               xml.FareOptions('Public' => true) if public_fares == true
               # TODO : Add Support for Passenger Type Code
               # xml.PassengerType('Code' => 'JCB', 'Quantity' => adult_passengers)
+              # if private_fares == true
+              # xml.PassengerType('Code' => 'JCB', 'Quantity' => adult_passengers)
+              # else
               xml.PassengerType('Code' => 'ADT', 'Quantity' => adult_passengers)
+              # end
             end
           end
         end
@@ -116,61 +112,16 @@ module Sabre
        "xmlns:xlink" => "http://www.w3.org/1999/xlink"
      }
 
-
-      # client = Savon::Client.new({
-      #   wsdl: Sabre.wsdl_url + 'OTA_AirLowFareSearchLLS2.3.0RQ.wsdl',
-      #   env_namespace: "soap-env",
-      #   soap_header: session.header('OTA_AirLowFareSearchRQ','OTA','OTA_AirLowFareSearchLLSRQ'),
-      #   namespaces: namespaces
-      # })
-
       client = Savon.client do
         convert_request_keys_to(:camelcase)
-        wsdl(Sabre.wsdl_url + 'OTA_AirLowFareSearchLLS2.3.0RQ.wsdl')
+        wsdl(wsdl_url_root + 'OTA_AirLowFareSearchLLS2.3.0RQ.wsdl')
         env_namespace("soap-env")
         soap_header(session.header('OTA_AirLowFareSearchRQ','OTA','OTA_AirLowFareSearchLLSRQ'))
         namespaces(namespaces)
       end
-
-      # response = client.call(:ota_air_low_fare_search_rq, soap_header: session.header('OTA_AirLowFareSearchRQ','OTA','OTA_AirLowFareSearchLLSRQ'), message: xml.target!)
-      # response = client.call(:ota_air_low_fare_search_rq, soap_header: false, message: xml.target!)
       response = client.call(:ota_air_low_fare_search_rq) do
         message(xml.target!)
       end
-
-
-      # OLD
-
-      # client = Sabre.client('OTA_AirLowFareSearchLLS2.3.0RQ.wsdl')
-      # response = client.request('OTA_AirLowFareSearchRQ', Sabre.request_header('2.3.0', true)) do
-      #   Sabre.namespaces(soap)
-      #   soap.header = session.header('OTA_AirLowFareSearchRQ','OTA','OTA_AirLowFareSearchLLSRQ')
-
-      #   soap.body do |xml|
-      #     xml.OriginDestinationInformation('RPH' => "1") do
-      #       xml.FlightSegment(outbound_segment_attrs) do
-      #         xml.DestinationLocation('LocationCode' => destination)
-      #         xml.OriginLocation('LocationCode' => origin)
-      #       end
-      #     end
-      #     xml.OriginDestinationInformation('RPH' => "2") do
-      #       xml.FlightSegment(return_segment_attrs) do
-      #         xml.DestinationLocation('LocationCode' => origin)
-      #         xml.OriginLocation('LocationCode' => destination)
-      #       end
-      #     end
-      #     xml.PriceRequestInformation do
-      #       xml.OptionalQualifiers do
-      #         xml.FlightQualifiers('NumStops' => max_stops) if max_stops
-      #         xml.PricingQualifiers('CurrencyCode' => 'USD') do
-      #           xml.PassengerType('Code' => 'ADT', 'Quantity' => adult_passengers)
-      #         end
-      #       end
-      #     end
-      #   end
-      # end
-
-      # /OLD
 
       filename = "#{origin}-#{destination}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
 
@@ -179,67 +130,12 @@ module Sabre
         File.open("#{Sabre.tmp_directory}/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_air_low_fare_search_rs]) }
       end
 
-      # if block_given?
-      #   construct_response_hash(response, &message)
-      # else
-      #   construct_response_hash(response)
-      # end
       return response.to_xml
     end
 
 
 
     private
-
-
-
-    def self.construct_response_hash(results, request = {})
-      itineraries = []
-      response = results.to_hash[:ota_air_low_fare_search_rs]
-      # Todo: Is "additional_avail" relevant to this call?
-      # more_available = response[:additional_avail][:@ind] == 'true'
-
-      app_results = response[:application_results]
-      priced_itineraries = response[:priced_itineraries]
-
-
-      # priced_itineraries.each do |pi|
-
-      # end
-
-      # unless response[:application_results][:error]
-      #   if response[:errors].nil?
-      #     options = response[:priced_itineraries]
-
-      #     fare_request_info = request
-      #     fare = Fare.new(fare_info)
-
-      #     if options
-      #       options[:priced_itinerary].each do |i|
-
-      #         itineraries <<
-
-      #       end
-      #     end
-
-      #   end
-      # end
-
-      return results
-    end
-
-
-    # def self.construct_full_response_hash(result)
-
-    # end
-
-    # Response Component Classes
-
-    # Ignoring the Following Elements (For now)
-    # AirItineraryPricingInfo > AncillaryFees
-    # AirItineraryPricingInfo > > AncillaryFeeGroup
-    # AirItineraryPricingInfo > > > AncillaryFeeItem
-    # AirItineraryPricingInfo > TicketingFees
 
 
     # PricedItinerary [0..*]

@@ -35,10 +35,10 @@ describe Sabre do
       @session = Sabre::Session.new('elia@mytravelershaven.com-123')
     end
 
-    it "should change the AAA for rates" do
-      changed = Sabre::Hotel.change_aaa(@session)
-      changed.should_not be_nil
-    end
+    # it "should change the AAA for rates" do
+    #   changed = Sabre::Hotel.change_aaa(@session)
+    #   changed.should_not be_nil
+    # end
 
     after(:each) do
       @session.close
@@ -67,10 +67,10 @@ describe Sabre do
       @session = Sabre::Session.new('elia@mytravelershaven.com')
     end
 
-    it "should change the AAA for rates" do
-      changed = Sabre::Hotel.context_change(@session)
-      changed.should_not be_nil
-    end
+    # it "should change the AAA for rates" do
+    #   changed = Sabre::Hotel.context_change(@session)
+    #   changed.should_not be_nil
+    # end
 
     it "should validate the session" do
       valid = @session.validate
@@ -98,7 +98,7 @@ describe Sabre do
       check_out = check_in + 1.day
       #hotels = Sabre::Hotel.find_by_geo(@session, (Date.today+25.days), (Date.today+27.days),
       #  '29.9680', '-92.0861','1',[],[],[],25)
-      response = Sabre::Hotel.find_by_geo(@session, check_in, check_out, 
+      response = Sabre::Hotel.find_by_geo(@session, check_in, check_out,
         '39.7417','-104.9894', 2, [], [], [], 1000)
       puts "Time elapsed #{(DateTime.now - st).to_f}"
 
@@ -116,8 +116,8 @@ describe Sabre do
     end
 
     it "should return a list of hotels given a valid availability request" do #, :vcr, record: :new_episodes do
-      Sabre::Hotel.context_change(@session)
-      
+      # Sabre::Hotel.context_change(@session)
+
       ci = Date.today + 2.months + 22.days
       co = ci + 1.day
       hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100)
@@ -129,8 +129,8 @@ describe Sabre do
     end
 
     it "should return a list of hotels within a block" do #, :vcr, record: :new_episodes do
-      Sabre::Hotel.context_change(@session)
-      
+      # Sabre::Hotel.context_change(@session)
+
       ci = Date.today + 2.months + 22.days
       co = ci + 1.day
       hotels = Sabre::Hotel.find_by_geo(@session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100) do |hotel|
@@ -150,7 +150,7 @@ describe Sabre do
     # Works with 0040713
     # 0112273 is Best Western Denver
     it "should return a hotels description response" do #, :vcr, record: :new_episodes do
-      Sabre::Hotel.change_aaa(@session)
+      # Sabre::Hotel.change_aaa(@session)
       ci = Date.today + 2.months + 23.days
       co = ci + 1.day
       hotel = Sabre::Hotel.profile(@session,'0033375',ci, co, '1',['VHV'])
@@ -164,7 +164,7 @@ describe Sabre do
     it "should return the rate details for a hotel", :vcr, record: :new_episodes do
       @check_in = Date.today + 2.months + 24.days
       @check_out = @check_in + 1.day
-      Sabre::Hotel.context_change(@session)
+      # Sabre::Hotel.context_change(@session)
       hotel = Sabre::Hotel.profile(@session,'0033375',@check_in, @check_out, '1',['VHV'])
       rate = hotel.rates.sample
       room_stay, cancellation = Sabre::Hotel.rate_details(@session,rate[:line_number])
@@ -204,7 +204,7 @@ describe Sabre do
       check_in = Date.today + 70.days
       check_out = check_in + 2.days
       expire_date = Date.today + 2.years
-      changed = Sabre::Hotel.context_change(@session)
+      # changed = Sabre::Hotel.context_change(@session)
       Sabre::Traveler.profile(@session, 'TEST', 'USER', '303-861-9300')
       hotel = Sabre::Hotel.profile(@session,'0032919',check_in, check_out, '1')
       rate_orig = hotel.rates.select{|r|r[:code] == 'NK1RAC'}.first
@@ -258,7 +258,7 @@ describe Sabre do
       connection = $pool.resource
       ci = Date.today + 2.months + 22.days
       co = ci + 1.day
-      Sabre::Hotel.context_change(connection.session)
+      # Sabre::Hotel.context_change(connection.session)
       #hotels = Sabre::Hotel.find_by_geo(connection.session, ci, co,'30.2671','-97.7430',1,[],[],['VHV','THH','THV','TV9'], 100)
       connection.status.should == 'busy'
       connection.session.validate
