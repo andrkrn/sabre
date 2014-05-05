@@ -4,20 +4,43 @@ require 'savon'
 module Sabre
   class Session
     attr_accessor :username, :password, :pcc, :ipcc, :binary_security_token, :ref_message_id, :domain, :conversation_id
-    def initialize(conversation_id)
-      @username = Sabre.username
-      @password = Sabre.password
-      @ipcc = Sabre.ipcc
-      @domain = Sabre.domain
-      @pcc = Sabre.pcc
-      @conversation_id = conversation_id
-      #@conversation_id = conversation_id
+
+    def initialize(params)
+      self.conversation_id       = params[:conversation_id]
+      self.username              = params[:username] || Sabre.username
+      self.password              = params[:password] || Sabre.password
+      self.ipcc                  = params[:ipcc]     || Sabre.ipcc
+      self.domain                = params[:domain]   || Sabre.domain
+      self.pcc                   = params[:pcc]      || Sabre.pcc
+      @is_open                   = params[:is_open]  || false
+      self.binary_security_token = params[:binary_security_token]
+      self.ref_message_id        = params[:ref_message_id]
 
       #@client = Savon::Client.new(wsdl: config[Rails.env]['wsdl_url'])
-      open
+      # open
+      # open unless (@is_open == true || (params[:auto_open] == false))
+    end
+
+    # def initialize(conversation_id)
+    #   @username = Sabre.username
+    #   @password = Sabre.password
+    #   @ipcc = Sabre.ipcc
+    #   @domain = Sabre.domain
+    #   @pcc = Sabre.pcc
+    #   @conversation_id = conversation_id
+    #   #@conversation_id = conversation_id
+
+    #   #@client = Savon::Client.new(wsdl: config[Rails.env]['wsdl_url'])
+    #   open
+    # end
+
+    def open?
+      return @is_open
     end
 
     def open
+      return self if self.open?
+
       client = Savon::Client.new({
         wsdl: Sabre.cert_wsdl_url,
         soap_header: header('Session','sabreXML','SessionCreateRQ'),
@@ -36,8 +59,10 @@ module Sabre
 
       response = client.call(:session_create_rq, message: message)
 
-      @binary_security_token = response.xpath("//wsse:BinarySecurityToken")[0].content
-      @ref_message_id = response.xpath("//eb:RefToMessageId")[0].content
+      self.binary_security_token = response.xpath("//wsse:BinarySecurityToken")[0].content
+      self.ref_message_id = response.xpath("//eb:RefToMessageId")[0].content
+
+      @is_open = true unless self.binary_security_token.blank?
     end
 
     def validate
@@ -66,9 +91,6 @@ module Sabre
       response = client.call('IgnoreTransactionRQ', Sabre.request_header('2.0.0',true)) do
         Sabre.namespaces(soap)
         soap.header = header('IgnoreTransactionLLSRQ','sabreXML', 'IgnoreTransactionLLSRQ')
-        #soap.body = {
-        #  'EchoData' => 'Ping'
-        #}
       end
       response.to_hash
     end
@@ -85,60 +107,21 @@ module Sabre
       client.call(:session_close_rq, message: message)
     end
 
-    # def close
-    #   client = Savon::Client.new(wsdl: Sabre.cert_wsdl_url.gsub('SessionCreate','SessionClose'))
-    #   client.call(:session_close_rq) do
-    #     Sabre.soap_namespaces(soap)
-    #     soap.header = header('Session','sabreXML','SessionCloseRQ')
-    #     soap.body = { 'POS' => { 'Source' => "", :attributes! => { 'Source' => { 'PseudoCityCode' => self.ipcc } } } }
-    #   end
-    # end
-
-    # def header(service, type, action, version = '2.0')
-
-    #   @xml = Nokogiri::XML::DocumentFragment.parse ""
-    #   Nokogiri::XML::Builder.with(@xml) do |xml|
-    #     xml.Root("xmlns:eb"   => "http://www.acme.com","xmlns:wsse" => "http://www.acme.com") do 
-    #       xml['eb'].MessageHeader('eb:version' => version, 'soap-env:mustUnderstand' => '1') do
-    #         xml['eb'].ConversationId(){ xml.text(self.conversation_id) }
-    #         xml['eb'].From() do
-    #           xml['eb'].PartyId('type' => 'urn:x12.org:IO5:01'){ xml.text(self.domain) }
-    #         end
-    #         xml['eb'].To() do
-    #           xml['eb'].PartyId('type' => 'urn:x12.org:IO5:01'){ xml.text('webservices.sabre.com') }
-    #         end
-    #         xml['eb'].CPAId(){ xml.text(self.ipcc) }
-    #         xml['eb'].Service('eb:type' => type)
-    #         xml['eb'].Action(){ xml.text(action) }
-    #         xml['eb'].MessageData() do
-    #           xml['eb'].MessageId(){ xml.text("mid:#{Time.now.strftime('%Y%m%d-%H%M%S')}@#{self.domain}") }
-    #           xml['eb'].RefToMessageId(){ xml.text(self.ref_message_id) }
-    #           xml['eb'].Timestamp(){ xml.text(Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')) }
-    #         end
-    #         xml['wsse'].Security('xmlns:wsse' => 'http://schemas.xmlsoap.org/ws/2002/12/secext') do
-    #           xml['wsse'].BinarySecurityToken('xmlns:wsu' => 'http://schemas.xmlsoap.org/ws/2002/12/utility', 'wsu:Id' => 'SabreSecurityToken', 'valueType' => 'String', 'EncodingType' => 'wsse:Base64Binary'){ xml.text(self.binary_security_token) }
-    #         end
-    #       end
-    #     end
-    #   end
-    #   return @xml.to_xml
-    # end
 
     def header(service, type, action, version = '2.0')
-        msg_header = { 'eb:ConversationId' => self.conversation_id,
-                  'eb:From' => { 'eb:PartyId' => self.domain, 
-                    :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
-                  'eb:To' => { 'eb:PartyId' => "webservices.sabre.com", 
-                    :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
-                  'eb:CPAId' => self.ipcc,
-                  'eb:Service' => service, :attributes! => { 'eb:Service' => { 'eb:type' => type } },
-                  'eb:Action' => action,
-                  'eb:MessageData' => {
-                     'eb:MessageId' => "mid:#{Time.now.strftime('%Y%m%d-%H%M%S')}@#{self.domain}",
-                     'eb:RefToMessageId' => self.ref_message_id,
-                     'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')#,
-                     #'eb:Timeout' => 300
-                  } }
+        msg_header = {
+          'eb:ConversationId' => self.conversation_id,
+          'eb:From' => { 'eb:PartyId' => self.domain, :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
+          'eb:To' => { 'eb:PartyId' => "webservices.sabre.com", :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
+          'eb:CPAId' => self.ipcc,
+          'eb:Service' => service, :attributes! => { 'eb:Service' => { 'eb:type' => type } },
+          'eb:Action' => action,
+          'eb:MessageData' => {
+             'eb:MessageId' => "mid:#{Time.now.strftime('%Y%m%d-%H%M%S')}@#{self.domain}",
+             'eb:RefToMessageId' => self.ref_message_id,
+             'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')#,
+             #'eb:Timeout' => 300
+          } }
       { 'eb:MessageHeader' => msg_header.to_hash,
         'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'soap-env:mustUnderstand' => "1", 'eb:version' => version } }
       }
