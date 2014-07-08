@@ -4,6 +4,8 @@ module Sabre
 
     # attr_accessor
 
+    LOG_TO_FILE = true
+
     def initialize(options)
 
     end
@@ -112,6 +114,8 @@ module Sabre
        "xmlns:xlink" => "http://www.w3.org/1999/xlink"
      }
 
+     Rails.logger.info("SEND AIR TO SABRE (#{Time.now()})")
+
       client = Savon.client do
         convert_request_keys_to(:camelcase)
         wsdl(wsdl_url_root + 'OTA_AirLowFareSearchLLS2.3.0RQ.wsdl')
@@ -123,11 +127,14 @@ module Sabre
         message(xml.target!)
       end
 
-      filename = "#{origin}-#{destination}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
+      Rails.logger.info("SENT AIR TO SABRE (#{Time.now()})")
 
-      unless Sabre.tmp_directory.blank?
+      
+
+      if LOG_TO_FILE &&  Sabre.tmp_directory.present?
+        filename = "#{origin}-#{destination}-#{Time.now.strftime('%Y%m%d-%H%M%S')}"
         File.open("#{Sabre.tmp_directory}/#{filename}.xml", 'w') {|f| f.write(response.to_xml) }
-        File.open("#{Sabre.tmp_directory}/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_air_low_fare_search_rs]) }
+        # File.open("#{Sabre.tmp_directory}/#{filename}.rb", 'w') {|f| f.write(response.to_hash[:ota_air_low_fare_search_rs]) }
       end
 
       return response.to_xml
@@ -261,12 +268,12 @@ module Sabre
         @total_amount = args[:total_amount]
       end
 
-      puts "********************************"
-      puts "****     ITINERARY RESP     ****"
-      puts "********************************"
-      puts self.to_yaml
-      puts "********************************"
-      puts "********************************"
+      # puts "********************************"
+      # puts "****     ITINERARY RESP     ****"
+      # puts "********************************"
+      # puts self.to_yaml
+      # puts "********************************"
+      # puts "********************************"
 
     end
   end
