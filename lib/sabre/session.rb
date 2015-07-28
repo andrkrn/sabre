@@ -6,7 +6,7 @@ module Sabre
     attr_accessor :username, :password, :pcc, :ipcc, :binary_security_token, :ref_message_id, :domain, :conversation_id
 
     def initialize(params)
-      self.conversation_id       = params[:conversation_id]
+      self.conversation_id       = params[:conversation_id] || nil
       self.username              = params[:username] || Sabre.username
       self.password              = params[:password] || Sabre.password
       self.ipcc                  = params[:ipcc]     || Sabre.ipcc
@@ -23,7 +23,7 @@ module Sabre
         return @is_open
       end
 
-      def open(wsdl_url_root)
+      def open
         return self if self.open?
 
         client = Savon::Client.new({
