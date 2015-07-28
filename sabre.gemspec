@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'ffaker'
 
   # s.add_runtime_dependency('savon','~> 2.3.0')
-  s.add_runtime_dependency 'savon', '~> 2.3.0'
+  s.add_runtime_dependency 'savon'
   s.add_runtime_dependency 'activesupport'
 
 end
