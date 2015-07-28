@@ -15,7 +15,6 @@ module Sabre
       @is_open                   = params[:is_open]  || false
       self.binary_security_token = params[:binary_security_token]
       self.ref_message_id        = params[:ref_message_id]
-
     end
 
     class << self
@@ -88,17 +87,16 @@ module Sabre
 
       def header(service, type, action, version = '2.0')
           msg_header = {
-            'eb:ConversationId' => self.conversation_id,
-            'eb:From' => { 'eb:PartyId' => self.domain, :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
+            'eb:ConversationId' => 'possetrips-test',
+            'eb:From' => { 'eb:PartyId' => 'DEFAULT', :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
             'eb:To' => { 'eb:PartyId' => "webservices.sabre.com", :attributes! => { 'eb:PartyId' => { 'type' => 'urn:x12.org:IO5:01' } } },
-            'eb:CPAId' => self.ipcc,
+            'eb:CPAId' => 'H59H',
             'eb:Service' => service, :attributes! => { 'eb:Service' => { 'eb:type' => type } },
             'eb:Action' => action,
             'eb:MessageData' => {
-               'eb:MessageId' => "mid:#{Time.now.strftime('%Y%m%d-%H%M%S')}@#{self.domain}",
+               'eb:MessageId' => "mid:#{Time.now.strftime('%Y%m%d-%H%M%S')}@DEFAULT",
                'eb:RefToMessageId' => self.ref_message_id,
-               'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')#,
-               #'eb:Timeout' => 300
+               'eb:Timestamp' => Time.now.strftime('%Y-%m-%dT%H:%M:%SZ')
             } }
         { 'eb:MessageHeader' => msg_header.to_hash,
           'wsse:Security' => security.to_hash, :attributes! => { 'wsse:Security' => { 'xmlns:wsse' => "http://schemas.xmlsoap.org/ws/2002/12/secext" }, 'eb:MessageHeader' => { 'soap-env:mustUnderstand' => "1", 'eb:version' => version } }
